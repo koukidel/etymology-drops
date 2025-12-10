@@ -72,7 +72,7 @@ export function TimeTraveler({ timeline }: Props) {
                                         </div>
                                         <div className="text-lg font-bold text-amber-800 italic mb-1">"{event.word}"</div>
                                         <p className="text-amber-900/80 leading-relaxed text-sm">
-                                            {event.description || "No definition available."}
+                                            {typeof event.description === 'string' ? event.description : event.description?.en || "No definition available."}
                                         </p>
                                     </div>
                                 );

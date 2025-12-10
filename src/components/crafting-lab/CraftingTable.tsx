@@ -122,7 +122,9 @@ export const CraftingTable = ({ words }: CraftingTableProps) => {
                     className="p-6 bg-white rounded-3xl shadow-sm border border-slate-100"
                 >
                     <h2 className="text-xl font-medium text-slate-500 mb-2">Build the word for:</h2>
-                    <p className="text-2xl font-bold text-slate-900">{currentWord.meaning}</p>
+                    <p className="text-2xl font-bold text-slate-900">
+                        {typeof currentWord.meaning === 'string' ? currentWord.meaning : currentWord.meaning.en}
+                    </p>
                 </motion.div>
             </div>
 

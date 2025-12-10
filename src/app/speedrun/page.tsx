@@ -11,7 +11,10 @@ const allRoots = expandedWords
     .flatMap(w => w.blocks.filter(b => b.type === 'root'))
     .filter((v, i, a) => a.findIndex(t => t.label === v.label) === i); // Unique roots
 
-const allMeanings = allRoots.map(r => r.meaning);
+// Helper to get string meaning
+const getMeaning = (m: any) => typeof m === 'string' ? m : m.en;
+
+const allMeanings = allRoots.map(r => getMeaning(r.meaning));
 
 const TOTAL_QUESTIONS = 14;
 
@@ -33,16 +36,17 @@ export default function SpeedrunPage() {
         const shuffledRoots = [...allRoots].sort(() => Math.random() - 0.5).slice(0, TOTAL_QUESTIONS);
 
         const quiz = shuffledRoots.map(root => {
+            const rootMeaning = getMeaning(root.meaning);
             // Get 3 random distractors
             const distractors = allMeanings
-                .filter(m => m !== root.meaning)
+                .filter(m => m !== rootMeaning)
                 .sort(() => Math.random() - 0.5)
                 .slice(0, 3);
 
             return {
                 root: root.label,
-                correct: root.meaning,
-                options: [...distractors, root.meaning].sort(() => Math.random() - 0.5) // Shuffle options
+                correct: rootMeaning,
+                options: [...distractors, rootMeaning].sort(() => Math.random() - 0.5) // Shuffle options
             };
         });
 

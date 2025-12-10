@@ -50,7 +50,7 @@ export function MatrixModule({ word }: Props) {
                             ))}
                         </div>
                         <p className="text-xs text-slate-500 line-clamp-2">
-                            {sibling.meaning}
+                            {typeof sibling.meaning === 'string' ? sibling.meaning : sibling.meaning.en}
                         </p>
                     </Link>
                 ))}

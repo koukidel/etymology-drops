@@ -70,12 +70,14 @@ export default function MatrixPage() {
                                 key={p.id}
                                 onClick={() => setSelectedPrefix(p)}
                                 className={`p-4 rounded-xl font-bold text-left transition-all ${selectedPrefix?.id === p.id
-                                        ? "bg-emerald-500 text-white shadow-lg shadow-emerald-500/20 scale-105"
-                                        : "bg-slate-700 text-slate-300 hover:bg-slate-600"
+                                    ? "bg-emerald-500 text-white shadow-lg shadow-emerald-500/20 scale-105"
+                                    : "bg-slate-700 text-slate-300 hover:bg-slate-600"
                                     }`}
                             >
                                 {p.label}-
-                                <div className="text-xs font-normal opacity-70 mt-1">{p.meaning}</div>
+                                <div className="text-xs font-normal opacity-70 mt-1">
+                                    {typeof p.meaning === 'string' ? p.meaning : p.meaning.en}
+                                </div>
                             </button>
                         ))}
                     </div>
@@ -122,7 +124,9 @@ export default function MatrixPage() {
                                         <Sparkles className="text-amber-400" />
                                         {match.word}
                                     </h2>
-                                    <p className="text-lg text-slate-600">{match.meaning}</p>
+                                    <p className="text-lg text-slate-600">
+                                        {typeof match.meaning === 'string' ? match.meaning : match.meaning.en}
+                                    </p>
                                     <Link href={`/master/${match.id}`} className="inline-block mt-4 text-sm font-bold text-indigo-600 underline decoration-2 underline-offset-4 hover:text-indigo-800">
                                         View Full Profile
                                     </Link>
@@ -150,12 +154,14 @@ export default function MatrixPage() {
                                 key={r.id}
                                 onClick={() => setSelectedRoot(r)}
                                 className={`p-4 rounded-xl font-bold text-left transition-all ${selectedRoot?.id === r.id
-                                        ? "bg-indigo-500 text-white shadow-lg shadow-indigo-500/20 scale-105"
-                                        : "bg-slate-700 text-slate-300 hover:bg-slate-600"
+                                    ? "bg-indigo-500 text-white shadow-lg shadow-indigo-500/20 scale-105"
+                                    : "bg-slate-700 text-slate-300 hover:bg-slate-600"
                                     }`}
                             >
                                 -{r.label}
-                                <div className="text-xs font-normal opacity-70 mt-1">{r.meaning}</div>
+                                <div className="text-xs font-normal opacity-70 mt-1">
+                                    {typeof r.meaning === 'string' ? r.meaning : r.meaning.en}
+                                </div>
                             </button>
                         ))}
                     </div>

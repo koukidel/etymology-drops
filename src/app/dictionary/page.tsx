@@ -47,8 +47,8 @@ export default function DictionaryPage() {
                             key={type}
                             onClick={() => setFilter(type as any)}
                             className={`px-4 py-2 rounded-full font-bold text-sm capitalize whitespace-nowrap transition-all ${filter === type
-                                    ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-200'
-                                    : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
+                                ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-200'
+                                : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
                                 }`}
                         >
                             {type}s
@@ -61,14 +61,16 @@ export default function DictionaryPage() {
                     {filtered.map((block) => (
                         <div key={`${block.type}-${block.id}`} className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-all flex items-start gap-4">
                             <div className={`p-3 rounded-lg font-bold text-lg ${block.type === 'root' ? 'bg-indigo-50 text-indigo-700' :
-                                    block.type === 'prefix' ? 'bg-emerald-50 text-emerald-700' :
-                                        'bg-amber-50 text-amber-700'
+                                block.type === 'prefix' ? 'bg-emerald-50 text-emerald-700' :
+                                    'bg-amber-50 text-amber-700'
                                 }`}>
                                 {block.type === 'prefix' ? `${block.label}-` : block.type === 'suffix' ? `-${block.label}` : block.label}
                             </div>
                             <div>
                                 <h3 className="font-bold text-slate-900">{block.label}</h3>
-                                <p className="text-slate-500 text-sm mt-1">{block.meaning}</p>
+                                <p className="text-slate-500 text-sm mt-1">
+                                    {typeof block.meaning === 'string' ? block.meaning : block.meaning.en}
+                                </p>
                                 <span className="text-xs font-mono text-slate-400 mt-2 inline-block uppercase tracking-wider">{block.type}</span>
                             </div>
                         </div>

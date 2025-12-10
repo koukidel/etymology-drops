@@ -32,12 +32,14 @@ export const generateLesson = (levelId: string): Question[] => {
     const selectedWords = targetWords.sort(() => 0.5 - Math.random()).slice(0, 5);
 
     // 3. Generate questions for these words
+    // 3. Generate questions for these words
     const questions: Question[] = selectedWords.map((word, index) => {
         // Alternate between types or random
         const types: QuestionType[] = ['meaning_match', 'construction'];
         const type = types[index % types.length];
 
         let options: string[] = [];
+        const wordMeaning = typeof word.meaning === 'string' ? word.meaning : word.meaning.en;
 
         if (type === 'meaning_match') {
             // Generate distractors
@@ -45,9 +47,9 @@ export const generateLesson = (levelId: string): Question[] => {
                 .filter(w => w.id !== word.id)
                 .sort(() => 0.5 - Math.random())
                 .slice(0, 3)
-                .map(w => w.meaning);
+                .map(w => typeof w.meaning === 'string' ? w.meaning : w.meaning.en);
 
-            options = [...distractors, word.meaning].sort(() => 0.5 - Math.random());
+            options = [...distractors, wordMeaning].sort(() => 0.5 - Math.random());
         }
 
         return {
@@ -55,7 +57,7 @@ export const generateLesson = (levelId: string): Question[] => {
             type,
             word,
             options,
-            correctAnswer: word.meaning // mainly for logic check
+            correctAnswer: wordMeaning // mainly for logic check
         };
     });
 

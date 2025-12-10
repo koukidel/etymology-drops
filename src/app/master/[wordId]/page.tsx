@@ -50,7 +50,9 @@ export default function MasterWordPage({ params }: PageProps) {
                 {/* 1. HERO CARD: Deconstruction */}
                 <section className="bg-white rounded-3xl p-8 shadow-sm border border-slate-200 text-center">
                     <h2 className="text-4xl sm:text-5xl font-extrabold text-slate-900 mb-2">{word.word}</h2>
-                    <p className="text-xl text-slate-500 mb-8">{word.meaning}</p>
+                    <p className="text-xl text-slate-500 mb-8">
+                        {typeof word.meaning === 'string' ? word.meaning : word.meaning.en}
+                    </p>
 
                     <div className="flex flex-wrap justify-center gap-2 sm:gap-4">
                         {word.blocks.map((block) => (
@@ -61,7 +63,9 @@ export default function MasterWordPage({ params }: PageProps) {
                                     }`}>
                                     {block.label}
                                 </div>
-                                <span className="text-xs font-medium text-slate-400 uppercase tracking-widest">{block.meaning}</span>
+                                <span className="text-xs font-medium text-slate-400 uppercase tracking-widest">
+                                    {typeof block.meaning === 'string' ? block.meaning : block.meaning.en}
+                                </span>
                             </div>
                         ))}
                     </div>
@@ -80,7 +84,7 @@ export default function MasterWordPage({ params }: PageProps) {
                             <h3>Etymology</h3>
                         </div>
                         <p className="text-amber-900 leading-relaxed">
-                            {word.history}
+                            {typeof word.history === 'string' ? word.history : word.history.en}
                         </p>
                     </section>
                 )}

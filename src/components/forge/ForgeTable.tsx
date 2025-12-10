@@ -107,12 +107,14 @@ function PoolColumn({ title, items, onSelect, selectedId }: any) {
                         key={item.id}
                         onClick={() => onSelect(item)}
                         className={`p-3 rounded-xl border-2 text-left transition-all ${selectedId === item.id
-                                ? "border-indigo-600 bg-indigo-50 shadow-md"
-                                : "border-slate-100 hover:border-indigo-200"
+                            ? "border-indigo-600 bg-indigo-50 shadow-md"
+                            : "border-slate-100 hover:border-indigo-200"
                             }`}
                     >
                         <span className="font-bold text-slate-800">{item.label}</span>
-                        <span className="block text-xs text-slate-500">{item.meaning}</span>
+                        <span className="block text-xs text-slate-500">
+                            {typeof item.meaning === 'string' ? item.meaning : item.meaning.en}
+                        </span>
                     </button>
                 ))}
             </div>

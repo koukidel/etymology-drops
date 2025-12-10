@@ -143,7 +143,10 @@ export const EtymoGraph = ({ nodes, links }: EtymoGraphProps) => {
                             {nodes.find(n => n.id === selectedNode)?.label}
                         </h3>
                         <p className="text-slate-600">
-                            {nodes.find(n => n.id === selectedNode)?.data?.meaning || "Root word."}
+                            {(() => {
+                                const meaning = nodes.find(n => n.id === selectedNode)?.data?.meaning;
+                                return typeof meaning === 'string' ? meaning : meaning?.en || "Root word.";
+                            })()}
                         </p>
                         <button
                             className="absolute top-4 right-4 text-slate-400 hover:text-slate-800"

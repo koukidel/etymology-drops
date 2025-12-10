@@ -3,9 +3,9 @@ import { Block } from "@/data/types";
 export function generateDefinition(prefix: Block | null, root: Block | null, suffix: Block | null): string {
     if (!root) return "Incomplete word structure.";
 
-    const rootMeaning = root.meaning.toLowerCase();
-    const prefixMeaning = prefix ? prefix.meaning.toLowerCase() : "";
-    const suffixMeaning = suffix ? suffix.meaning.toLowerCase() : "";
+    const rootMeaning = (typeof root.meaning === 'string' ? root.meaning : root.meaning.en).toLowerCase();
+    const prefixMeaning = prefix ? (typeof prefix.meaning === 'string' ? prefix.meaning : prefix.meaning.en).toLowerCase() : "";
+    const suffixMeaning = suffix ? (typeof suffix.meaning === 'string' ? suffix.meaning : suffix.meaning.en).toLowerCase() : "";
 
     // Simple Template Logic
     if (prefix && suffix) {

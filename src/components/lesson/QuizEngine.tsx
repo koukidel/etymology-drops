@@ -170,7 +170,9 @@ export const QuizEngine = ({ questions, levelId }: QuizEngineProps) => {
                                     {isCorrect ? "Excellent!" : "Not quite..."}
                                 </h3>
                                 {!isCorrect && (
-                                    <p className="text-sm text-red-600">Correct: {currentQuestion.word.meaning}</p>
+                                    <p className="text-sm text-red-600">
+                                        Correct: {typeof currentQuestion.word.meaning === 'string' ? currentQuestion.word.meaning : currentQuestion.word.meaning.en}
+                                    </p>
                                 )}
                             </div>
                         </div>

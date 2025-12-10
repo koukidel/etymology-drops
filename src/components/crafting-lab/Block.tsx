@@ -32,7 +32,9 @@ export const Block = ({ block, onDragEnd, isPlaced = false }: BlockProps) => {
             )}
         >
             <span className="text-lg font-bold">{block.label}</span>
-            <span className="text-xs opacity-80">{block.meaning}</span>
+            <span className="text-xs opacity-80">
+                {typeof block.meaning === 'string' ? block.meaning : block.meaning.en}
+            </span>
         </motion.div>
     );
 };

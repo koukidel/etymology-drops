@@ -98,28 +98,32 @@ export function BossGauntlet({ word, onClose, onComplete }: Props) {
             {/* Content */}
             <div className="p-8">
                 <p className="text-lg text-slate-600 text-center font-medium mb-8 leading-relaxed">
-                    {currentChallenge.question}
+                    {typeof currentChallenge.question === 'string' ? currentChallenge.question : currentChallenge.question.en}
                 </p>
 
                 <div className="space-y-3">
-                    {currentChallenge.options.map((option) => (
-                        <button
-                            key={option}
-                            onClick={() => handleAnswer(option)}
-                            disabled={isCorrect !== null}
-                            className={`w-full p-4 rounded-xl border-2 font-bold text-left transition-all duration-200 flex items-center justify-between
-                                ${isCorrect === true && option === currentChallenge.answer
-                                    ? 'bg-emerald-50 border-emerald-500 text-emerald-700'
-                                    : isCorrect === false && option !== currentChallenge.answer
-                                        ? 'bg-white border-slate-100 text-slate-300' // Fade out wrong
-                                        : 'bg-white border-slate-100 hover:border-indigo-600 hover:bg-slate-50 text-slate-700'
-                                }
-                            `}
-                        >
-                            <span>{option}</span>
-                            {isCorrect === true && option === currentChallenge.answer && <Check className="text-emerald-500" />}
-                        </button>
-                    ))}
+                    {currentChallenge.options.map((option) => {
+                        const optionText = typeof option === 'string' ? option : (option as any).en;
+                        const answerText = typeof currentChallenge.answer === 'string' ? currentChallenge.answer : (currentChallenge.answer as any).en;
+                        return (
+                            <button
+                                key={optionText}
+                                onClick={() => handleAnswer(optionText)}
+                                disabled={isCorrect !== null}
+                                className={`w-full p-4 rounded-xl border-2 font-bold text-left transition-all duration-200 flex items-center justify-between
+                                    ${isCorrect === true && optionText === answerText
+                                        ? 'bg-emerald-50 border-emerald-500 text-emerald-700'
+                                        : isCorrect === false && optionText !== answerText
+                                            ? 'bg-white border-slate-100 text-slate-300' // Fade out wrong
+                                            : 'bg-white border-slate-100 hover:border-indigo-600 hover:bg-slate-50 text-slate-700'
+                                    }
+                                `}
+                            >
+                                <span>{optionText}</span>
+                                {isCorrect === true && optionText === answerText && <Check className="text-emerald-500" />}
+                            </button>
+                        );
+                    })}
                 </div>
             </div>
 

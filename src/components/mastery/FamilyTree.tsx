@@ -56,7 +56,9 @@ export function FamilyTree({ rootId, currentWordId }: Props) {
                     <div className="flex items-center gap-3">
                         <span className="text-3xl">{rootBlock.label.toUpperCase()}</span>
                         <span className="w-px h-6 bg-white/20 mx-2" />
-                        <span className="text-sm font-medium opacity-80 italic">"{rootBlock.meaning}"</span>
+                        <span className="text-sm font-medium opacity-80 italic">
+                            "{typeof rootBlock.meaning === 'string' ? rootBlock.meaning : rootBlock.meaning.en}"
+                        </span>
                     </div>
                 </div>
             </motion.div>
@@ -138,7 +140,7 @@ export function FamilyTree({ rootId, currentWordId }: Props) {
                                             <h3 className="text-2xl font-black text-slate-900 mb-2">{member.word}</h3>
                                             <div className="h-px w-8 bg-indigo-200 mx-auto mb-2" />
                                             <p className="text-sm font-medium text-slate-600 leading-snug">
-                                                {member.meaning}
+                                                {typeof member.meaning === 'string' ? member.meaning : member.meaning.en}
                                             </p>
                                         </div>
                                     </motion.div>

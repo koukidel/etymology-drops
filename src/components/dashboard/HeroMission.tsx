@@ -46,7 +46,7 @@ export function HeroMission() {
                         </div>
                         <h2 className="text-3xl sm:text-4xl font-black mb-2">Master "{missionWord.word}"</h2>
                         <p className="text-indigo-100 max-w-md text-lg leading-relaxed">
-                            {missionWord.meaning} proving you command the root <strong>-{missionWord.blocks.find(b => b.type === 'root')?.label}</strong>.
+                            {typeof missionWord.meaning === 'string' ? missionWord.meaning : missionWord.meaning.en} proving you command the root <strong>-{missionWord.blocks.find(b => b.type === 'root')?.label}</strong>.
                         </p>
                     </div>
 
