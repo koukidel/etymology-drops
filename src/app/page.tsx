@@ -4,9 +4,24 @@ import { CampaignPath } from "@/components/campaign/CampaignPath";
 import { BottomNav } from "@/components/layout/BottomNav";
 import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
 import { useTranslation } from "@/hooks/useTranslation";
+import { useGameStore } from "@/store/useGameStore";
+import { OnboardingSlides } from "@/components/onboarding/OnboardingSlides";
+import { useEffect, useState } from "react";
 
 export default function Home() {
   const { t } = useTranslation();
+  const { hasSeenOnboarding } = useGameStore();
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  if (!isMounted) return null; // Prevent hydration mismatch
+
+  if (!hasSeenOnboarding) {
+    return <OnboardingSlides />;
+  }
 
   return (
     <main className="min-h-screen bg-slate-50 pb-20">

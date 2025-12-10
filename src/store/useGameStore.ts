@@ -24,6 +24,10 @@ interface GameState {
     // The Grimoire (Word Forge)
     customWords: { id: string; word: string; definition: string; parts: string[] }[];
     addCustomWord: (word: string, definition: string, parts: string[]) => void;
+
+    // Onboarding
+    hasSeenOnboarding: boolean;
+    completeOnboarding: () => void;
 }
 
 export const useGameStore = create<GameState>()(
@@ -105,6 +109,9 @@ export const useGameStore = create<GameState>()(
                     return {};
                 }
             }),
+
+            hasSeenOnboarding: false,
+            completeOnboarding: () => set({ hasSeenOnboarding: true }),
         }),
         {
             name: 'etymology-quest-storage',
