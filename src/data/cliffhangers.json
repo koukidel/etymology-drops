@@ -1,0 +1,128 @@
+{
+    "precept": {
+        "nextRoot": "Tain",
+        "sampleWords": [
+            "Contain",
+            "Maintain"
+        ],
+        "hint": "To hold together or hold in hand. The power of possession.",
+        "caseId": "002"
+    },
+    "detain": {
+        "nextRoot": "Mit",
+        "sampleWords": [
+            "Submit",
+            "Transmit"
+        ],
+        "hint": "To send under or send across. A mission of movement.",
+        "caseId": "003"
+    },
+    "intermittent": {
+        "nextRoot": "Fer",
+        "sampleWords": [
+            "Transfer",
+            "Conifer"
+        ],
+        "hint": "To carry burdens across distances. The bearer of gifts.",
+        "caseId": "004"
+    },
+    "offer": {
+        "nextRoot": "Sist",
+        "sampleWords": [
+            "Persist",
+            "Assist"
+        ],
+        "hint": "To stand firm through difficulties. The unyielding stance.",
+        "caseId": "005"
+    },
+    "insist": {
+        "nextRoot": "Graph",
+        "sampleWords": [
+            "Autograph",
+            "Telegraph"
+        ],
+        "hint": "To write from afar. The mark of the pen.",
+        "caseId": "006"
+    },
+    "monograph": {
+        "nextRoot": "Log",
+        "sampleWords": [
+            "Dialogue",
+            "Logic"
+        ],
+        "hint": "Words flowing between people. The art of reason.",
+        "caseId": "007"
+    },
+    "epilogue": {
+        "nextRoot": "Spect",
+        "sampleWords": [
+            "Inspect",
+            "Aspect"
+        ],
+        "hint": "To look into closely. The vision of truth.",
+        "caseId": "008"
+    },
+    "aspect": {
+        "nextRoot": "Ply",
+        "sampleWords": [
+            "Reply",
+            "Multiply"
+        ],
+        "hint": "To fold back an answer. The layers of complexity.",
+        "caseId": "009"
+    },
+    "uncomplicated": {
+        "nextRoot": "Tend",
+        "sampleWords": [
+            "Extend",
+            "Attend"
+        ],
+        "hint": "To stretch out. Reaching beyond limits.",
+        "caseId": "010"
+    },
+    "nonextended": {
+        "nextRoot": "Duct",
+        "sampleWords": [
+            "Conduct",
+            "Introduce"
+        ],
+        "hint": "To lead together. The path of guidance.",
+        "caseId": "011"
+    },
+    "reproduction": {
+        "nextRoot": "Pose",
+        "sampleWords": [
+            "Compose",
+            "Oppose"
+        ],
+        "hint": "To put together or place against. The arrangement of things.",
+        "caseId": "012"
+    },
+    "indisposed": {
+        "nextRoot": "Fic",
+        "sampleWords": [
+            "Fiction",
+            "Efficient"
+        ],
+        "hint": "To make something up. The craft of creation.",
+        "caseId": "013"
+    },
+    "oversufficient": {
+        "nextRoot": "Scribe",
+        "sampleWords": [
+            "Subscribe",
+            "Describe"
+        ],
+        "hint": "To write your name under. The final signature.",
+        "caseId": "014"
+    },
+    "mistranscribe": {
+        "nextRoot": "Fin",
+        "sampleWords": [
+            "Final",
+            "Infinite"
+        ],
+        "hint": "The end. Or is it just the beginning?",
+        "caseId": "END"
+    }
+}

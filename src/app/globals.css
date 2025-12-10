@@ -1,26 +1,90 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  --font-sans: var(--font-inter);
+
+  /* Juicy Palette */
+  --color-primary: #6366f1;
+  /* Indigo 500 */
+  --color-primary-foreground: #ffffff;
+  --color-secondary: #ec4899;
+  /* Pink 500 */
+  --color-secondary-foreground: #ffffff;
+  --color-accent: #f59e0b;
+  /* Amber 500 */
+  --color-accent-foreground: #ffffff;
+  --color-destructive: #ef4444;
+  --color-destructive-foreground: #ffffff;
+
+  --color-background: #f8fafc;
+  /* Slate 50 */
+  --color-foreground: #0f172a;
+  /* Slate 900 */
+
+  --color-muted: #f1f5f9;
+  --color-muted-foreground: #64748b;
+
+  --color-card: #ffffff;
+  --color-card-foreground: #0f172a;
+
+  --color-popover: #ffffff;
+  --color-popover-foreground: #0f172a;
+
+  --color-border: #e2e8f0;
+  --color-input: #e2e8f0;
+  --color-ring: #6366f1;
+
+  --radius-lg: 0.75rem;
+  --radius-md: 0.5rem;
+  --radius-sm: 0.25rem;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* Hide Vercel Toast & Next.js Indicators */
+body>[data-nextjs-toast],
+body>[data-nextjs-scroll-restoration-mock],
+#nextjs-dev-tools-overlay,
+.nextjs-toast-errors-parent {
+  display: none !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  visibility: hidden !important;
+  z-index: -9999 !important;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* Specific fix for the "N" badge (Turbopack/Static Indicator) */
+/* We want to show it, but push it up above the bottom nav */
+[class*="nextjs-static-indicator"],
+[class*="nextjs-dev-overlay"],
+#__next-build-watcher,
+#next-route-announcer {
+  display: block !important;
+  /* Use transform to lift it regardless of inline bottom styles */
+  transform: translateY(-100px) !important;
+  left: 20px !important;
+  z-index: 9999 !important;
+}
+
+/* Custom Utilities */
+@layer utilities {
+  .text-shadow-sm {
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Haptic-like press effect */
+  .pressable {
+    @apply active:scale-95 transition-transform duration-100;
+  }
+
+  /* Safe Area Padding for Bottom Nav */
+  .safe-area-pb {
+    padding-bottom: env(safe-area-inset-bottom, 20px);
   }
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
 }

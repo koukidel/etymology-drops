@@ -1,0 +1,133 @@
+"use client";
+
+import { motion } from "framer-motion";
+import Link from "next/link";
+import { Lock, Star, Play, Check } from "lucide-react";
+import { Word } from "@/data/types";
+
+import { CAMPAIGN_LEVELS } from "@/data/campaignLevels";
+import { useGameStore } from "@/store/useGameStore";
+import { useMemo, useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useTranslation } from "@/hooks/useTranslation";
+
+export function CampaignPath() {
+    const { unlockedWords, masteredWords } = useGameStore();
+    const router = useRouter();
+    const { language } = useTranslation();
+
+    // Calculate current level index based on last unlocked word in the sequence
+    // or simply find the highest index that is unlocked.
+    // Since unlockedWords is an array of IDs, finding the highest index in CAMPAIGN_LEVELS matching explicit unlock.
+
+    // NOTE: This runs on client. Hydration mismatch risk if server renders locked.
+    // For MVP we just use client side calculation.
+    const [mounted, setMounted] = useState(false);
+    useEffect(() => setMounted(true), []);
+
+    const currentLevelIndex = useMemo(() => {
+        if (!mounted) return 0; // Default to 0 on server/initial
+        let maxIndex = 0;
+        CAMPAIGN_LEVELS.forEach((level, index) => {
+            if (unlockedWords.includes(level.id)) {
+                if (index > maxIndex) maxIndex = index;
+            }
+        });
+        return maxIndex;
+    }, [unlockedWords, mounted]);
+
+    return (
+        <div className="flex flex-col items-center py-12 relative max-w-md mx-auto">
+            {/* Background Path Line */}
+            <div className="absolute top-0 bottom-0 left-1/2 w-1 bg-slate-200 -translate-x-1/2 rounded-full" />
+
+            {CAMPAIGN_LEVELS.map((level, index) => {
+                const isUnlocked = index <= currentLevelIndex;
+                const isCompleted = masteredWords.includes(level.id);
+                const isActive = index === currentLevelIndex && !isCompleted;
+
+                const title = typeof level.title === 'string' ? level.title : level.title[language];
+
+                return (
+                    <div key={level.id} className="relative z-10 mb-16 w-full flex justify-center">
+                        <Link
+                            href={isUnlocked ? `/lesson/${level.id}` : "#"}
+                            className={`
+                                relative group flex flex-col items-center justify-center 
+                                w-24 h-24 rounded-full border-4 shadow-xl transition-all duration-300
+                                ${isActive
+                                    ? "bg-indigo-600 border-white ring-4 ring-indigo-200 scale-110 cursor-pointer hover:scale-115"
+                                    : isCompleted
+                                        ? "bg-emerald-500 border-white cursor-pointer"
+                                        : "bg-slate-200 border-slate-300 cursor-not-allowed grayscale"
+                                }
+                            `}
+                        >
+                            {/* Icon / Number */}
+                            {isCompleted ? (
+                                <Check size={32} className="text-white" />
+                            ) : isActive ? (
+                                <Play size={32} className="text-white fill-white ml-1" />
+                            ) : (
+                                <Lock size={24} className="text-slate-400" />
+                            )}
+
+                            {/* Floating Label */}
+                            <div className={`
+                                absolute top-full mt-3 px-4 py-1.5 rounded-full text-xs font-black tracking-widest uppercase shadow-sm border
+                                ${isActive
+                                    ? "bg-indigo-100 text-indigo-700 border-indigo-200"
+                                    : isUnlocked
+                                        ? "bg-white text-slate-600 border-slate-200"
+                                        : "bg-slate-100 text-slate-400 border-slate-200"
+                                }
+                            `}>
+                                {level.label}
+                            </div>
+
+                            {/* Pulsing Effect for Active */}
+                            {isActive && (
+                                <span className="absolute inset-0 rounded-full animate-ping bg-indigo-500 opacity-20 duration-1000" />
+                            )}
+                        </Link>
+
+                        {/* Level Title (Side Tooltip) */}
+                        {isActive && (
+                            <motion.div
+                                initial={{ opacity: 0, x: 20 }}
+                                animate={{ opacity: 1, x: 50 }}
+                                className="absolute left-1/2 bg-slate-900 text-white text-sm font-bold px-4 py-2 rounded-xl arrow-left whitespace-nowrap hidden sm:block"
+                            >
+                                {title}
+                            </motion.div>
+                        )}
+                    </div>
+                );
+            })}
+
+            {/* Final Trophy */}
+            <motion.button
+                onClick={() => {
+                    const isGameComplete = masteredWords.includes("mistranscribe");
+                    if (isGameComplete) {
+                        router.push("/exam");
+                    }
+                }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className={`
+                    relative z-10 w-32 h-32 rounded-full flex items-center justify-center border-4 shadow-2xl transition-all
+                    ${masteredWords.includes("mistranscribe")
+                        ? "bg-amber-100 border-amber-400 cursor-pointer animate-pulse-slow shadow-amber-200"
+                        : "bg-slate-100 border-slate-300 opacity-50 grayscale cursor-not-allowed"
+                    }
+                `}
+            >
+                <Star size={48} className={masteredWords.includes("mistranscribe") ? "text-amber-500 fill-amber-500" : "text-slate-400"} />
+                <div className={`absolute top-full mt-4 font-black uppercase tracking-widest text-sm ${masteredWords.includes("mistranscribe") ? "text-amber-600" : "text-slate-400"}`}>
+                    Grand Master
+                </div>
+            </motion.button>
+        </div>
+    );
+}
