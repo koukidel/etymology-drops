@@ -7,30 +7,30 @@ import { ArrowRight, Check, Sparkles, BookOpen, Hammer, Trophy } from "lucide-re
 
 const SLIDES = [
     {
-        id: "welcome",
-        title: "Unlock the Power of Words",
-        description: "Discover the ancient roots that build the language we use today. See English in a whole new light.",
-        icon: <Sparkles size={64} className="text-amber-400" />,
+        id: "lego",
+        title: "Words are like Legos",
+        description: "English isn't random. It's built from blocks. PRE (Before) + CEPT (Take) = PRECEPT (A rule taken beforehand).",
+        icon: <Hammer size={64} className="text-amber-400" />,
         color: "bg-indigo-600"
     },
     {
-        id: "roots",
-        title: "Collect Ancient Roots",
-        description: "Every word has a history. Collect roots like 'Chron' (Time) or 'Phon' (Sound) to expand your vocabulary.",
-        icon: <BookOpen size={64} className="text-emerald-400" />,
+        id: "dna",
+        title: "Scan the DNA",
+        description: "Use the Etymo-Scanner to reveal the hidden 'genes' inside every word. See the history they carry.",
+        icon: <Sparkles size={64} className="text-emerald-400" />,
         color: "bg-slate-800"
     },
     {
-        id: "crafting",
-        title: "Forge New Words",
-        description: "Enter the Crafting Lab to combine prefixes, roots, and suffixes. Create words like 'Re-construct-ion'.",
-        icon: <Hammer size={64} className="text-indigo-400" />,
+        id: "keys",
+        title: "The 14 Master Keys",
+        description: "Master just 14 root families to unlock over 10,000 complex English words. Work smarter, not harder.",
+        icon: <BookOpen size={64} className="text-indigo-400" />,
         color: "bg-slate-900"
     },
     {
-        id: "mastery",
-        title: "Prove Your Mastery",
-        description: "Challenge Bosses, earn badges, and climb the leaderboard. Your journey to etymology mastery begins now.",
+        id: "collection",
+        title: "Start Your Collection",
+        description: "Collect roots, craft words, and build your Codex. Your journey to mastery begins now.",
         icon: <Trophy size={64} className="text-yellow-400" />,
         color: "bg-indigo-900"
     }

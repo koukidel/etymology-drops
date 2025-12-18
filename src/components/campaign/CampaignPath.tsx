@@ -1,19 +1,23 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import { Lock, Star, Play, Check } from "lucide-react";
+import { Lock, Star, Play, Check, Trophy, ChevronRight, CheckCircle2 } from "lucide-react";
 import { Word } from "@/data/types";
 
 import { CAMPAIGN_LEVELS } from "@/data/campaignLevels";
 import { useGameStore } from "@/store/useGameStore";
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslation } from "@/hooks/useTranslation";
+import { PremiumModal } from "@/components/PremiumModal";
 
-export function CampaignPath() {
-    const { unlockedWords, masteredWords } = useGameStore();
+export const CampaignPath = () => {
     const router = useRouter();
+    const { unlockedWords, masteredWords, unlockLevel, unlockedLevels, canUnlockWord } = useGameStore();
+    const [selectedLevel, setSelectedLevel] = useState<string | null>(null);
+    const [showPremiumModal, setShowPremiumModal] = useState(false);
+    const scrollContainerRef = useRef<HTMLDivElement>(null);
     const { language } = useTranslation();
 
     // Calculate current level index based on last unlocked word in the sequence
@@ -52,8 +56,14 @@ export function CampaignPath() {
                     <div key={level.id} className="relative z-10 mb-16 w-full flex justify-center">
                         <Link
                             href={isUnlocked ? `/lesson/${level.id}` : "#"}
+                            onClick={(e) => {
+                                if (isUnlocked && !canUnlockWord()) {
+                                    e.preventDefault();
+                                    setShowPremiumModal(true);
+                                }
+                            }}
                             className={`
-                                relative group flex flex-col items-center justify-center 
+                                relative group flex flex-col items-center justify-center
                                 w-24 h-24 rounded-full border-4 shadow-xl transition-all duration-300
                                 ${isActive
                                     ? "bg-indigo-600 border-white ring-4 ring-indigo-200 scale-110 cursor-pointer hover:scale-115"
@@ -99,6 +109,18 @@ export function CampaignPath() {
                                 className="absolute left-1/2 bg-slate-900 text-white text-sm font-bold px-4 py-2 rounded-xl arrow-left whitespace-nowrap hidden sm:block"
                             >
                                 {title}
+                                <button
+                                    onClick={() => {
+                                        if (!canUnlockWord()) {
+                                            setShowPremiumModal(true);
+                                            return;
+                                        }
+                                        router.push(`/lesson/${level.id}`);
+                                    }}
+                                    className="ml-2 p-1 bg-indigo-500 rounded-full hover:bg-indigo-400 transition-colors inline-flex items-center justify-center"
+                                >
+                                    <Play size={12} fill="currentColor" />
+                                </button>
                             </motion.div>
                         )}
                     </div>
@@ -128,6 +150,11 @@ export function CampaignPath() {
                     Grand Master
                 </div>
             </motion.button>
+            {/* Premium Modal */}
+            <PremiumModal
+                isOpen={showPremiumModal}
+                onClose={() => setShowPremiumModal(false)}
+            />
         </div>
     );
-}
+};

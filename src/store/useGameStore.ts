@@ -28,11 +28,16 @@ interface GameState {
     // Onboarding
     hasSeenOnboarding: boolean;
     completeOnboarding: () => void;
+
+    // Freemium
+    isPremium: boolean;
+    setPremium: (status: boolean) => void;
+    canUnlockWord: () => boolean;
 }
 
 export const useGameStore = create<GameState>()(
     persist(
-        (set) => ({
+        (set, get) => ({
             unlockedWords: [],
             masteredWords: [],
             unlockedLevels: [],
@@ -112,6 +117,14 @@ export const useGameStore = create<GameState>()(
 
             hasSeenOnboarding: false,
             completeOnboarding: () => set({ hasSeenOnboarding: true }),
+
+            isPremium: false,
+            setPremium: (status) => set({ isPremium: status }),
+            canUnlockWord: () => {
+                const state = get();
+                if (state.isPremium) return true;
+                return state.unlockedWords.length < 25;
+            },
         }),
         {
             name: 'etymology-quest-storage',
