@@ -227,7 +227,8 @@ export const QuizEngine = ({ questions, levelId, isPracticeMode = false, onPract
                         initial={{ y: 100 }}
                         animate={{ y: 0 }}
                         className={clsx(
-                            "fixed bottom-0 left-0 right-0 p-6 border-t-2 z-50 flex items-center justify-between max-w-md mx-auto",
+                            "fixed left-0 right-0 p-6 border-t-2 z-50 flex items-center justify-between max-w-md mx-auto transition-all",
+                            isPracticeMode ? "bottom-[88px] rounded-t-2xl shadow-[0_-4px_20px_rgba(0,0,0,0.1)]" : "bottom-0",
                             isCorrect ? "bg-green-50 border-green-200" : "bg-red-50 border-red-200"
                         )}
                     >
