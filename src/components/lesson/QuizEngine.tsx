@@ -24,6 +24,7 @@ export const QuizEngine = ({ questions, levelId, isPracticeMode = false, onPract
     const [currentIndex, setCurrentIndex] = useState(0);
     const [isAnswered, setIsAnswered] = useState(false);
     const [isCorrect, setIsCorrect] = useState(false);
+    const [showHint, setShowHint] = useState(false);
     // For construction, we might not need local state if we reuse CraftingTable in a smart way
     // For now, let's implement Meaning Match logic here
 
@@ -35,18 +36,14 @@ export const QuizEngine = ({ questions, levelId, isPracticeMode = false, onPract
 
     const handleOptionSelect = (option: string) => {
         if (isAnswered && isCorrect) return; // Prevent changing after correct
-        // In practice mode, allow retrying if wrong? 
-        // Requirement: "Stay Until Correct". So if wrong, show error but let them try again?
-        // Or show error state and require them to click "Try Again"?
-        // Let's stick to the current UI: Show result. If wrong, "Continue" button could be "Try Again" or just let them click another option.
-        // For now, let's keep it simple: If wrong, they see red. They must click "Continue" to reset state for SAME question?
-        // Actually, "Stay Until Correct" usually means:
-        // 1. Click option.
-        // 2. If wrong, shake/red, but don't reveal answer or lock state.
-        // 3. If correct, lock state and show success.
+
+        const correctMeaning = typeof currentQuestion.word.meaning === 'string'
+            ? currentQuestion.word.meaning
+            : currentQuestion.word.meaning.en;
+
+        const correct = option === correctMeaning;
 
         if (isPracticeMode) {
-            const correct = option === currentQuestion.word.meaning;
             if (correct) {
                 setIsAnswered(true);
                 setIsCorrect(true);
@@ -60,7 +57,6 @@ export const QuizEngine = ({ questions, levelId, isPracticeMode = false, onPract
 
         // Normal Mode
         if (isAnswered) return;
-        const correct = option === currentQuestion.word.meaning;
         setIsAnswered(true);
         setIsCorrect(correct);
 
@@ -81,6 +77,7 @@ export const QuizEngine = ({ questions, levelId, isPracticeMode = false, onPract
             }
             setIsAnswered(false);
             setIsCorrect(false);
+            setShowHint(false);
             playSnap();
             return;
         }
@@ -104,6 +101,7 @@ export const QuizEngine = ({ questions, levelId, isPracticeMode = false, onPract
             setCurrentIndex(prev => prev + 1);
             setIsAnswered(false);
             setIsCorrect(false);
+            setShowHint(false);
             playSnap();
         }
     };
@@ -132,13 +130,38 @@ export const QuizEngine = ({ questions, levelId, isPracticeMode = false, onPract
                         className="w-full"
                     >
                         {/* HEADER */}
-                        <div className="text-center mb-8">
+                        <div className="text-center mb-8 relative">
                             <h2 className="text-2xl font-bold text-slate-800 mb-2">
                                 {currentQuestion.type === 'meaning_match' ? "Choose the meaning" : "Build the word"}
                             </h2>
-                            <div className="inline-block px-4 py-2 bg-indigo-50 text-indigo-700 rounded-xl font-bold text-xl border border-indigo-100">
+                            <div className="inline-block px-4 py-2 bg-indigo-50 text-indigo-700 rounded-xl font-bold text-xl border border-indigo-100 mb-4">
                                 {currentQuestion.word.word}
                             </div>
+
+                            {/* Hint Button */}
+                            {isPracticeMode && (
+                                <div className="mt-2">
+                                    <button
+                                        onClick={() => setShowHint(!showHint)}
+                                        className="text-xs font-bold text-slate-400 hover:text-indigo-600 flex items-center justify-center gap-1 mx-auto transition-colors"
+                                    >
+                                        <span className="bg-slate-100 px-2 py-1 rounded-md">?</span>
+                                        {showHint ? "Hide Hint" : "Show Hint"}
+                                    </button>
+                                    <AnimatePresence>
+                                        {showHint && (
+                                            <motion.div
+                                                initial={{ opacity: 0, height: 0 }}
+                                                animate={{ opacity: 1, height: "auto" }}
+                                                exit={{ opacity: 0, height: 0 }}
+                                                className="text-sm text-slate-600 mt-2 bg-yellow-50 p-3 rounded-lg border border-yellow-100 max-w-xs mx-auto"
+                                            >
+                                                <span className="font-bold">Etymology:</span> {typeof currentQuestion.word.history === 'string' ? currentQuestion.word.history : currentQuestion.word.history.en}
+                                            </motion.div>
+                                        )}
+                                    </AnimatePresence>
+                                </div>
+                            )}
                         </div>
 
                         {/* QUESTION BODY */}
