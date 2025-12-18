@@ -13,20 +13,26 @@ export interface Question {
 }
 
 export const generateLesson = (levelId: string): Question[] => {
-    const level = levels.find(l => l.id === levelId);
-    console.log(`Generating lesson for ${levelId}`, level);
-    if (!level) return [];
+    let targetWords: Word[] = [];
 
-    // 1. Filter words matching the level's topics
-    // If topic is "all", allow all words
-    const targetWords = wordBank.filter(word => {
-        if (level.topics.includes("all")) return true;
-        // Check if word contains any of the level's topics (roots/prefixes)
-        const hasMatch = word.blocks.some(block => level.topics.includes(block.id));
-        if (hasMatch) console.log(`Matched word: ${word.word}`);
-        return hasMatch;
-    });
-    console.log(`Found ${targetWords.length} words for topic ${level.topics}`);
+    if (levelId === "random") {
+        targetWords = wordBank;
+    } else {
+        const level = levels.find(l => l.id === levelId);
+        console.log(`Generating lesson for ${levelId}`, level);
+        if (!level) return [];
+
+        // 1. Filter words matching the level's topics
+        // If topic is "all", allow all words
+        targetWords = wordBank.filter(word => {
+            if (level.topics.includes("all")) return true;
+            // Check if word contains any of the level's topics (roots/prefixes)
+            const hasMatch = word.blocks.some(block => level.topics.includes(block.id));
+            if (hasMatch) console.log(`Matched word: ${word.word}`);
+            return hasMatch;
+        });
+        console.log(`Found ${targetWords.length} words for topic ${level.topics}`);
+    }
 
     // 2. Select a subset of words (e.g., 5 random words)
     const selectedWords = targetWords.sort(() => 0.5 - Math.random()).slice(0, 5);

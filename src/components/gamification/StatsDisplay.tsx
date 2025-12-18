@@ -59,7 +59,7 @@ export function StatsDisplay({ isOpen, onClose }: StatsDisplayProps) {
                             <div className="grid grid-cols-2 gap-4">
                                 {/* XP Card */}
                                 <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100 relative overflow-hidden group">
-                                    <div className="absolute -right-4 -bottom-4 text-amber-100 group-hover:scale-110 transition-transform">
+                                    <div className="absolute -right-4 -bottom-4 text-amber-100 group-hover:scale-110 transition-transform z-0">
                                         <Zap size={80} />
                                     </div>
                                     <div className="relative z-10">
@@ -72,21 +72,21 @@ export function StatsDisplay({ isOpen, onClose }: StatsDisplayProps) {
                                         </div>
                                     </div>
                                     {/* Progress Bar (Visual only for now) */}
-                                    <div className="mt-3 h-1.5 bg-slate-200 rounded-full overflow-hidden">
+                                    <div className="mt-3 h-1.5 bg-slate-200 rounded-full overflow-hidden relative z-10">
                                         <motion.div
                                             initial={{ width: 0 }}
                                             animate={{ width: `${(xp % 1000) / 10}%` }}
                                             className="h-full bg-amber-400 rounded-full"
                                         />
                                     </div>
-                                    <p className="text-[10px] text-slate-400 mt-1 text-right">
+                                    <p className="text-[10px] text-slate-400 mt-1 text-right relative z-10">
                                         {1000 - (xp % 1000)} to next rank
                                     </p>
                                 </div>
 
                                 {/* Gems Card */}
                                 <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100 relative overflow-hidden group">
-                                    <div className="absolute -right-4 -bottom-4 text-cyan-100 group-hover:scale-110 transition-transform">
+                                    <div className="absolute -right-4 -bottom-4 text-cyan-100 group-hover:scale-110 transition-transform z-0">
                                         <Gem size={80} />
                                     </div>
                                     <div className="relative z-10">
