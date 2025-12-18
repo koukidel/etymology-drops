@@ -5,22 +5,40 @@ import { BottomNav } from "@/components/layout/BottomNav";
 import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useGameStore } from "@/store/useGameStore";
-import { OnboardingSlides } from "@/components/onboarding/OnboardingSlides";
+import { Onboarding } from "@/components/onboarding/Onboarding";
+import { SimplePaywall } from "@/components/SimplePaywall";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
   const { t } = useTranslation();
-  const { hasSeenOnboarding } = useGameStore();
+  const {
+    hasSeenOnboarding,
+    completeOnboarding,
+    showPaywall,
+    paywallTrigger,
+    setShowPaywall,
+    checkPaywallTrigger
+  } = useGameStore();
+
   const [isMounted, setIsMounted] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     setIsMounted(true);
-  }, []);
+    // Check paywall trigger on mount (e.g. if user refreshed after hitting limit)
+    if (hasSeenOnboarding) {
+      checkPaywallTrigger();
+    }
+  }, [hasSeenOnboarding, checkPaywallTrigger]);
 
   if (!isMounted) return null; // Prevent hydration mismatch
 
   if (!hasSeenOnboarding) {
-    return <OnboardingSlides />;
+    return <Onboarding onComplete={() => {
+      completeOnboarding();
+      router.push('/lesson/precept');
+    }} />;
   }
 
   return (
@@ -52,6 +70,14 @@ export default function Home() {
       </div>
 
       <BottomNav />
+
+      {/* Paywall Modal */}
+      {showPaywall && paywallTrigger && (
+        <SimplePaywall
+          onClose={() => setShowPaywall(false)}
+          trigger={paywallTrigger}
+        />
+      )}
     </main>
   );
 }

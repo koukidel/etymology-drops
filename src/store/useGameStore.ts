@@ -31,8 +31,36 @@ interface GameState {
 
     // Freemium
     isPremium: boolean;
+    showPaywall: boolean;
+    paywallTrigger: 'word_limit' | 'locked_root' | 'manual' | null;
+
     setPremium: (status: boolean) => void;
-    canUnlockWord: () => boolean;
+    setShowPaywall: (show: boolean, trigger?: 'word_limit' | 'locked_root' | 'manual') => void;
+    checkPaywallTrigger: () => boolean;
+
+    // Gamification & Social
+    achievements: import('@/data/types').Achievement[];
+    unlockAchievement: (id: string) => void;
+
+    notifications: import('@/data/types').Notification[];
+    addNotification: (notification: Omit<import('@/data/types').Notification, 'id'>) => void;
+    removeNotification: (id: string) => void;
+
+    lastRewardDate: string | null;
+    claimDailyReward: () => void;
+
+    referralCode: string | null;
+    referralsCount: number;
+    generateReferralCode: () => void;
+
+    // Gacha & Inventory
+    inventory: {
+        shields: number;
+        customParts: string[];
+        stories: string[];
+    };
+    spendGems: (amount: number) => boolean;
+    addItem: (type: 'shield' | 'part' | 'story', id?: string) => void;
 }
 
 export const useGameStore = create<GameState>()(
@@ -119,12 +147,99 @@ export const useGameStore = create<GameState>()(
             completeOnboarding: () => set({ hasSeenOnboarding: true }),
 
             isPremium: false,
+            showPaywall: false,
+            paywallTrigger: null,
+
             setPremium: (status) => set({ isPremium: status }),
-            canUnlockWord: () => {
+            setShowPaywall: (show, trigger) => set({ showPaywall: show, paywallTrigger: trigger || null }),
+
+            checkPaywallTrigger: () => {
                 const state = get();
-                if (state.isPremium) return true;
-                return state.unlockedWords.length < 25;
+                if (state.isPremium) return false;
+
+                if (state.unlockedWords.length >= 25) {
+                    set({ showPaywall: true, paywallTrigger: 'word_limit' });
+                    return true;
+                }
+                return false;
             },
+
+            // Gamification Implementation
+            achievements: [],
+            unlockAchievement: (id) => set((state) => {
+                if (state.achievements.find(a => a.id === id)) return {};
+                // In a real app, we'd look up achievement details from a static list
+                const newAchievement = {
+                    id,
+                    title: "Achievement Unlocked",
+                    description: "You did something cool!",
+                    icon: "🏆",
+                    unlockedAt: new Date().toISOString()
+                };
+                return {
+                    achievements: [...state.achievements, newAchievement],
+                    notifications: [...state.notifications, {
+                        id: Date.now().toString(),
+                        title: "Achievement Unlocked!",
+                        message: newAchievement.description,
+                        type: 'achievement',
+                        icon: newAchievement.icon
+                    }]
+                };
+            }),
+
+            notifications: [],
+            addNotification: (notification) => set((state) => ({
+                notifications: [...state.notifications, { ...notification, id: Date.now().toString() }]
+            })),
+            removeNotification: (id) => set((state) => ({
+                notifications: state.notifications.filter(n => n.id !== id)
+            })),
+
+            lastRewardDate: null,
+            claimDailyReward: () => set((state) => {
+                const today = new Date().toDateString();
+                if (state.lastRewardDate === today) return {};
+                return {
+                    lastRewardDate: today,
+                    gems: state.gems + 50 + (state.streak * 10), // Simple reward logic
+                    xp: state.xp + 100
+                };
+            }),
+
+            referralCode: null,
+            referralsCount: 0,
+            generateReferralCode: () => set((state) => {
+                if (state.referralCode) return {};
+                return { referralCode: `ETYMO-${Math.random().toString(36).substring(2, 8).toUpperCase()}` };
+            }),
+
+            inventory: { shields: 0, customParts: [], stories: [] },
+
+            spendGems: (amount) => {
+                const state = get();
+                if (state.gems >= amount) {
+                    set({ gems: state.gems - amount });
+                    return true;
+                }
+                return false;
+            },
+
+            addItem: (type, id) => set((state) => {
+                const newInventory = { ...state.inventory };
+                if (type === 'shield') {
+                    newInventory.shields += 1;
+                } else if (type === 'part' && id) {
+                    if (!newInventory.customParts.includes(id)) {
+                        newInventory.customParts.push(id);
+                    }
+                } else if (type === 'story' && id) {
+                    if (!newInventory.stories.includes(id)) {
+                        newInventory.stories.push(id);
+                    }
+                }
+                return { inventory: newInventory };
+            }),
         }),
         {
             name: 'etymology-quest-storage',

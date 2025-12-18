@@ -13,7 +13,7 @@ import { ProficiencyView } from "./views/ProficiencyView";
 // Phase 23 Imports
 import { useGameStore } from "@/store/useGameStore";
 import { wordBank } from "@/data/wordBank";
-import { calculateLootDrop } from "@/lib/gacha";
+import { rollGacha as calculateLootDrop } from "@/lib/gacha";
 import { GachaReveal } from "@/components/rewards/GachaReveal";
 import { CliffhangerModal } from "@/components/rewards/CliffhangerModal";
 import { useTranslation } from "@/hooks/useTranslation";
@@ -110,8 +110,8 @@ export function LessonContainer({ word }: Props) {
         return (
             <>
                 <GachaReveal
-                    loot={loot}
-                    onComplete={() => {
+                    item={loot}
+                    onClose={() => {
                         setShowCliffhanger(true);
                     }}
                 />

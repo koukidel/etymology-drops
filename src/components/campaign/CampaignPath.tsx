@@ -11,13 +11,11 @@ import { useMemo, useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslation } from "@/hooks/useTranslation";
 import { PremiumModal } from "@/components/PremiumModal";
+import { WordCard } from "@/components/campaign/WordCard";
 
 export const CampaignPath = () => {
     const router = useRouter();
-    const { unlockedWords, masteredWords, unlockLevel, unlockedLevels, canUnlockWord } = useGameStore();
-    const [selectedLevel, setSelectedLevel] = useState<string | null>(null);
-    const [showPremiumModal, setShowPremiumModal] = useState(false);
-    const scrollContainerRef = useRef<HTMLDivElement>(null);
+    const { unlockedWords, masteredWords, checkPaywallTrigger } = useGameStore();
     const { language } = useTranslation();
 
     // Calculate current level index based on last unlocked word in the sequence
@@ -53,77 +51,16 @@ export const CampaignPath = () => {
                 const title = typeof level.title === 'string' ? level.title : level.title[language];
 
                 return (
-                    <div key={level.id} className="relative z-10 mb-16 w-full flex justify-center">
-                        <Link
-                            href={isUnlocked ? `/lesson/${level.id}` : "#"}
-                            onClick={(e) => {
-                                if (isUnlocked && !canUnlockWord()) {
-                                    e.preventDefault();
-                                    setShowPremiumModal(true);
-                                }
-                            }}
-                            className={`
-                                relative group flex flex-col items-center justify-center
-                                w-24 h-24 rounded-full border-4 shadow-xl transition-all duration-300
-                                ${isActive
-                                    ? "bg-indigo-600 border-white ring-4 ring-indigo-200 scale-110 cursor-pointer hover:scale-115"
-                                    : isCompleted
-                                        ? "bg-emerald-500 border-white cursor-pointer"
-                                        : "bg-slate-200 border-slate-300 cursor-not-allowed grayscale"
-                                }
-                            `}
-                        >
-                            {/* Icon / Number */}
-                            {isCompleted ? (
-                                <Check size={32} className="text-white" />
-                            ) : isActive ? (
-                                <Play size={32} className="text-white fill-white ml-1" />
-                            ) : (
-                                <Lock size={24} className="text-slate-400" />
-                            )}
-
-                            {/* Floating Label */}
-                            <div className={`
-                                absolute top-full mt-3 px-4 py-1.5 rounded-full text-xs font-black tracking-widest uppercase shadow-sm border
-                                ${isActive
-                                    ? "bg-indigo-100 text-indigo-700 border-indigo-200"
-                                    : isUnlocked
-                                        ? "bg-white text-slate-600 border-slate-200"
-                                        : "bg-slate-100 text-slate-400 border-slate-200"
-                                }
-                            `}>
-                                {level.label}
-                            </div>
-
-                            {/* Pulsing Effect for Active */}
-                            {isActive && (
-                                <span className="absolute inset-0 rounded-full animate-ping bg-indigo-500 opacity-20 duration-1000" />
-                            )}
-                        </Link>
-
-                        {/* Level Title (Side Tooltip) */}
-                        {isActive && (
-                            <motion.div
-                                initial={{ opacity: 0, x: 20 }}
-                                animate={{ opacity: 1, x: 50 }}
-                                className="absolute left-1/2 bg-slate-900 text-white text-sm font-bold px-4 py-2 rounded-xl arrow-left whitespace-nowrap hidden sm:block"
-                            >
-                                {title}
-                                <button
-                                    onClick={() => {
-                                        if (!canUnlockWord()) {
-                                            setShowPremiumModal(true);
-                                            return;
-                                        }
-                                        router.push(`/lesson/${level.id}`);
-                                    }}
-                                    className="ml-2 p-1 bg-indigo-500 rounded-full hover:bg-indigo-400 transition-colors inline-flex items-center justify-center"
-                                >
-                                    <Play size={12} fill="currentColor" />
-                                </button>
-                            </motion.div>
-                        )}
-                    </div>
+                    <WordCard
+                        key={level.id}
+                        id={level.id}
+                        label={level.label}
+                        title={title}
+                        isUnlocked={isUnlocked}
+                        isCompleted={isCompleted}
+                        isActive={isActive}
+                        index={index}
+                    />
                 );
             })}
 
@@ -151,10 +88,7 @@ export const CampaignPath = () => {
                 </div>
             </motion.button>
             {/* Premium Modal */}
-            <PremiumModal
-                isOpen={showPremiumModal}
-                onClose={() => setShowPremiumModal(false)}
-            />
+            <PremiumModal />
         </div>
     );
 };

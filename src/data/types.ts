@@ -42,3 +42,19 @@ export interface Word {
     icon?: string; // Lucide icon name
     bossChallenges?: BossChallenge[];
 }
+
+export interface Achievement {
+    id: string;
+    title: string;
+    description: string;
+    icon: string;
+    unlockedAt?: string;
+}
+
+export interface Notification {
+    id: string;
+    title: string;
+    message: string;
+    type: 'achievement' | 'info' | 'reward';
+    icon?: string;
+}

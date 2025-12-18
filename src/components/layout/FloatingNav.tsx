@@ -3,9 +3,12 @@
 import { Home, Settings } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useState } from "react";
+import { StatsDisplay } from "@/components/gamification/StatsDisplay";
 
 export function FloatingNav() {
     const pathname = usePathname();
+    const [showStats, setShowStats] = useState(false);
 
     // Hide on immersive pages (lessons, etc)
     if (pathname.startsWith("/lesson") || pathname.startsWith("/master") || pathname.startsWith("/speedrun") || pathname.startsWith("/verdict") || pathname.startsWith("/forge")) {
@@ -23,7 +26,10 @@ export function FloatingNav() {
 
                 {/* The "N" Brand Button (Center Stage) */}
                 <div className="w-px h-6 bg-slate-700 mx-2" /> {/* Divider */}
-                <button className="bg-indigo-600 text-white w-10 h-10 rounded-full flex items-center justify-center font-bold shadow-lg shadow-indigo-500/50 hover:scale-110 transition-transform">
+                <button
+                    onClick={() => setShowStats(true)}
+                    className="bg-indigo-600 text-white w-10 h-10 rounded-full flex items-center justify-center font-bold shadow-lg shadow-indigo-500/50 hover:scale-110 transition-transform"
+                >
                     N
                 </button>
                 <div className="w-px h-6 bg-slate-700 mx-2" /> {/* Divider */}
@@ -34,6 +40,8 @@ export function FloatingNav() {
                 </Link>
 
             </div>
+
+            <StatsDisplay isOpen={showStats} onClose={() => setShowStats(false)} />
         </div>
     );
 }

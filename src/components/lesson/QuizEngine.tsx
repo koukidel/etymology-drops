@@ -15,10 +15,12 @@ import { BuilderQuestion } from "./BuilderQuestion";
 
 interface QuizEngineProps {
     questions: Question[];
-    levelId: string;
+    levelId?: string;
+    isPracticeMode?: boolean;
+    onPracticeNext?: () => void;
 }
 
-export const QuizEngine = ({ questions, levelId }: QuizEngineProps) => {
+export const QuizEngine = ({ questions, levelId, isPracticeMode = false, onPracticeNext }: QuizEngineProps) => {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [isAnswered, setIsAnswered] = useState(false);
     const [isCorrect, setIsCorrect] = useState(false);
@@ -32,8 +34,32 @@ export const QuizEngine = ({ questions, levelId }: QuizEngineProps) => {
     const isLast = currentIndex === questions.length - 1;
 
     const handleOptionSelect = (option: string) => {
-        if (isAnswered) return;
+        if (isAnswered && isCorrect) return; // Prevent changing after correct
+        // In practice mode, allow retrying if wrong? 
+        // Requirement: "Stay Until Correct". So if wrong, show error but let them try again?
+        // Or show error state and require them to click "Try Again"?
+        // Let's stick to the current UI: Show result. If wrong, "Continue" button could be "Try Again" or just let them click another option.
+        // For now, let's keep it simple: If wrong, they see red. They must click "Continue" to reset state for SAME question?
+        // Actually, "Stay Until Correct" usually means:
+        // 1. Click option.
+        // 2. If wrong, shake/red, but don't reveal answer or lock state.
+        // 3. If correct, lock state and show success.
 
+        if (isPracticeMode) {
+            const correct = option === currentQuestion.word.meaning;
+            if (correct) {
+                setIsAnswered(true);
+                setIsCorrect(true);
+                playSuccess();
+            } else {
+                playError();
+                // Optional: Shake animation or toast
+            }
+            return;
+        }
+
+        // Normal Mode
+        if (isAnswered) return;
         const correct = option === currentQuestion.word.meaning;
         setIsAnswered(true);
         setIsCorrect(correct);
@@ -46,14 +72,31 @@ export const QuizEngine = ({ questions, levelId }: QuizEngineProps) => {
     };
 
     const handleNext = () => {
+        if (isPracticeMode) {
+            if (onPracticeNext) {
+                onPracticeNext();
+            } else {
+                // Infinite loop within provided questions?
+                setCurrentIndex(prev => (prev + 1) % questions.length);
+            }
+            setIsAnswered(false);
+            setIsCorrect(false);
+            playSnap();
+            return;
+        }
+
         if (isLast) {
             // Finish Lesson
             playLevelUp();
             addXp(50);
             // Check for story unlock
-            const currentLevel = levels.find(l => l.id === levelId);
-            if (currentLevel?.storyId) {
-                router.push(`/story/${currentLevel.storyId}`);
+            if (levelId) {
+                const currentLevel = levels.find(l => l.id === levelId);
+                if (currentLevel?.storyId) {
+                    router.push(`/story/${currentLevel.storyId}`);
+                } else {
+                    router.push('/path');
+                }
             } else {
                 router.push('/path');
             }
@@ -65,23 +108,18 @@ export const QuizEngine = ({ questions, levelId }: QuizEngineProps) => {
         }
     };
 
-    // Construction Completion Handler (from reusing CraftingTable logic manually)
-    // We will render CraftingTable but we need to know when it's done.
-    // The current CraftingTable handles its own state. 
-    // We might need to wrap it or modify it to accept an `onComplete` prop if it doesn't have one.
-    // Looking at file... it calls `unlockWord` and `incrementStreak`. 
-    // We'll wrap it in a custom view later. For now, let's focus on Meaning Match or a simplified view.
-
     return (
         <div className="w-full max-w-md mx-auto h-full flex flex-col relative">
-            {/* Progress Bar */}
-            <div className="w-full h-2 bg-slate-200 rounded-full mb-8">
-                <motion.div
-                    className="h-full bg-indigo-500 rounded-full"
-                    initial={{ width: 0 }}
-                    animate={{ width: `${((currentIndex) / questions.length) * 100}%` }}
-                />
-            </div>
+            {/* Progress Bar - Hide in Practice Mode or show infinite? */}
+            {!isPracticeMode && (
+                <div className="w-full h-2 bg-slate-200 rounded-full mb-8">
+                    <motion.div
+                        className="h-full bg-indigo-500 rounded-full"
+                        initial={{ width: 0 }}
+                        animate={{ width: `${((currentIndex) / questions.length) * 100}%` }}
+                    />
+                </div>
+            )}
 
             {/* Content Switcher */}
             <div className="flex-1 flex flex-col justify-center">
@@ -108,19 +146,15 @@ export const QuizEngine = ({ questions, levelId }: QuizEngineProps) => {
                             <div className="grid gap-4">
                                 {currentQuestion.options?.map((option) => {
                                     const isSelected = isAnswered && option === currentQuestion.word.meaning;
-                                    const isWrong = isAnswered && !isSelected && option !== currentQuestion.word.meaning; // Simplified logic? No used state to track selection.
-
-                                    // Better logic: We need to know WHICH one user clicked if wrong.
-                                    // For MVP, just show Correct Highlight always if Answered.
 
                                     return (
                                         <button
                                             key={option}
                                             onClick={() => handleOptionSelect(option)}
-                                            disabled={isAnswered}
+                                            disabled={isAnswered && isCorrect} // Only disable if correctly answered
                                             className={clsx(
                                                 "p-4 rounded-xl border-2 text-left transition-all font-medium",
-                                                isAnswered && option === currentQuestion.word.meaning
+                                                isSelected
                                                     ? "bg-green-100 border-green-500 text-green-800"
                                                     : "bg-white border-slate-200 hover:border-slate-300 hover:bg-slate-50 text-slate-700"
                                             )}
@@ -136,6 +170,17 @@ export const QuizEngine = ({ questions, levelId }: QuizEngineProps) => {
                             <BuilderQuestion
                                 word={currentQuestion.word}
                                 onComplete={(success) => {
+                                    if (isPracticeMode) {
+                                        if (success) {
+                                            setIsAnswered(true);
+                                            setIsCorrect(true);
+                                            playSuccess();
+                                        } else {
+                                            playError();
+                                        }
+                                        return;
+                                    }
+
                                     if (isAnswered) return;
                                     setIsAnswered(true);
                                     setIsCorrect(success);
@@ -169,7 +214,7 @@ export const QuizEngine = ({ questions, levelId }: QuizEngineProps) => {
                                 <h3 className={clsx("font-bold text-lg", isCorrect ? "text-green-800" : "text-red-800")}>
                                     {isCorrect ? "Excellent!" : "Not quite..."}
                                 </h3>
-                                {!isCorrect && (
+                                {!isCorrect && !isPracticeMode && (
                                     <p className="text-sm text-red-600">
                                         Correct: {typeof currentQuestion.word.meaning === 'string' ? currentQuestion.word.meaning : currentQuestion.word.meaning.en}
                                     </p>
@@ -184,7 +229,7 @@ export const QuizEngine = ({ questions, levelId }: QuizEngineProps) => {
                                 isCorrect ? "bg-green-500 hover:bg-green-600" : "bg-red-500 hover:bg-red-600"
                             )}
                         >
-                            {isLast ? "Finish" : "Continue"} <ArrowRight size={20} />
+                            {isLast && !isPracticeMode ? "Finish" : "Continue"} <ArrowRight size={20} />
                         </button>
                     </motion.div>
                 )}

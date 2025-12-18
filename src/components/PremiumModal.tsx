@@ -5,15 +5,12 @@ import { Lock, Sparkles, X, CheckCircle2 } from "lucide-react";
 import { useState } from "react";
 import { useGameStore } from "@/store/useGameStore";
 
-interface PremiumModalProps {
-    isOpen: boolean;
-    onClose: () => void;
-}
-
-export function PremiumModal({ isOpen, onClose }: PremiumModalProps) {
+export function PremiumModal() {
     const [email, setEmail] = useState("");
     const [isSubmitted, setIsSubmitted] = useState(false);
-    const { setPremium } = useGameStore();
+    const { setPremium, showPaywall, setShowPaywall } = useGameStore();
+
+    const onClose = () => setShowPaywall(false);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -30,7 +27,7 @@ export function PremiumModal({ isOpen, onClose }: PremiumModalProps) {
 
     return (
         <AnimatePresence>
-            {isOpen && (
+            {showPaywall && (
                 <>
                     <motion.div
                         initial={{ opacity: 0 }}

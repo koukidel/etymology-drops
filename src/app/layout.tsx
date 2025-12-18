@@ -5,6 +5,8 @@ import { LanguageProvider } from "@/contexts/LanguageContext";
 import { BadgeFixer } from "@/components/layout/BadgeFixer";
 import { FloatingNav } from "@/components/layout/FloatingNav";
 import { GlobalNavigation } from "@/components/layout/GlobalNavigation";
+import { AchievementToast } from "@/components/gamification/AchievementToast";
+import { DailyReward } from "@/components/gamification/DailyReward";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -50,6 +52,9 @@ export default function RootLayout({
           {/* This sits outside of <main>, so page content cannot hide it. */}
           <GlobalNavigation />
           <FloatingNav />
+
+          <AchievementToast />
+          <DailyReward />
 
           <main className="relative z-0">
             {children}

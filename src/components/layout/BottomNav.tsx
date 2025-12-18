@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, TreeDeciduous, Hammer, Gavel, Zap, Book } from "lucide-react";
+import { Home, TreeDeciduous, Hammer, Gavel, Zap, Book, Store } from "lucide-react";
 
 import { useTranslation } from "@/hooks/useTranslation";
 
@@ -17,6 +17,8 @@ export function BottomNav() {
 
     const navItems = [
         { href: "/", label: t('nav.path'), icon: Home },
+        { href: "/drill", label: "Drill", icon: Hammer },
+        { href: "/shop", label: "Shop", icon: Store },
         { href: "/dictionary", label: "Codex", icon: Book },
         { href: "/verdict", label: t('nav.law'), icon: Gavel },
         { href: "/speedrun", label: t('nav.run'), icon: Zap },
