@@ -109,12 +109,14 @@ export function LessonContainer({ word }: Props) {
     if (viewIndex === 5 && loot) {
         return (
             <>
-                <GachaReveal
-                    item={loot}
-                    onClose={() => {
-                        setShowCliffhanger(true);
-                    }}
-                />
+                {!showCliffhanger && (
+                    <GachaReveal
+                        item={loot}
+                        onClose={() => {
+                            setShowCliffhanger(true);
+                        }}
+                    />
+                )}
                 {showCliffhanger && (
                     <CliffhangerModal
                         currentRootId={word.id}
