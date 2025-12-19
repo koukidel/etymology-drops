@@ -202,8 +202,9 @@ export const useGameStore = create<GameState>()(
                 if (state.lastRewardDate === today) return {};
                 return {
                     lastRewardDate: today,
-                    gems: state.gems + 50 + (state.streak * 10), // Simple reward logic
-                    xp: state.xp + 100
+                    gems: state.gems + 50 + (state.streak * 10),
+                    xp: state.xp + 100,
+                    streak: state.streak + 1
                 };
             }),
 

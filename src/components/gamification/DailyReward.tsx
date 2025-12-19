@@ -27,8 +27,15 @@ export function DailyReward() {
         }, 1000);
     };
 
-    const days = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
-    const currentDayIndex = new Date().getDay() === 0 ? 6 : new Date().getDay() - 1;
+    const days = [1, 2, 3, 4, 5, 6, 7];
+    // Calculate which day of the cycle we are on (0-6)
+    // If not claimed yet today, current streak is X. We want to show day X+1 as active.
+    // If claimed, streak is X+1. We want to show day X+1 as completed.
+    // Actually, simpler:
+    // We want to show the NEXT 7 days or the CURRENT 7 day cycle.
+    // Let's just show a static 7 day cycle for now, where progress fills up.
+
+    const currentCycleDay = streak % 7;
 
     return (
         <AnimatePresence>
@@ -57,27 +64,28 @@ export function DailyReward() {
                                 <Gift size={40} />
                             </div>
                             <h2 className="text-2xl font-black text-slate-800 mb-2">Daily Login Bonus</h2>
-                            <p className="text-slate-500 text-sm">Keep your streak alive to earn more!</p>
+                            <p className="text-slate-500 text-sm">Day {streak + 1} of your streak!</p>
                         </div>
 
                         {/* Streak Calendar */}
                         <div className="flex justify-between mb-8 px-2">
                             {days.map((day, index) => {
-                                const isPast = index < currentDayIndex;
-                                const isToday = index === currentDayIndex;
+                                const isCompleted = index < currentCycleDay;
+                                const isCurrent = index === currentCycleDay;
+
                                 return (
                                     <div key={index} className="flex flex-col items-center gap-2">
-                                        <div className="text-[10px] font-bold text-slate-400">{day}</div>
+                                        <div className="text-[10px] font-bold text-slate-400">Day {day}</div>
                                         <div className={`
-                                            w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold border-2
-                                            ${isToday
+                                            w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold border-2 transition-all
+                                            ${isCurrent
                                                 ? 'bg-indigo-600 border-indigo-600 text-white shadow-lg shadow-indigo-200 scale-110'
-                                                : isPast
+                                                : isCompleted
                                                     ? 'bg-emerald-100 border-emerald-100 text-emerald-600'
                                                     : 'bg-slate-50 border-slate-100 text-slate-300'
                                             }
                                         `}>
-                                            {isPast ? <Check size={14} /> : (index + 1)}
+                                            {isCompleted ? <Check size={14} /> : (isCurrent ? <Gift size={14} /> : day)}
                                         </div>
                                     </div>
                                 );
