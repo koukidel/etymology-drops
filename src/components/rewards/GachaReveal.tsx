@@ -3,6 +3,8 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { GachaItem } from "@/lib/gacha";
 import { Sparkles, X } from "lucide-react";
+import { createPortal } from "react-dom";
+import { useState, useEffect } from "react";
 
 interface GachaRevealProps {
     item: GachaItem | null;
@@ -10,9 +12,16 @@ interface GachaRevealProps {
 }
 
 export function GachaReveal({ item, onClose }: GachaRevealProps) {
-    if (!item) return null;
+    const [mounted, setMounted] = useState(false);
 
-    return (
+    useEffect(() => {
+        setMounted(true);
+        return () => setMounted(false);
+    }, []);
+
+    if (!item || !mounted) return null;
+
+    return createPortal(
         <div className="fixed inset-0 z-[1000] flex items-center justify-center p-4">
             {/* Backdrop */}
             <motion.div
@@ -72,11 +81,12 @@ export function GachaReveal({ item, onClose }: GachaRevealProps) {
                 {/* Close Button */}
                 <button
                     onClick={onClose}
-                    className="mt-8 bg-white text-slate-900 px-8 py-3 rounded-full font-bold shadow-lg hover:scale-105 active:scale-95 transition-all flex items-center gap-2"
+                    className="mt-8 bg-white text-slate-900 px-8 py-3 rounded-full font-bold shadow-lg hover:scale-105 active:scale-95 transition-all flex items-center gap-2 cursor-pointer z-50"
                 >
                     Collect <Sparkles size={16} />
                 </button>
             </motion.div>
-        </div>
+        </div>,
+        document.body
     );
 }
