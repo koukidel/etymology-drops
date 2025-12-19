@@ -50,7 +50,7 @@ export default function RootLayout({
 
           {/* === Global Navigation === */}
           {/* This sits outside of <main>, so page content cannot hide it. */}
-          <GlobalNavigation />
+          {/* <GlobalNavigation /> - Removed as per user request */}
           <FloatingNav />
 
           <AchievementToast />
