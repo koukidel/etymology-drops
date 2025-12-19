@@ -51,8 +51,8 @@ export default function DrillPage() {
                         <Hammer size={20} />
                     </div>
                     <div>
-                        <h1 className="text-xl font-bold text-slate-900">Drill Mode</h1>
-                        <p className="text-xs text-slate-500 font-medium">Stress-free practice</p>
+                        <h1 className="text-xl font-bold text-slate-900">{t('drill.title')}</h1>
+                        <p className="text-xs text-slate-500 font-medium">{t('drill.subtitle')}</p>
                     </div>
                 </div>
             </header>

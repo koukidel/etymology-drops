@@ -6,8 +6,10 @@ import { useState, useMemo } from "react";
 import Link from "next/link";
 import { ArrowLeft, Book, Search, X, ChevronRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTranslation } from "@/hooks/useTranslation";
 
 export default function DictionaryPage() {
+    const { t } = useTranslation();
     const [filter, setFilter] = useState<'all' | 'prefix' | 'root' | 'suffix'>('all');
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedBlock, setSelectedBlock] = useState<Block | null>(null);
@@ -51,7 +53,7 @@ export default function DictionaryPage() {
                     <div className="flex-1">
                         <h1 className="text-xl font-bold flex items-center gap-2">
                             <Book className="text-indigo-600" />
-                            The Codex
+                            {t('codex.title')}
                         </h1>
                     </div>
                 </div>
@@ -61,7 +63,7 @@ export default function DictionaryPage() {
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
                     <input
                         type="text"
-                        placeholder="Search roots, prefixes..."
+                        placeholder={t('codex.search_placeholder')}
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                         className="w-full pl-10 pr-4 py-3 bg-slate-100 rounded-xl border-none focus:ring-2 focus:ring-indigo-500 outline-none font-medium"
@@ -160,7 +162,7 @@ export default function DictionaryPage() {
                             {/* Modal Content */}
                             <div className="flex-1 overflow-y-auto p-6">
                                 <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4">
-                                    Found in {relatedWords.length} Words
+                                    {t('codex.related_words')} ({relatedWords.length})
                                 </h3>
                                 <div className="space-y-3">
                                     {relatedWords.map((word) => (

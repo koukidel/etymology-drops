@@ -59,5 +59,51 @@ export const ja = {
     "paywall.footer": "今週ローンチ。スパムなし、いつでも登録解除可能。",
     "paywall.success.title": "リストに追加されました！ 🎉",
     "paywall.success.message": "50%割引を確保しました。受信トレイをチェックしてください！",
-    "paywall.success.closing": "自動的に閉じます..."
+    "paywall.success.closing": "自動的に閉じます...",
+
+    // Drill (Infinite Practice)
+    "drill.title": "無限ドリル",
+    "drill.subtitle": "終わりのない練習",
+    "drill.start": "ドリル開始",
+    "drill.correct": "正解！",
+    "drill.incorrect": "不正解...",
+    "drill.streak": "連続正解",
+    "drill.best_streak": "最高記録",
+
+    // Shop (Market)
+    "shop.title": "マーケット",
+    "shop.subtitle": "冒険の道具屋",
+    "shop.gems": "ジェム",
+    "shop.buy": "購入",
+    "shop.owned": "所持済み",
+    "shop.not_enough_gems": "ジェムが足りません",
+    "shop.item.shield": "ストリークシールド",
+    "shop.item.shield.desc": "1日休んでもストリークが維持されます。",
+    "shop.item.gacha": "ガチャチケット",
+    "shop.item.gacha.desc": "レアアイテムを獲得できるチャンス。",
+
+    // Craft (Forge)
+    "craft.title": "鍛冶場",
+    "craft.subtitle": "言葉を創り出す",
+    "craft.create": "作成",
+    "craft.my_creations": "私の作品",
+    "craft.input_placeholder": "新しい単語を入力...",
+    "craft.definition_placeholder": "定義を入力...",
+    "craft.parts_placeholder": "パーツ (カンマ区切り)...",
+
+    // Codex (Dictionary)
+    "codex.title": "コーデックス",
+    "codex.subtitle": "全知の辞書",
+    "codex.search_placeholder": "語源、単語を検索...",
+    "codex.root": "語根",
+    "codex.meaning": "意味",
+    "codex.related_words": "関連語",
+
+    // Verdict (Law)
+    "verdict.title": "評決の間",
+    "verdict.subtitle": "正義を下せ",
+    "verdict.intro": "あなたは裁判官です。語源の知識を使って正しい判決を下してください。",
+    "verdict.guilty": "有罪",
+    "verdict.innocent": "無罪",
+    "verdict.next_case": "次の事件"
 };

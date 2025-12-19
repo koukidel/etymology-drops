@@ -59,5 +59,51 @@ export const en = {
     "paywall.footer": "Launching this week. No spam, unsubscribe anytime.",
     "paywall.success.title": "You're on the list! 🎉",
     "paywall.success.message": "We've secured your 50% discount. Keep an eye on your inbox!",
-    "paywall.success.closing": "Closing automatically..."
+    "paywall.success.closing": "Closing automatically...",
+
+    // Drill (Infinite Practice)
+    "drill.title": "Infinite Drill",
+    "drill.subtitle": "Endless Practice",
+    "drill.start": "Start Drill",
+    "drill.correct": "Correct!",
+    "drill.incorrect": "Incorrect...",
+    "drill.streak": "Streak",
+    "drill.best_streak": "Best Streak",
+
+    // Shop (Market)
+    "shop.title": "Marketplace",
+    "shop.subtitle": "Tools for the Adventure",
+    "shop.gems": "Gems",
+    "shop.buy": "Buy",
+    "shop.owned": "Owned",
+    "shop.not_enough_gems": "Not enough gems",
+    "shop.item.shield": "Streak Shield",
+    "shop.item.shield.desc": "Protects your streak for one missed day.",
+    "shop.item.gacha": "Gacha Ticket",
+    "shop.item.gacha.desc": "A chance to win rare items.",
+
+    // Craft (Forge)
+    "craft.title": "The Forge",
+    "craft.subtitle": "Craft New Words",
+    "craft.create": "Create",
+    "craft.my_creations": "My Creations",
+    "craft.input_placeholder": "Enter new word...",
+    "craft.definition_placeholder": "Enter definition...",
+    "craft.parts_placeholder": "Parts (comma separated)...",
+
+    // Codex (Dictionary)
+    "codex.title": "The Codex",
+    "codex.subtitle": "Dictionary of All Knowledge",
+    "codex.search_placeholder": "Search roots, words...",
+    "codex.root": "Root",
+    "codex.meaning": "Meaning",
+    "codex.related_words": "Related Words",
+
+    // Verdict (Law)
+    "verdict.title": "Chamber of Verdict",
+    "verdict.subtitle": "Deliver Justice",
+    "verdict.intro": "You are the judge. Use your etymological knowledge to deliver the correct verdict.",
+    "verdict.guilty": "Guilty",
+    "verdict.innocent": "Innocent",
+    "verdict.next_case": "Next Case"
 };

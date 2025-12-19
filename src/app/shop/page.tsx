@@ -7,8 +7,10 @@ import { GachaReveal } from "@/components/rewards/GachaReveal";
 import { BottomNav } from "@/components/layout/BottomNav";
 import { Store, Gem, Shield, Puzzle, BookOpen, Sparkles } from "lucide-react";
 import { AnimatePresence } from "framer-motion";
+import { useTranslation } from "@/hooks/useTranslation";
 
 export default function ShopPage() {
+    const { t } = useTranslation();
     const { gems, spendGems, addItem, inventory } = useGameStore();
     const [revealedItem, setRevealedItem] = useState<GachaItem | null>(null);
 
@@ -18,7 +20,7 @@ export default function ShopPage() {
             addItem(item.type, item.id);
             setRevealedItem(item);
         } else {
-            alert("Not enough gems!");
+            alert(t('shop.not_enough_gems'));
         }
     };
 
@@ -31,8 +33,8 @@ export default function ShopPage() {
                         <Store size={20} />
                     </div>
                     <div>
-                        <h1 className="text-xl font-bold text-slate-900">Market</h1>
-                        <p className="text-xs text-slate-500 font-medium">Spend your gems</p>
+                        <h1 className="text-xl font-bold text-slate-900">{t('shop.title')}</h1>
+                        <p className="text-xs text-slate-500 font-medium">{t('shop.subtitle')}</p>
                     </div>
                 </div>
                 <div className="flex items-center gap-2 bg-slate-100 px-3 py-1.5 rounded-full border border-slate-200">
@@ -49,11 +51,11 @@ export default function ShopPage() {
                     <div className="relative z-10">
                         <div className="inline-flex items-center gap-1 bg-white/20 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest mb-4">
                             <Sparkles size={12} />
-                            <span>Mystery Box</span>
+                            <span>{t('shop.item.gacha')}</span>
                         </div>
-                        <h2 className="text-2xl font-black mb-2">Unlock Rare Loot</h2>
+                        <h2 className="text-2xl font-black mb-2">{t('shop.item.gacha.desc')}</h2>
                         <p className="text-indigo-100 text-sm mb-6 max-w-[80%]">
-                            Get exclusive word parts, streak shields, and legendary stories.
+                            {t('shop.subtitle')}
                         </p>
 
                         <button
@@ -61,7 +63,7 @@ export default function ShopPage() {
                             disabled={gems < 50}
                             className="w-full bg-white text-indigo-600 py-3 rounded-xl font-black shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                         >
-                            <span>Pull for 50</span>
+                            <span>{t('shop.buy')} (50)</span>
                             <Gem size={16} />
                         </button>
                     </div>
@@ -70,7 +72,7 @@ export default function ShopPage() {
                 {/* Inventory */}
                 <div>
                     <h3 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
-                        Your Inventory
+                        {t('shop.owned')}
                     </h3>
                     <div className="grid grid-cols-2 gap-4">
                         {/* Shields */}
@@ -79,7 +81,7 @@ export default function ShopPage() {
                                 <Shield size={24} />
                             </div>
                             <div className="text-2xl font-black text-slate-900">{inventory.shields}</div>
-                            <div className="text-xs font-bold text-slate-400 uppercase">Shields</div>
+                            <div className="text-xs font-bold text-slate-400 uppercase">{t('shop.item.shield')}</div>
                         </div>
 
                         {/* Parts */}
@@ -88,7 +90,7 @@ export default function ShopPage() {
                                 <Puzzle size={24} />
                             </div>
                             <div className="text-2xl font-black text-slate-900">{inventory.customParts.length}</div>
-                            <div className="text-xs font-bold text-slate-400 uppercase">Parts</div>
+                            <div className="text-xs font-bold text-slate-400 uppercase">{t('craft.title')}</div>
                         </div>
 
                         {/* Stories */}
@@ -97,8 +99,8 @@ export default function ShopPage() {
                                 <BookOpen size={24} />
                             </div>
                             <div>
-                                <div className="text-lg font-black text-slate-900">{inventory.stories.length} Stories</div>
-                                <div className="text-xs text-slate-500">Unlocked from the archives</div>
+                                <div className="text-lg font-black text-slate-900">{inventory.stories.length} {t('lesson.priming.origin_story')}</div>
+                                <div className="text-xs text-slate-500">{t('shop.owned')}</div>
                             </div>
                         </div>
                     </div>
