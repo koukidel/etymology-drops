@@ -3,6 +3,8 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { Sparkles, X, Check, Mail, CheckCircle2 } from "lucide-react";
 import { useState } from "react";
+import { db } from "@/lib/firebase";
+import { collection, addDoc } from "firebase/firestore";
 
 import { useTranslation } from "@/hooks/useTranslation";
 
@@ -34,14 +36,24 @@ export function SimplePaywall({ onClose, trigger }: SimplePaywallProps) {
 
         setIsLoading(true);
 
-        // Simulate API call
-        console.log('Email captured:', email, 'Trigger:', trigger);
+        try {
+            // Save to Firestore
+            await addDoc(collection(db, "waitlist"), {
+                email,
+                trigger,
+                timestamp: new Date(),
+                userAgent: navigator.userAgent
+            });
 
-        setTimeout(() => {
-            setIsLoading(false);
+            console.log('Email saved to Firebase:', email);
             setIsSubmitted(true);
             setTimeout(() => onClose(), 2000);
-        }, 1500);
+        } catch (error) {
+            console.error("Error adding document: ", error);
+            alert("Something went wrong. Please try again.");
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (
