@@ -55,6 +55,19 @@ export default function ProfilePage() {
                     </div>
                     <span className="text-slate-400">&rarr;</span>
                 </Link>
+
+                {/* Reset Progress Button */}
+                <button
+                    onClick={() => {
+                        if (confirm("Are you sure you want to reset all progress? This cannot be undone.")) {
+                            useGameStore.getState().resetProgress();
+                            window.location.reload();
+                        }
+                    }}
+                    className="w-full p-4 bg-red-50 text-red-600 rounded-xl border border-red-100 hover:bg-red-100 transition-colors font-bold text-sm flex items-center justify-center gap-2"
+                >
+                    Reset Progress (Start Over)
+                </button>
             </div>
         </main>
     );
