@@ -10,7 +10,7 @@ import { useGameStore } from "@/store/useGameStore";
 import { useMemo, useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslation } from "@/hooks/useTranslation";
-import { PremiumModal } from "@/components/PremiumModal";
+// import { PremiumModal } from "@/components/PremiumModal";
 import { WordCard } from "@/components/campaign/WordCard";
 
 export const CampaignPath = () => {
@@ -87,8 +87,7 @@ export const CampaignPath = () => {
                     Grand Master
                 </div>
             </motion.button>
-            {/* Premium Modal */}
-            <PremiumModal />
+            {/* Premium Modal Removed - Handled in page.tsx */}
         </div>
     );
 };
