@@ -3,6 +3,8 @@
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import cliffhangers from "@/data/cliffhangers.json";
+import { useGameStore } from "@/store/useGameStore";
+import { CAMPAIGN_LEVELS } from "@/data/campaignLevels";
 
 interface Props {
     currentRootId: string;
@@ -15,6 +17,7 @@ import { useTranslation } from "@/hooks/useTranslation";
 export function CliffhangerModal({ currentRootId, nextLessonId, onClose }: Props) {
     const [isDecrypted, setIsDecrypted] = useState(false);
     const { t } = useTranslation();
+    const { isPremium, setShowPaywall } = useGameStore();
 
     // Find the teaser. Does the prompt say "Next Root" is determined by list? 
     // Yes. For now, let's just grab a random one or specific if mapped.
@@ -33,7 +36,7 @@ export function CliffhangerModal({ currentRootId, nextLessonId, onClose }: Props
     }, []);
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/80 backdrop-blur-sm">
+        <div className="fixed inset-0 z-[1000] flex items-center justify-center p-6 bg-black/80 backdrop-blur-sm">
             <motion.div
                 initial={{ y: 100, opacity: 0, rotate: -2 }}
                 animate={{ y: 0, opacity: 1, rotate: 0 }}
@@ -82,7 +85,16 @@ export function CliffhangerModal({ currentRootId, nextLessonId, onClose }: Props
                     <div className="flex flex-col gap-3">
                         {nextLessonId ? (
                             <button
-                                onClick={() => window.location.href = `/lesson/${nextLessonId}`}
+                                onClick={() => {
+                                    // Check if next lesson is premium
+                                    const nextLevelIndex = CAMPAIGN_LEVELS.findIndex(l => l.id === nextLessonId);
+                                    // If index is 3 ("fer") or higher, it's premium
+                                    if (!isPremium && nextLevelIndex >= 3) {
+                                        setShowPaywall(true, 'word_limit');
+                                    } else {
+                                        window.location.href = `/lesson/${nextLessonId}`;
+                                    }
+                                }}
                                 className="w-full py-4 font-black uppercase tracking-widest bg-red-800 text-white hover:bg-red-900 shadow-lg hover:scale-105 transition-transform flex items-center justify-center gap-2"
                             >
                                 {t('cliffhanger.investigate_now')}

@@ -13,7 +13,7 @@ export function GachaReveal({ item, onClose }: GachaRevealProps) {
     if (!item) return null;
 
     return (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-[1000] flex items-center justify-center p-4">
             {/* Backdrop */}
             <motion.div
                 initial={{ opacity: 0 }}
@@ -37,9 +37,9 @@ export function GachaReveal({ item, onClose }: GachaRevealProps) {
                 <div className="bg-white p-1 rounded-3xl shadow-2xl overflow-hidden w-64 relative">
                     {/* Rarity Glow */}
                     <div className={`absolute inset-0 opacity-20 ${item.rarity === 'legendary' ? 'bg-amber-500' :
-                            item.rarity === 'epic' ? 'bg-purple-500' :
-                                item.rarity === 'rare' ? 'bg-blue-500' :
-                                    'bg-slate-500'
+                        item.rarity === 'epic' ? 'bg-purple-500' :
+                            item.rarity === 'rare' ? 'bg-blue-500' :
+                                'bg-slate-500'
                         }`} />
 
                     <div className="bg-white rounded-[20px] p-6 flex flex-col items-center text-center relative z-10 h-full">
@@ -50,9 +50,9 @@ export function GachaReveal({ item, onClose }: GachaRevealProps) {
 
                         {/* Rarity Badge */}
                         <div className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest mb-2 ${item.rarity === 'legendary' ? 'bg-amber-100 text-amber-600' :
-                                item.rarity === 'epic' ? 'bg-purple-100 text-purple-600' :
-                                    item.rarity === 'rare' ? 'bg-blue-100 text-blue-600' :
-                                        'bg-slate-100 text-slate-600'
+                            item.rarity === 'epic' ? 'bg-purple-100 text-purple-600' :
+                                item.rarity === 'rare' ? 'bg-blue-100 text-blue-600' :
+                                    'bg-slate-100 text-slate-600'
                             }`}>
                             {item.rarity}
                         </div>
