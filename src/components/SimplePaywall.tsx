@@ -4,6 +4,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Sparkles, X, Check, Mail, CheckCircle2 } from "lucide-react";
 import { useState } from "react";
 
+import { useTranslation } from "@/hooks/useTranslation";
+
 interface SimplePaywallProps {
     onClose: () => void;
     trigger: 'word_limit' | 'locked_root' | 'manual';
@@ -13,15 +15,16 @@ export function SimplePaywall({ onClose, trigger }: SimplePaywallProps) {
     const [email, setEmail] = useState("");
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const { t } = useTranslation();
 
     const getHeadline = () => {
         switch (trigger) {
             case 'word_limit':
-                return "You've mastered the free 3 words! 🎯";
+                return t('paywall.headline.word_limit');
             case 'locked_root':
             case 'manual':
             default:
-                return "Unlock the full power of Etymology Drops";
+                return t('paywall.headline.default');
         }
     };
 
@@ -81,9 +84,9 @@ export function SimplePaywall({ onClose, trigger }: SimplePaywallProps) {
                             {getHeadline()}
                         </h2>
                         <div className="inline-flex items-center gap-1.5 bg-white/20 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold text-white border border-white/20">
-                            <span>Early Bird Offer</span>
+                            <span>{t('paywall.early_bird')}</span>
                             <span>•</span>
-                            <span>50% off for email signups</span>
+                            <span>{t('paywall.discount')}</span>
                         </div>
                     </div>
                 </div>
@@ -94,12 +97,12 @@ export function SimplePaywall({ onClose, trigger }: SimplePaywallProps) {
                         <>
                             <div className="space-y-3 mb-8">
                                 {[
-                                    "200+ vocabulary words across 14 root families",
-                                    "Unlimited boss challenges & quizzes",
-                                    "Full etymology timelines (Latin → English)",
-                                    "Progress tracking & achievement system",
-                                    "Priority customer support",
-                                    "No ads, forever"
+                                    t('paywall.feature.vocab'),
+                                    t('paywall.feature.boss'),
+                                    t('paywall.feature.timelines'),
+                                    t('paywall.feature.tracking'),
+                                    t('paywall.feature.support'),
+                                    t('paywall.feature.no_ads')
                                 ].map((feature, i) => (
                                     <div key={i} className="flex items-start gap-3">
                                         <div className="mt-0.5 bg-emerald-100 text-emerald-600 rounded-full p-0.5">
@@ -116,7 +119,7 @@ export function SimplePaywall({ onClose, trigger }: SimplePaywallProps) {
                                     <input
                                         type="email"
                                         required
-                                        placeholder="Enter your email address"
+                                        placeholder={t('paywall.email_placeholder')}
                                         value={email}
                                         onChange={(e) => setEmail(e.target.value)}
                                         className="w-full pl-12 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none transition-all font-medium text-slate-800 placeholder:text-slate-400"
@@ -127,7 +130,7 @@ export function SimplePaywall({ onClose, trigger }: SimplePaywallProps) {
                                     disabled={isLoading}
                                     className="w-full py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-bold text-lg shadow-lg shadow-indigo-200 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-70 disabled:cursor-not-allowed"
                                 >
-                                    {isLoading ? "Processing..." : "Get 50% Off at Launch 🚀"}
+                                    {isLoading ? t('paywall.button.processing') : t('paywall.button.get_offer')}
                                 </button>
                             </form>
 
@@ -136,10 +139,10 @@ export function SimplePaywall({ onClose, trigger }: SimplePaywallProps) {
                                     onClick={onClose}
                                     className="text-sm font-bold text-slate-400 hover:text-slate-600 transition-colors"
                                 >
-                                    Continue with free version
+                                    {t('paywall.continue_free')}
                                 </button>
                                 <p className="text-[10px] text-slate-400">
-                                    Launching this week. No spam, unsubscribe anytime.
+                                    {t('paywall.footer')}
                                 </p>
                             </div>
                         </>
@@ -152,11 +155,11 @@ export function SimplePaywall({ onClose, trigger }: SimplePaywallProps) {
                             >
                                 <CheckCircle2 size={40} />
                             </motion.div>
-                            <h3 className="text-2xl font-black text-slate-900 mb-2">You're on the list! 🎉</h3>
+                            <h3 className="text-2xl font-black text-slate-900 mb-2">{t('paywall.success.title')}</h3>
                             <p className="text-slate-500 mb-6">
-                                We've secured your 50% discount. Keep an eye on your inbox!
+                                {t('paywall.success.message')}
                             </p>
-                            <p className="text-xs text-slate-400">Closing automatically...</p>
+                            <p className="text-xs text-slate-400">{t('paywall.success.closing')}</p>
                         </div>
                     )}
                 </div>

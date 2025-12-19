@@ -157,7 +157,7 @@ export const useGameStore = create<GameState>()(
                 const state = get();
                 if (state.isPremium) return false;
 
-                if (state.unlockedWords.length >= 3) {
+                if (state.masteredWords.length >= 3) {
                     set({ showPaywall: true, paywallTrigger: 'word_limit' });
                     return true;
                 }
