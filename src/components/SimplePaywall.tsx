@@ -17,7 +17,7 @@ export function SimplePaywall({ onClose, trigger }: SimplePaywallProps) {
     const getHeadline = () => {
         switch (trigger) {
             case 'word_limit':
-                return "You've mastered the free 25 words! 🎯";
+                return "You've mastered the free 3 words! 🎯";
             case 'locked_root':
             case 'manual':
             default:
