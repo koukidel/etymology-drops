@@ -34,8 +34,8 @@ export const generateLesson = (levelId: string): Question[] => {
         console.log(`Found ${targetWords.length} words for topic ${level.topics}`);
     }
 
-    // 2. Select a subset of words (e.g., 5 random words)
-    const selectedWords = targetWords.sort(() => 0.5 - Math.random()).slice(0, 5);
+    // 2. Select a subset of words (e.g., 10 random words)
+    const selectedWords = targetWords.sort(() => 0.5 - Math.random()).slice(0, 10);
 
     // 3. Generate questions for these words
     // 3. Generate questions for these words

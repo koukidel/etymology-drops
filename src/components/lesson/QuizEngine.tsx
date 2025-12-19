@@ -69,6 +69,15 @@ export const QuizEngine = ({ questions, levelId, isPracticeMode = false, onPract
 
     const handleNext = () => {
         if (isPracticeMode) {
+            // Check for Paywall Limit (3 questions for free users)
+            const { isPremium, setShowPaywall } = useGameStore.getState();
+            // currentIndex is 0-indexed. So 0, 1, 2 are free. Index 2 is the 3rd question.
+            // When user clicks "Next" on index 2, they are trying to go to index 3 (4th question).
+            if (!isPremium && currentIndex >= 2) {
+                setShowPaywall(true, 'manual'); // Using 'manual' as a generic trigger for now, or add 'drill_limit'
+                return;
+            }
+
             if (onPracticeNext) {
                 onPracticeNext();
             } else {
@@ -101,7 +110,6 @@ export const QuizEngine = ({ questions, levelId, isPracticeMode = false, onPract
             setCurrentIndex(prev => prev + 1);
             setIsAnswered(false);
             setIsCorrect(false);
-            setShowHint(false);
             playSnap();
         }
     };
