@@ -56,7 +56,7 @@ export default function RootLayout({
           <AchievementToast />
           <DailyReward />
 
-          <main className="relative z-0">
+          <main className="relative">
             {children}
           </main>
         </LanguageProvider>

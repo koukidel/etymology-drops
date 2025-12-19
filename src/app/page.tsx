@@ -18,7 +18,8 @@ export default function Home() {
     showPaywall,
     paywallTrigger,
     setShowPaywall,
-    checkPaywallTrigger
+    checkPaywallTrigger,
+    masteredWords
   } = useGameStore();
 
   const [isMounted, setIsMounted] = useState(false);
@@ -27,10 +28,8 @@ export default function Home() {
   useEffect(() => {
     setIsMounted(true);
     // Check paywall trigger on mount (e.g. if user refreshed after hitting limit)
-    if (hasSeenOnboarding) {
-      checkPaywallTrigger();
-    }
-  }, [hasSeenOnboarding, checkPaywallTrigger]);
+    // Removed auto-trigger as per user request. Only trigger on interaction.
+  }, [hasSeenOnboarding]);
 
   if (!isMounted) return null; // Prevent hydration mismatch
 

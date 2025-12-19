@@ -10,6 +10,7 @@ interface GameState {
     audioEnabled: boolean;
 
     unlockWord: (wordId: string) => void;
+    masterWord: (wordId: string) => void;
     addXp: (amount: number) => void;
     incrementStreak: () => void;
     addGems: (amount: number) => void;
@@ -102,12 +103,20 @@ export const useGameStore = create<GameState>()(
             }),
 
             unlockWord: (wordId) => set((state) => {
-                const updates: Partial<GameState> = {};
                 if (!state.unlockedWords.includes(wordId)) {
-                    updates.unlockedWords = [...state.unlockedWords, wordId];
+                    return { unlockedWords: [...state.unlockedWords, wordId] };
                 }
+                return {};
+            }),
+
+            masterWord: (wordId) => set((state) => {
+                const updates: Partial<GameState> = {};
                 if (!state.masteredWords.includes(wordId)) {
                     updates.masteredWords = [...state.masteredWords, wordId];
+                }
+                // Ensure it's also unlocked if mastered
+                if (!state.unlockedWords.includes(wordId)) {
+                    updates.unlockedWords = [...state.unlockedWords, wordId];
                 }
                 return updates;
             }),

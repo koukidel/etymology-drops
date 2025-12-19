@@ -50,7 +50,7 @@ export function LessonContainer({ word }: Props) {
         }
     }, [word, masteredWords]);
 
-    const { unlockWord } = useGameStore();
+    const { unlockWord, masterWord } = useGameStore();
 
     const handleNext = () => {
         if (viewIndex < 4) {
@@ -58,7 +58,7 @@ export function LessonContainer({ word }: Props) {
         } else if (viewIndex === 4) {
             // Constellation Unlocked
             // 1. Mark current word as mastered
-            unlockWord(word.id);
+            masterWord(word.id);
 
             // 3. Unlock Next CAMPAIGN Level (if this is a key node)
             // This ensures the Map progresses even if we have intermediate words.

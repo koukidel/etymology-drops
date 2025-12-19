@@ -16,11 +16,14 @@ interface WordCardProps {
 }
 
 export function WordCard({ id, label, title, isUnlocked, isCompleted, isActive, index }: WordCardProps) {
-    const { checkPaywallTrigger } = useGameStore();
+    const { isPremium, setShowPaywall } = useGameStore();
 
     const handleClick = (e: React.MouseEvent) => {
-        if (isUnlocked && checkPaywallTrigger()) {
+        // Free users can only access the first 3 levels (indices 0, 1, 2)
+        // If they try to access index 3 ("fer") or higher, show paywall
+        if (!isPremium && index >= 3) {
             e.preventDefault();
+            setShowPaywall(true, 'word_limit');
         }
     };
 
