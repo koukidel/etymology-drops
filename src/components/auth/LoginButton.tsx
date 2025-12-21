@@ -9,13 +9,13 @@ import { useGameStore } from "@/store/useGameStore";
 import { useEffect } from "react";
 
 export const LoginButton = () => {
-    const [user, loading] = useAuthState(auth);
+    const [user, loading] = useAuthState(auth as any);
     const { xp, streak, gems, masteredWords, setFromFirestore } = useGameStore();
 
     // Sync user data on login
     useEffect(() => {
         const syncUser = async () => {
-            if (user) {
+            if (user && db) {
                 const userRef = doc(db, "users", user.uid);
                 const userSnap = await getDoc(userRef);
 
@@ -48,6 +48,10 @@ export const LoginButton = () => {
     }, [user]); // Run when user auth state changes
 
     const handleLogin = async () => {
+        if (!auth || !googleProvider) {
+            console.error("Firebase auth not initialized");
+            return;
+        }
         try {
             await signInWithPopup(auth, googleProvider);
         } catch (error) {
@@ -56,6 +60,7 @@ export const LoginButton = () => {
     };
 
     const handleLogout = async () => {
+        if (!auth) return;
         await signOut(auth);
         window.location.reload(); // Simple reload to clear state for now
     };

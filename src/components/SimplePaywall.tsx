@@ -37,6 +37,10 @@ export function SimplePaywall({ onClose, trigger }: SimplePaywallProps) {
         setIsLoading(true);
 
         try {
+            if (!db) {
+                console.error("Firebase db not initialized");
+                return;
+            }
             // Save to Firestore
             await addDoc(collection(db, "waitlist"), {
                 email,

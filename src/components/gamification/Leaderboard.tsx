@@ -17,9 +17,10 @@ interface LeaderboardUser {
 
 export const Leaderboard = ({ userXp }: { userXp: number }) => {
     const [users, setUsers] = useState<LeaderboardUser[]>([]);
-    const [currentUser] = useAuthState(auth);
+    const [currentUser] = useAuthState(auth as any);
 
     useEffect(() => {
+        if (!db) return;
         const q = query(collection(db, "users"), orderBy("xp", "desc"), limit(50));
         const unsubscribe = onSnapshot(q,
             (snapshot) => {
