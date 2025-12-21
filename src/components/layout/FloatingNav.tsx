@@ -16,7 +16,7 @@ export function FloatingNav() {
     }
 
     return (
-        <div className="fixed top-12 left-1/2 -translate-x-1/2 z-[1000]">
+        <div className="fixed top-24 left-1/2 -translate-x-1/2 z-[1000]">
             <div className="flex items-center gap-4 bg-slate-900/90 backdrop-blur-md px-6 py-3 rounded-full border border-slate-700 shadow-2xl">
 
                 {/* Home / Path */}
