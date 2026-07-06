@@ -53,24 +53,24 @@ export function LessonContainer({ word }: Props) {
                 <motion.div
                     initial={{ scale: 0.8, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
-                    className="mb-8 p-4 border border-slate-300 rounded-full"
+                    className="mb-8 p-4 border border-border rounded-full"
                 >
-                    <Check size={32} className="text-slate-900" />
+                    <Check size={32} className="text-foreground" />
                 </motion.div>
-                <p className="text-sm uppercase tracking-widest text-slate-500 mb-2">{t('lesson.complete.title')}</p>
-                <h2 className="font-serif text-5xl text-slate-900 mb-3">{word.word}</h2>
-                <p className="text-slate-500 mb-10">{t('lesson.complete.subtitle')}</p>
+                <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-2">{t('lesson.complete.title')}</p>
+                <h2 className="font-serif text-5xl text-foreground mb-3">{word.word}</h2>
+                <p className="text-muted-foreground mb-10">{t('lesson.complete.subtitle')}</p>
 
                 <div className="flex flex-col items-center gap-4">
                     {nextLessonId && (
                         <Link
                             href={`/lesson/${nextLessonId}`}
-                            className="px-8 py-3 bg-slate-900 text-white rounded-full hover:opacity-90 transition-opacity"
+                            className="px-10 py-3 bg-foreground text-background rounded-full hover:opacity-90 transition-opacity"
                         >
                             {t('lesson.complete.continue')}
                         </Link>
                     )}
-                    <Link href="/" className="text-sm text-slate-500 hover:text-slate-900 transition-colors underline underline-offset-4">
+                    <Link href="/" className="text-sm text-muted-foreground hover:text-foreground transition-colors underline underline-offset-4">
                         {t('lesson.complete.back')}
                     </Link>
                 </div>
@@ -86,11 +86,11 @@ export function LessonContainer({ word }: Props) {
                     <div key={i} className="flex flex-col items-center relative z-10">
                         <div className={`
                             w-8 h-8 rounded-full flex items-center justify-center text-sm transition-colors duration-500
-                            ${i <= viewIndex ? "bg-slate-900 text-white" : "bg-slate-200 text-slate-500"}
+                            ${i <= viewIndex ? "bg-foreground text-background" : "bg-muted text-muted-foreground"}
                         `}>
                             {i < viewIndex ? <Check size={14} /> : i + 1}
                         </div>
-                        <span className={`text-xs mt-2 transition-opacity ${i === viewIndex ? "text-slate-900" : "text-slate-400"}`}>
+                        <span className={`text-xs mt-2 transition-opacity ${i === viewIndex ? "text-foreground" : "text-muted-foreground"}`}>
                             {step}
                         </span>
                     </div>

@@ -16,13 +16,13 @@ export default async function LessonPage({ params }: PageProps) {
     }
 
     return (
-        <main className="min-h-screen h-screen w-screen bg-slate-900 flex items-center justify-center overflow-hidden relative">
-            {/* Exit Button */}
+        <main className="min-h-screen flex items-center justify-center relative">
             <Link
                 href="/"
-                className="absolute top-6 left-6 z-50 p-3 bg-slate-800/80 hover:bg-slate-700 text-slate-400 hover:text-white rounded-full transition-all backdrop-blur-sm"
+                aria-label="Exit lesson"
+                className="absolute top-6 left-6 z-50 p-2 text-muted-foreground hover:text-foreground transition-colors"
             >
-                <X size={24} />
+                <X size={22} />
             </Link>
 
             <LessonContainer word={word} />

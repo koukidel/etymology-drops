@@ -2,103 +2,94 @@
 
 import { useState } from "react";
 import { Word } from "@/data/types";
-// import { DragDropContext, Droppable, Draggable, DropResult } from "@hello-pangea/dnd";
 import { motion } from "framer-motion";
-import { Check } from "lucide-react";
+import { useTranslation } from "@/hooks/useTranslation";
 
 interface Props {
     word: Word;
     onNext: () => void;
 }
 
-import { useTranslation } from "@/hooks/useTranslation";
-
-// For MVP, we "Fake" the matrix logic to just be a simple "Assemble the Root" task.
-// Or we ask them to assemble the prefix + root.
 export function MatrixView({ word, onNext }: Props) {
-    const rootBlock = word.blocks.find(b => b.type === 'root');
-    const prefixes = word.blocks.filter(b => b.type === 'prefix');
     const { t } = useTranslation();
 
-    // Initial State: Blocks are scattered
-    const [assembled, setAssembled] = useState<string[]>([]);
+    const [assembled, setAssembled] = useState<number[]>([]);
+    const [shakeIndex, setShakeIndex] = useState<number | null>(null);
 
-    // We want the user to click or drag the blocks in order: Prefix -> Root.
-    // Let's use simple Click-to-add for mobile friendliness instead of full DnD for this specific "Mini-Matrix".
-    // "Tap the blocks in order to build the word."
+    const handleBlockClick = (blockIndex: number) => {
+        if (assembled.includes(blockIndex)) return;
 
-    const handleBlockClick = (blockLabel: string) => {
-        if (assembled.includes(blockLabel)) return;
+        // Blocks must be assembled in reading order.
+        if (blockIndex !== assembled.length) {
+            setShakeIndex(blockIndex);
+            setTimeout(() => setShakeIndex(null), 400);
+            return;
+        }
 
-        const newAssembled = [...assembled, blockLabel];
+        const newAssembled = [...assembled, blockIndex];
         setAssembled(newAssembled);
 
-        // Check completion
-        const fullWordFromBlocks = word.blocks.map(b => b.label).join('');
-        const currentWord = newAssembled.join('');
-
-        // Simple check: length match? (Order matters?)
-        // Let's just auto-complete if they picked all blocks.
         if (newAssembled.length === word.blocks.length) {
-            setTimeout(onNext, 1000);
+            setTimeout(onNext, 900);
         }
     };
 
     return (
-        <div className="text-center space-y-8">
-            <div className="mb-6">
-                <h2 className="text-2xl font-bold text-slate-900">{t('lesson.matrix.title')}</h2>
-                <p className="text-slate-500">{t('lesson.matrix.instruction')}</p>
+        <div className="text-center space-y-10 max-w-xl mx-auto px-4">
+            <div>
+                <h2 className="font-serif text-2xl text-foreground">{t('lesson.matrix.title')}</h2>
+                <p className="text-sm text-muted-foreground mt-1">{t('lesson.matrix.instruction')}</p>
             </div>
 
             {/* Target Area */}
-            <div className="h-24 bg-slate-100 rounded-2xl flex items-center justify-center gap-2 border-2 border-dashed border-slate-300">
-                {assembled.map((label, i) => (
-                    <motion.div
-                        key={i}
-                        layoutId={label}
-                        initial={{ scale: 0.8, opacity: 0 }}
-                        animate={{ scale: 1, opacity: 1 }}
-                        className="bg-indigo-600 text-white font-bold px-4 py-2 rounded-lg shadow-[0_4px_0_theme(colors.indigo.800)] active:shadow-none active:translate-y-1 transition-all"
+            <div className="h-24 rounded-lg flex items-center justify-center gap-1 border border-dashed border-border">
+                {assembled.map((blockIndex) => (
+                    <motion.span
+                        key={blockIndex}
+                        layoutId={`block-${blockIndex}`}
+                        className="font-serif text-3xl text-foreground"
                     >
-                        {label}
-                    </motion.div>
+                        {word.blocks[blockIndex].label.replace(/-/g, '')}
+                    </motion.span>
                 ))}
                 {assembled.length === 0 && (
-                    <span className="text-slate-400 text-sm">{t('lesson.matrix.tap_blocks')}</span>
+                    <span className="text-sm text-muted-foreground">{t('lesson.matrix.tap_blocks')}</span>
                 )}
             </div>
 
             {/* Source Blocks */}
-            <div className="flex flex-wrap justify-center gap-4">
+            <div className="flex flex-wrap justify-center gap-3">
                 {word.blocks.map((block, i) => {
-                    const isUsed = assembled.includes(block.label);
-                    if (isUsed) return null;
+                    if (assembled.includes(i)) return null;
 
                     return (
                         <motion.button
-                            key={block.id}
-                            layoutId={block.label}
-                            whileHover={{ scale: 1.05, rotate: [-1, 1, 0] }}
-                            whileTap={{ scale: 0.95 }}
-                            onClick={() => handleBlockClick(block.label)}
+                            key={`${block.id}-${i}`}
+                            layoutId={`block-${i}`}
+                            animate={shakeIndex === i ? { x: [0, -6, 6, -4, 4, 0] } : {}}
+                            transition={{ duration: 0.4 }}
+                            onClick={() => handleBlockClick(i)}
                             className={`
-                                px-6 py-3 rounded-xl font-bold shadow-[0_4px_0_rgba(0,0,0,0.1)] border-2 transition-all
+                                px-6 py-3 rounded-lg border bg-card transition-colors font-serif text-xl
                                 ${block.type === 'root'
-                                    ? "bg-amber-100 text-amber-800 border-amber-300 hover:bg-amber-200"
-                                    : "bg-white text-slate-700 border-slate-200 hover:bg-slate-50"
+                                    ? "border-accent/40 text-accent hover:border-accent"
+                                    : "border-border text-foreground hover:border-muted-foreground"
                                 }
                             `}
                         >
-                            {block.label}
-                            {/* Removed cluttery meaning subtitle for cleaner look */}
+                            {block.label.replace(/-/g, '')}
                         </motion.button>
                     );
                 })}
             </div>
 
-            {assembled.length > 0 && (
-                <button onClick={() => setAssembled([])} className="text-sm text-slate-400 hover:text-red-500">{t('lesson.matrix.reset')}</button>
+            {assembled.length > 0 && assembled.length < word.blocks.length && (
+                <button
+                    onClick={() => setAssembled([])}
+                    className="text-sm text-muted-foreground hover:text-foreground transition-colors underline underline-offset-4"
+                >
+                    {t('lesson.matrix.reset')}
+                </button>
             )}
         </div>
     );

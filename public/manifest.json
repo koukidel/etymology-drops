@@ -1,11 +1,11 @@
 {
   "name": "Etymology Drops",
   "short_name": "Drops",
-  "description": "Craft words, discover stories.",
+  "description": "Every word has a story. Learn the hidden histories inside everyday English.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#f8fafc",
-  "theme_color": "#6366f1",
+  "background_color": "#faf7f2",
+  "theme_color": "#faf7f2",
   "icons": [
     {
       "src": "/icon-192.png",
