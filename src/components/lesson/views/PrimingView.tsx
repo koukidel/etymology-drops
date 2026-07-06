@@ -14,6 +14,7 @@ export function PrimingView({ word, onNext }: Props) {
 
     const history = typeof word.history === 'string' ? word.history : word.history[language];
     const meaning = typeof word.meaning === 'string' ? word.meaning : word.meaning[language];
+    const tip = word.tip ? (typeof word.tip === 'string' ? word.tip : word.tip[language]) : null;
 
     return (
         <motion.div
@@ -36,6 +37,17 @@ export function PrimingView({ word, onNext }: Props) {
                     {history}
                 </p>
             </blockquote>
+
+            {tip && (
+                <aside className="border-y border-border py-4 text-left mx-auto max-w-md">
+                    <p className="text-[11px] uppercase tracking-[0.2em] text-accent mb-2">
+                        {t('lesson.tip_label')}
+                    </p>
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                        {tip}
+                    </p>
+                </aside>
+            )}
 
             <button
                 onClick={onNext}

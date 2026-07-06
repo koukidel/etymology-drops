@@ -19,6 +19,10 @@ export const familiarWords: Word[] = [
             { id: "fast", label: "Fast", meaning: { en: "A time without food", ja: "断食" }, type: "root" },
         ],
         icon: "Sunrise",
+        tip: {
+            en: "Scholar James Brown found that just 14 'master words' contain the 20 most useful prefixes and 14 most important roots — parts he estimated appear in over 100,000 dictionary words (Programmed Vocabulary, 1971). You will meet all 14 on this path.",
+            ja: "学者ジェームズ・ブラウンは、わずか14個の「マスターワード」に最も有用な接頭辞20個と最重要語根14個が含まれ、それらの部品は10万語以上の辞書見出し語に現れると推定しました（Programmed Vocabulary, 1971）。この道の途中で、その14語すべてに出会います。",
+        },
         timeline: [
             {
                 year: "900 AD",
@@ -78,6 +82,10 @@ export const familiarWords: Word[] = [
             { id: "bye", label: "Bye", meaning: { en: "'Be with ye'", ja: "「あなたと共にあれ」の短縮" }, type: "root" },
         ],
         icon: "Hand",
+        tip: {
+            en: "A 1942 study of the 20,000 most common English words found that just 15 prefixes account for 82% of all prefix use (Stauffer, Journal of Educational Research). A small toolkit goes a very long way.",
+            ja: "最頻出英単語2万語を調べた1942年の研究では、わずか15個の接頭辞が接頭辞使用全体の82%を占めていました（Stauffer, Journal of Educational Research）。小さな道具箱が、とても遠くまで連れて行ってくれます。",
+        },
     },
     {
         id: "alphabet",
@@ -95,6 +103,10 @@ export const familiarWords: Word[] = [
             { id: "bet", label: "Bet", meaning: { en: "Beta (Β) — the second letter", ja: "2番目の文字ベータ (Β)" }, type: "root" },
         ],
         icon: "Type",
+        tip: {
+            en: "An estimated 60% of English words have Greek or Latin roots — and in science and technology vocabulary the figure rises past 90% (Green, The Greek & Latin Roots of English).",
+            ja: "英単語の推定60%はギリシャ語・ラテン語由来で、科学技術の語彙では90%を超えます（Green, The Greek & Latin Roots of English）。",
+        },
     },
     {
         id: "companion",
@@ -113,6 +125,10 @@ export const familiarWords: Word[] = [
             { id: "ion", label: "Ion", meaning: { en: "Person or thing", ja: "〜する人・もの" }, type: "suffix" },
         ],
         icon: "Users",
+        tip: {
+            en: "Reading researchers estimate that a single Latin or Greek root or affix can aid the understanding of 20 or more English words (Rasinski, Padak, Newton & Newton, 2011).",
+            ja: "読解研究者の推定によれば、ラテン語・ギリシャ語の語根や接辞ひとつが、20語以上の英単語の理解を助けてくれます（Rasinski, Padak, Newton & Newton, 2011）。",
+        },
     },
     {
         id: "window",
@@ -130,6 +146,10 @@ export const familiarWords: Word[] = [
             { id: "ow", label: "Ow", meaning: { en: "From 'auga' — eye", ja: "「目」(古ノルド語 auga) から" }, type: "suffix" },
         ],
         icon: "Wind",
+        tip: {
+            en: "From third grade on, about 60% of the new words a reader meets are built from parts whose meanings can be worked out (Nagy & Anderson, 1984). Most 'new' words are old parts in new clothes.",
+            ja: "小学3年生以降に出会う新出単語の約60%は、意味を推測できる部品からできています（Nagy & Anderson, 1984）。「新しい」単語のほとんどは、古い部品の新しい組み合わせなのです。",
+        },
     },
     {
         id: "muscle",
@@ -147,6 +167,10 @@ export const familiarWords: Word[] = [
             { id: "cle", label: "Cle", meaning: { en: "Little (diminutive)", ja: "小さい（指小辞）" }, type: "suffix" },
         ],
         icon: "Mouse",
+        tip: {
+            en: "Greek made the same joke: mys meant both 'mouse' and 'muscle' — which is why doctors still say myo- for muscle, as in myocarditis.",
+            ja: "ギリシャ語も同じ冗談を言いました。mys は「ネズミ」と「筋肉」の両方を意味し、だから医師は今でも筋肉を myo- と呼びます（myocarditis 心筋炎など）。",
+        },
     },
     {
         id: "salary",
@@ -156,13 +180,17 @@ export const familiarWords: Word[] = [
             ja: "労働の対価として定期的に受け取るお金、給料。",
         },
         history: {
-            en: "From Latin 'salarium', related to 'sal' (salt) — in Rome it named a soldier's allowance, traditionally linked to buying precious salt. To be 'worth your salt' is the same idea.",
-            ja: "ラテン語の 'salarium' から。'sal'（塩）に関係し、ローマ兵の手当を指しました。貴重だった塩を買うためのお金と伝えられています。",
+            en: "From Latin 'salarium', related to 'sal' (salt) — in Rome it named a soldier's allowance. The tale that soldiers were literally paid in salt is a legend, but the salty root is real: to be 'worth your salt' keeps it alive.",
+            ja: "ラテン語の 'salarium' から。'sal'（塩）に関係し、ローマ兵の手当を指しました。「兵士が塩で給料を受け取った」という話は伝説ですが、塩の語根は本物。'worth your salt'（給料に値する）という表現に今も生きています。",
         },
         blocks: [
             { id: "sal", label: "Sal", meaning: { en: "Salt", ja: "塩" }, type: "root" },
             { id: "ary", label: "Ary", meaning: { en: "Connected with", ja: "〜に関する" }, type: "suffix" },
         ],
         icon: "Coins",
+        tip: {
+            en: "Not every good story is true — historians have shown the 'paid in salt' anecdote rests on a misquoted line of Pliny. The etymology stands; the payroll doesn't. Real word history means checking.",
+            ja: "良い物語がすべて真実とは限りません。「塩で給料」の逸話は、プリニウスの一節の誤訳に基づくことが歴史家によって示されています。語源は本物、給与明細は伝説。本当の語源学習には確認が必要です。",
+        },
     },
 ];

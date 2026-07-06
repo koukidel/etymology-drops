@@ -11,6 +11,8 @@ export const en = {
     "onboarding.intro": "The words you use every day carry hidden histories. Learn to take them apart, and you will never see them the same way again.",
     "onboarding.example": "Sleep is the longest fast of your day. Breakfast is the meal that breaks it.",
     "onboarding.begin": "Begin with breakfast",
+    "onboarding.kanji_hook": "You already read words in parts every day.",
+    "lesson.tip_label": "Margin note",
 
     "lesson.steps.priming": "Story",
     "lesson.steps.practice": "Take apart",

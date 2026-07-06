@@ -9,7 +9,7 @@ interface OnboardingProps {
 }
 
 export function Onboarding({ onComplete }: OnboardingProps) {
-    const { t } = useTranslation();
+    const { t, language } = useTranslation();
 
     return (
         <div className="min-h-screen flex items-center justify-center p-6 relative">
@@ -28,6 +28,22 @@ export function Onboarding({ onComplete }: OnboardingProps) {
                 <p className="text-muted-foreground leading-relaxed mb-12">
                     {t('onboarding.intro')}
                 </p>
+
+                {/* Kanji hook — Japanese readers already decompose characters daily */}
+                {language === 'ja' && (
+                    <div className="mb-12">
+                        <div className="flex items-baseline justify-center gap-3 mb-3">
+                            <span className="font-serif text-3xl text-foreground">鳴</span>
+                            <span className="text-border">＝</span>
+                            <span className="font-serif text-3xl text-foreground">口</span>
+                            <span className="text-border">＋</span>
+                            <span className="font-serif text-3xl text-foreground">鳥</span>
+                        </div>
+                        <p className="text-sm text-muted-foreground">
+                            {t('onboarding.kanji_hook')}
+                        </p>
+                    </div>
+                )}
 
                 {/* The breakfast example */}
                 <div className="border-y border-border py-10 mb-12">

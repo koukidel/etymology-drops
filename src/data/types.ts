@@ -41,4 +41,6 @@ export interface Word {
     blocks: WordBlock[];
     icon?: string; // Lucide icon name
     bossChallenges?: BossChallenge[];
+    /** Textbook-style margin note shown in the lesson story stage. */
+    tip?: LocalizedString;
 }

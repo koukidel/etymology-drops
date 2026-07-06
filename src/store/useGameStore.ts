@@ -80,17 +80,51 @@ export const useGameStore = create<GameState>()(
         }),
         {
             name: 'etymology-quest-storage',
-            version: 1,
-            migrate: (persisted) => {
-                // v0 stored gems, xp, inventory, paywall flags, etc. — keep only what survives.
+            version: 2,
+            migrate: (persisted, version) => {
                 const old = (persisted ?? {}) as Record<string, unknown>;
-                return {
-                    unlockedWords: Array.isArray(old.unlockedWords) ? old.unlockedWords as string[] : [],
-                    masteredWords: Array.isArray(old.masteredWords) ? old.masteredWords as string[] : [],
-                    streak: 0,
-                    lastActiveDate: null,
-                    hasSeenOnboarding: old.hasSeenOnboarding === true,
+
+                // v0 stored gems, xp, inventory, paywall flags, etc. — keep only what survives.
+                let state = version >= 1
+                    ? {
+                        unlockedWords: Array.isArray(old.unlockedWords) ? old.unlockedWords as string[] : [],
+                        masteredWords: Array.isArray(old.masteredWords) ? old.masteredWords as string[] : [],
+                        streak: typeof old.streak === 'number' ? old.streak : 0,
+                        lastActiveDate: typeof old.lastActiveDate === 'string' ? old.lastActiveDate : null,
+                        hasSeenOnboarding: old.hasSeenOnboarding === true,
+                    }
+                    : {
+                        unlockedWords: Array.isArray(old.unlockedWords) ? old.unlockedWords as string[] : [],
+                        masteredWords: Array.isArray(old.masteredWords) ? old.masteredWords as string[] : [],
+                        streak: 0,
+                        lastActiveDate: null,
+                        hasSeenOnboarding: old.hasSeenOnboarding === true,
+                    };
+
+                // v2: the Latin campaign now leads with familiar words. Carry progress
+                // earned on the old hero lessons over to the new lead lessons
+                // (keeping the old ids — those words stay learned).
+                const HERO_TO_LEAD: Record<string, string> = {
+                    precept: 'accept', detain: 'contain', intermittent: 'submit',
+                    offer: 'offer', insist: 'assist', monograph: 'autograph',
+                    epilogue: 'logic', aspect: 'inspect', uncomplicated: 'reply',
+                    nonextended: 'extend', reproduction: 'conduct', indisposed: 'compose',
+                    oversufficient: 'fiction', mistranscribe: 'subscribe',
                 };
+                const carryOver = (ids: string[]) => {
+                    const out = [...ids];
+                    for (const id of ids) {
+                        const lead = HERO_TO_LEAD[id];
+                        if (lead && !out.includes(lead)) out.push(lead);
+                    }
+                    return out;
+                };
+                state = {
+                    ...state,
+                    unlockedWords: carryOver(state.unlockedWords),
+                    masteredWords: carryOver(state.masteredWords),
+                };
+                return state;
             },
         }
     )

@@ -29,7 +29,7 @@ export const CampaignPath = () => {
     const localized = (s: string | { en: string; ja: string }) =>
         typeof s === 'string' ? s : s[language];
 
-    const allDone = masteredWords.includes("mistranscribe");
+    const allDone = masteredWords.includes(CAMPAIGN_LEVELS[CAMPAIGN_LEVELS.length - 1].id);
 
     return (
         <div className="max-w-xl mx-auto">

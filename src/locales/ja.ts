@@ -11,6 +11,8 @@ export const ja = {
     "onboarding.intro": "毎日使っている言葉には、隠された歴史があります。言葉を分解する方法を学べば、世界の見え方が変わります。",
     "onboarding.example": "睡眠は一日で最も長い断食。Breakfast はその断食（fast）を破る（break）食事です。",
     "onboarding.begin": "Breakfast から始める",
+    "onboarding.kanji_hook": "漢字を分解できるように、英単語も分解できます。",
+    "lesson.tip_label": "豆知識",
 
     "lesson.steps.priming": "物語",
     "lesson.steps.practice": "分解",
