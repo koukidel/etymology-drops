@@ -1,21 +1,15 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
-import Link from "next/link";
-import { Lock, Star, Play, Check, Trophy, ChevronRight, CheckCircle2 } from "lucide-react";
-import { Word } from "@/data/types";
+import { Star } from "lucide-react";
 
 import { CAMPAIGN_LEVELS } from "@/data/campaignLevels";
 import { useGameStore } from "@/store/useGameStore";
-import { useMemo, useState, useEffect, useRef } from "react";
-import { useRouter } from "next/navigation";
+import { useMemo, useState, useEffect } from "react";
 import { useTranslation } from "@/hooks/useTranslation";
-// import { PremiumModal } from "@/components/PremiumModal";
 import { WordCard } from "@/components/campaign/WordCard";
 
 export const CampaignPath = () => {
-    const router = useRouter();
-    const { unlockedWords, masteredWords, checkPaywallTrigger } = useGameStore();
+    const { unlockedWords, masteredWords } = useGameStore();
     const { language } = useTranslation();
 
     // Calculate current level index based on last unlocked word in the sequence
@@ -64,30 +58,18 @@ export const CampaignPath = () => {
                 );
             })}
 
-            {/* Final Trophy */}
-            <motion.button
-                onClick={() => {
-                    const isGameComplete = masteredWords.includes("mistranscribe");
-                    if (isGameComplete) {
-                        router.push("/exam");
-                    }
-                }}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className={`
-                    relative z-10 w-32 h-32 rounded-full flex items-center justify-center border-4 shadow-2xl transition-all
-                    ${masteredWords.includes("mistranscribe")
-                        ? "bg-amber-100 border-amber-400 cursor-pointer animate-pulse-slow shadow-amber-200"
-                        : "bg-slate-100 border-slate-300 opacity-50 grayscale cursor-not-allowed"
-                    }
-                `}
-            >
-                <Star size={48} className={masteredWords.includes("mistranscribe") ? "text-amber-500 fill-amber-500" : "text-slate-400"} />
-                <div className={`absolute top-full mt-4 font-black uppercase tracking-widest text-sm ${masteredWords.includes("mistranscribe") ? "text-amber-600" : "text-slate-400"}`}>
-                    Grand Master
-                </div>
-            </motion.button>
-            {/* Premium Modal Removed - Handled in page.tsx */}
+            {/* Completion marker */}
+            <div className="relative z-10 flex flex-col items-center gap-3 pt-4">
+                <Star
+                    size={32}
+                    className={masteredWords.includes("mistranscribe") ? "text-slate-900 fill-slate-900" : "text-slate-300"}
+                />
+                {masteredWords.includes("mistranscribe") && (
+                    <p className="text-sm text-slate-500">
+                        {language === 'ja' ? 'すべての章を修了しました' : 'You have completed every chapter.'}
+                    </p>
+                )}
+            </div>
         </div>
     );
 };

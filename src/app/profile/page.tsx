@@ -1,72 +1,62 @@
 "use client";
 
-import { useGameStore } from "@/store/useGameStore";
-import { User, Settings, Award, Clock } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useGameStore, currentStreak } from "@/store/useGameStore";
+import { useTranslation } from "@/hooks/useTranslation";
+import { CAMPAIGN_LEVELS } from "@/data/campaignLevels";
 import Link from "next/link";
 
 export default function ProfilePage() {
-    const { xp, unlockedWords, masteredWords } = useGameStore();
+    const { unlockedWords, masteredWords, streak, lastActiveDate, resetProgress } = useGameStore();
+    const { language } = useTranslation();
+    const [mounted, setMounted] = useState(false);
+    useEffect(() => setMounted(true), []);
+
+    if (!mounted) return null;
+
+    const chaptersDone = CAMPAIGN_LEVELS.filter(l => masteredWords.includes(l.id)).length;
+    const activeStreak = currentStreak(streak, lastActiveDate);
+    const ja = language === 'ja';
 
     return (
-        <main className="min-h-screen bg-slate-50 p-6 flex flex-col items-center">
-            <header className="w-full max-w-md mb-8">
-                <Link href="/path" className="text-sm font-bold text-slate-400 hover:text-indigo-600 mb-4 inline-block">
-                    &larr; Back to Path
+        <main className="min-h-screen p-6 flex flex-col items-center">
+            <header className="w-full max-w-md mb-10">
+                <Link href="/" className="text-sm text-slate-500 hover:text-slate-900 mb-6 inline-block">
+                    &larr; {ja ? 'パスに戻る' : 'Back to the path'}
                 </Link>
-                <h1 className="text-3xl font-black text-slate-900">Agent Profile</h1>
+                <h1 className="font-serif text-4xl text-slate-900">{ja ? '学習の記録' : 'Progress'}</h1>
             </header>
 
-            <div className="w-full max-w-md space-y-6">
-                {/* ID Card */}
-                <div className="bg-white rounded-3xl p-8 shadow-xl border border-slate-200 flex flex-col items-center">
-                    <div className="w-24 h-24 bg-indigo-100 rounded-full flex items-center justify-center mb-4 text-indigo-600">
-                        <User size={48} />
+            <div className="w-full max-w-md space-y-10">
+                <dl className="divide-y divide-slate-200 border-y border-slate-200">
+                    <div className="flex items-baseline justify-between py-4">
+                        <dt className="text-sm text-slate-500">{ja ? '学んだ単語' : 'Words learned'}</dt>
+                        <dd className="font-serif text-3xl text-slate-900">{masteredWords.length}</dd>
                     </div>
-                    <h2 className="text-2xl font-bold text-slate-900">Etymologist</h2>
-                    <div className="flex gap-2 mt-2">
-                        <span className="px-3 py-1 bg-amber-100 text-amber-700 font-bold rounded-full text-xs uppercase tracking-wider">
-                            Level {Math.floor(xp / 1000) + 1}
-                        </span>
-                        <span className="px-3 py-1 bg-slate-100 text-slate-500 font-bold rounded-full text-xs uppercase tracking-wider">
-                            {xp} XP
-                        </span>
+                    <div className="flex items-baseline justify-between py-4">
+                        <dt className="text-sm text-slate-500">{ja ? '完了した章' : 'Chapters completed'}</dt>
+                        <dd className="font-serif text-3xl text-slate-900">{chaptersDone} / {CAMPAIGN_LEVELS.length}</dd>
                     </div>
-                </div>
+                    <div className="flex items-baseline justify-between py-4">
+                        <dt className="text-sm text-slate-500">{ja ? '連続学習日数' : 'Day streak'}</dt>
+                        <dd className="font-serif text-3xl text-slate-900">{activeStreak}</dd>
+                    </div>
+                    <div className="flex items-baseline justify-between py-4">
+                        <dt className="text-sm text-slate-500">{ja ? '開放済みの単語' : 'Words unlocked'}</dt>
+                        <dd className="font-serif text-3xl text-slate-900">{unlockedWords.length}</dd>
+                    </div>
+                </dl>
 
-                {/* Stats Grid */}
-                <div className="grid grid-cols-2 gap-4">
-                    <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-                        <Award className="text-emerald-500 mb-2" />
-                        <div className="text-2xl font-black text-slate-900">{masteredWords.length}</div>
-                        <div className="text-xs text-slate-500 font-bold uppercase">Mastered Roots</div>
-                    </div>
-                    <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-                        <Clock className="text-blue-500 mb-2" />
-                        <div className="text-2xl font-black text-slate-900">{unlockedWords.length}</div>
-                        <div className="text-xs text-slate-500 font-bold uppercase">Unlocked</div>
-                    </div>
-                </div>
-
-                {/* Settings Link */}
-                <Link href="/settings" className="flex items-center justify-between p-4 bg-white rounded-xl border border-slate-200 hover:bg-slate-50 transition-colors">
-                    <div className="flex items-center gap-3">
-                        <Settings size={20} className="text-slate-400" />
-                        <span className="font-bold text-slate-700">Settings</span>
-                    </div>
-                    <span className="text-slate-400">&rarr;</span>
-                </Link>
-
-                {/* Reset Progress Button */}
                 <button
                     onClick={() => {
-                        if (confirm("Are you sure you want to reset all progress? This cannot be undone.")) {
-                            useGameStore.getState().resetProgress();
+                        if (confirm(ja ? '本当にすべての進捗をリセットしますか？この操作は取り消せません。' : 'Reset all progress? This cannot be undone.')) {
+                            resetProgress();
                             window.location.reload();
                         }
                     }}
-                    className="w-full p-4 bg-red-50 text-red-600 rounded-xl border border-red-100 hover:bg-red-100 transition-colors font-bold text-sm flex items-center justify-center gap-2"
+                    className="text-sm text-slate-400 hover:text-red-600 transition-colors underline underline-offset-4"
                 >
-                    Reset Progress (Start Over)
+                    {ja ? '進捗をリセット' : 'Reset progress'}
                 </button>
             </div>
         </main>

@@ -1,35 +1,23 @@
 "use client";
 
 import { CampaignPath } from "@/components/campaign/CampaignPath";
-import { BottomNav } from "@/components/layout/BottomNav";
 import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
 import { useTranslation } from "@/hooks/useTranslation";
-import { useGameStore } from "@/store/useGameStore";
+import { useGameStore, currentStreak } from "@/store/useGameStore";
 import { Onboarding } from "@/components/onboarding/Onboarding";
-import { SimplePaywall } from "@/components/SimplePaywall";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 export default function Home() {
   const { t } = useTranslation();
-  const {
-    hasSeenOnboarding,
-    completeOnboarding,
-    showPaywall,
-    paywallTrigger,
-    setShowPaywall,
-    checkPaywallTrigger,
-    masteredWords
-  } = useGameStore();
+  const { hasSeenOnboarding, completeOnboarding, streak, lastActiveDate } = useGameStore();
 
   const [isMounted, setIsMounted] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
     setIsMounted(true);
-    // Check paywall trigger on mount (e.g. if user refreshed after hitting limit)
-    // Removed auto-trigger as per user request. Only trigger on interaction.
-  }, [hasSeenOnboarding]);
+  }, []);
 
   if (!isMounted) return null; // Prevent hydration mismatch
 
@@ -56,10 +44,11 @@ export default function Home() {
 
         <div className="flex items-center gap-3">
           <LanguageSwitcher />
-          {/* Stats / Streak (Placeholder) */}
-          <div className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-full border border-slate-200 shadow-sm">
-            <span className="text-sm font-bold text-amber-500">🔥 1</span>
-          </div>
+          {currentStreak(streak, lastActiveDate) > 0 && (
+            <span className="text-sm text-slate-500">
+              {currentStreak(streak, lastActiveDate)}
+            </span>
+          )}
         </div>
       </header>
 
@@ -67,16 +56,6 @@ export default function Home() {
       <div className="px-4 mt-8 pb-24">
         <CampaignPath />
       </div>
-
-      <BottomNav />
-
-      {/* Paywall Modal */}
-      {showPaywall && paywallTrigger && (
-        <SimplePaywall
-          onClose={() => setShowPaywall(false)}
-          trigger={paywallTrigger}
-        />
-      )}
     </main>
   );
 }

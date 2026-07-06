@@ -3,7 +3,6 @@
 import { motion } from "framer-motion";
 import { Lock, Play, Check } from "lucide-react";
 import Link from "next/link";
-import { useGameStore } from "@/store/useGameStore";
 
 interface WordCardProps {
     id: string;
@@ -15,23 +14,11 @@ interface WordCardProps {
     index: number;
 }
 
-export function WordCard({ id, label, title, isUnlocked, isCompleted, isActive, index }: WordCardProps) {
-    const { isPremium, setShowPaywall } = useGameStore();
-
-    const handleClick = (e: React.MouseEvent) => {
-        // Free users can only access the first 3 levels (indices 0, 1, 2)
-        // If they try to access index 3 ("fer") or higher, show paywall
-        if (!isPremium && index >= 3) {
-            e.preventDefault();
-            setShowPaywall(true, 'word_limit');
-        }
-    };
-
+export function WordCard({ id, label, title, isUnlocked, isCompleted, isActive }: WordCardProps) {
     return (
         <div className="relative z-10 mb-16 w-full flex justify-center">
             <Link
                 href={isUnlocked ? `/lesson/${id}` : "#"}
-                onClick={handleClick}
                 className={`
                     relative group flex flex-col items-center justify-center
                     w-24 h-24 rounded-full border-4 shadow-xl transition-all duration-300
