@@ -3,7 +3,7 @@
 import { useGameStore, currentStreak } from "@/store/useGameStore";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useMounted } from "@/hooks/useMounted";
-import { CAMPAIGN_LEVELS } from "@/data/campaignLevels";
+import { COURSES } from "@/data/courses";
 import { Header } from "@/components/layout/Header";
 
 export default function ProfilePage() {
@@ -13,7 +13,7 @@ export default function ProfilePage() {
 
     if (!mounted) return null;
 
-    const chaptersDone = CAMPAIGN_LEVELS.filter(l => masteredWords.includes(l.id)).length;
+    const coursesDone = COURSES.filter(c => c.lessons.every(l => masteredWords.includes(l.id))).length;
     const activeStreak = currentStreak(streak, lastActiveDate);
     const ja = language === 'ja';
 
@@ -32,8 +32,8 @@ export default function ProfilePage() {
                         <dd className="font-serif text-3xl text-foreground">{masteredWords.length}</dd>
                     </div>
                     <div className="flex items-baseline justify-between py-4">
-                        <dt className="text-sm text-muted-foreground">{ja ? '完了した章' : 'Chapters completed'}</dt>
-                        <dd className="font-serif text-3xl text-foreground">{chaptersDone} / {CAMPAIGN_LEVELS.length}</dd>
+                        <dt className="text-sm text-muted-foreground">{ja ? '修了したコース' : 'Courses completed'}</dt>
+                        <dd className="font-serif text-3xl text-foreground">{coursesDone} / {COURSES.length}</dd>
                     </div>
                     <div className="flex items-baseline justify-between py-4">
                         <dt className="text-sm text-muted-foreground">{ja ? '連続学習日数' : 'Day streak'}</dt>

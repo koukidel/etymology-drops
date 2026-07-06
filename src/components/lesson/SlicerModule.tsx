@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Word } from "@/data/types";
 import { useTranslation } from "@/hooks/useTranslation";
@@ -8,13 +8,26 @@ import { useTranslation } from "@/hooks/useTranslation";
 interface Props {
     word: Word;
     onComplete?: () => void;
+    /** If set, the hint blink runs automatically after this many ms of inactivity, repeating until cut. */
+    autoHintMs?: number;
+    /** Overrides the continue-button label on the completion view. */
+    completeLabel?: string;
 }
 
-export function SlicerModule({ word, onComplete }: Props) {
+export function SlicerModule({ word, onComplete, autoHintMs, completeLabel }: Props) {
     const [foundCuts, setFoundCuts] = useState<number[]>([]);
     const [isComplete, setIsComplete] = useState(false);
     const [hintActive, setHintActive] = useState(false);
     const { t, language } = useTranslation();
+
+    useEffect(() => {
+        if (!autoHintMs || isComplete) return;
+        const timer = setInterval(() => {
+            setHintActive(true);
+            setTimeout(() => setHintActive(false), 1400);
+        }, autoHintMs);
+        return () => clearInterval(timer);
+    }, [autoHintMs, isComplete, foundCuts]);
 
     // Valid cut positions fall between blocks; labels spell the word.
     const cuts = useMemo(() => {
@@ -67,7 +80,7 @@ export function SlicerModule({ word, onComplete }: Props) {
                     onClick={() => onComplete && onComplete()}
                     className="px-10 py-3 bg-foreground text-background rounded-full hover:opacity-90 transition-opacity"
                 >
-                    {t('lesson.slicer.continue')}
+                    {completeLabel ?? t('lesson.slicer.continue')}
                 </button>
             </motion.div>
         );

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import Link from "next/link";
 import { Word } from "@/data/types";
 import { motion, AnimatePresence } from "framer-motion";
@@ -12,34 +12,73 @@ import { MatrixView } from "./views/MatrixView";
 import { ProficiencyView } from "./views/ProficiencyView";
 
 import { useGameStore } from "@/store/useGameStore";
-import { CAMPAIGN_LEVELS } from "@/data/campaignLevels";
+import { findCourseByLesson } from "@/data/courses";
+import { allWords } from "@/data/words";
+import { DERIVATIVES } from "@/data/derivatives";
 import { useTranslation } from "@/hooks/useTranslation";
 
 interface Props {
     word: Word;
 }
 
+interface RelatedEntry {
+    word: string;
+    gloss: string;
+    href?: string;
+}
+
 export function LessonContainer({ word }: Props) {
     const [viewIndex, setViewIndex] = useState(0);
     const [nextLessonId, setNextLessonId] = useState<string | null>(null);
-    const { t } = useTranslation();
+    const [courseDone, setCourseDone] = useState(false);
+    const { t, language } = useTranslation();
 
     const { unlockWord, masterWord, recordLessonComplete } = useGameStore();
+
+    const localized = (s: string | { en: string; ja: string }) =>
+        typeof s === 'string' ? s : s[language];
+
+    // Other words built from this word's parts: lesson words first, then curated derivatives.
+    const related = useMemo<RelatedEntry[]>(() => {
+        const out: RelatedEntry[] = [];
+        const seen = new Set<string>([word.word.toLowerCase()]);
+        for (const block of word.blocks) {
+            for (const w of allWords) {
+                if (w.id === word.id || seen.has(w.word.toLowerCase())) continue;
+                if (w.blocks.some(b => b.id === block.id)) {
+                    seen.add(w.word.toLowerCase());
+                    out.push({ word: w.word, gloss: localized(w.meaning), href: `/lesson/${w.id}` });
+                }
+            }
+            for (const d of DERIVATIVES[block.id] ?? []) {
+                if (seen.has(d.word.toLowerCase())) continue;
+                seen.add(d.word.toLowerCase());
+                out.push({ word: d.word, gloss: localized(d.gloss) });
+            }
+        }
+        return out.slice(0, 6);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [word, language]);
 
     const handleNext = () => {
         if (viewIndex < 3) {
             setViewIndex(prev => prev + 1);
             return;
         }
-        // Final stage passed: record progress and unlock the next campaign level.
+        // Final stage passed: record progress and open the next lesson in this course.
         masterWord(word.id);
         recordLessonComplete();
 
-        const levelIndex = CAMPAIGN_LEVELS.findIndex(l => l.id === word.id);
-        if (levelIndex !== -1 && levelIndex < CAMPAIGN_LEVELS.length - 1) {
-            const nextLevel = CAMPAIGN_LEVELS[levelIndex + 1];
-            unlockWord(nextLevel.id);
-            setNextLessonId(nextLevel.id);
+        const course = findCourseByLesson(word.id);
+        if (course) {
+            const index = course.lessons.findIndex(l => l.id === word.id);
+            const next = course.lessons[index + 1];
+            if (next) {
+                unlockWord(next.id);
+                setNextLessonId(next.id);
+            } else {
+                setCourseDone(true);
+            }
         }
         setViewIndex(4);
     };
@@ -49,7 +88,7 @@ export function LessonContainer({ word }: Props) {
     // Completion
     if (viewIndex === 4) {
         return (
-            <div className="min-h-[60vh] flex flex-col items-center justify-center text-center p-8">
+            <div className="min-h-[60vh] flex flex-col items-center justify-center text-center p-8 max-w-xl mx-auto">
                 <motion.div
                     initial={{ scale: 0.8, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
@@ -57,9 +96,33 @@ export function LessonContainer({ word }: Props) {
                 >
                     <Check size={32} className="text-foreground" />
                 </motion.div>
-                <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-2">{t('lesson.complete.title')}</p>
+                <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-2">
+                    {courseDone ? t('lesson.complete.course') : t('lesson.complete.title')}
+                </p>
                 <h2 className="font-serif text-5xl text-foreground mb-3">{word.word}</h2>
-                <p className="text-muted-foreground mb-10">{t('lesson.complete.subtitle')}</p>
+                <p className="text-muted-foreground mb-8">{t('lesson.complete.subtitle')}</p>
+
+                {related.length > 0 && (
+                    <div className="w-full border-y border-border py-5 mb-8 text-left">
+                        <p className="text-[11px] uppercase tracking-[0.2em] text-accent mb-3">
+                            {t('lesson.complete.related')}
+                        </p>
+                        <ul className="space-y-2">
+                            {related.map(r => (
+                                <li key={r.word} className="flex items-baseline gap-3">
+                                    {r.href ? (
+                                        <Link href={r.href} className="font-serif text-lg text-foreground underline underline-offset-4 decoration-border hover:decoration-foreground transition-colors shrink-0">
+                                            {r.word}
+                                        </Link>
+                                    ) : (
+                                        <span className="font-serif text-lg text-foreground shrink-0">{r.word}</span>
+                                    )}
+                                    <span className="text-sm text-muted-foreground truncate">{r.gloss}</span>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                )}
 
                 <div className="flex flex-col items-center gap-4">
                     {nextLessonId && (
