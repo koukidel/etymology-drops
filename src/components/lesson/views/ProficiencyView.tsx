@@ -11,7 +11,7 @@ interface Props {
     onNext: () => void;
 }
 
-import { expandedWords } from "@/data/expandedWords";
+import { allWords } from "@/data/words";
 
 import { useTranslation } from "@/hooks/useTranslation";
 
@@ -28,7 +28,7 @@ export function ProficiencyView({ word, onNext }: Props) {
         const a = typeof word.meaning === 'string' ? word.meaning : word.meaning[language];
 
         // Get 3 random distractors from other words
-        const otherWords = expandedWords.filter(w => w.id !== word.id);
+        const otherWords = allWords.filter(w => w.id !== word.id);
         const distractors = otherWords
             .sort(() => 0.5 - Math.random())
             .slice(0, 3)

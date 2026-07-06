@@ -24,7 +24,7 @@ export default function Home() {
   if (!hasSeenOnboarding) {
     return <Onboarding onComplete={() => {
       completeOnboarding();
-      router.push('/lesson/precept');
+      router.push('/lesson/breakfast');
     }} />;
   }
 

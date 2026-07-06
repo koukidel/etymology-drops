@@ -1,6 +1,6 @@
 "use client";
 
-import { expandedWords } from "@/data/expandedWords";
+import { allWords } from "@/data/words";
 import { Block, Word } from "@/data/types";
 import { useState, useMemo } from "react";
 import Link from "next/link";
@@ -17,7 +17,7 @@ export default function DictionaryPage() {
     // Extract all unique blocks
     const dictionary = useMemo(() => {
         const map = new Map<string, Block>();
-        expandedWords.forEach(word => {
+        allWords.forEach(word => {
             word.blocks.forEach(block => {
                 const key = `${block.type}-${block.id}`;
                 if (!map.has(key)) {
@@ -38,7 +38,7 @@ export default function DictionaryPage() {
     // Find words related to the selected block
     const relatedWords = useMemo(() => {
         if (!selectedBlock) return [];
-        return expandedWords.filter(word =>
+        return allWords.filter(word =>
             word.blocks.some(b => b.id === selectedBlock.id && b.type === selectedBlock.type)
         );
     }, [selectedBlock]);

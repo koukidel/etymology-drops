@@ -1,4 +1,4 @@
-import { expandedWords } from "@/data/expandedWords";
+import { allWords } from "@/data/words";
 import { LessonContainer } from "@/components/lesson/LessonContainer";
 import Link from "next/link";
 import { X } from "lucide-react";
@@ -9,7 +9,7 @@ interface PageProps {
 
 export default async function LessonPage({ params }: PageProps) {
     const { wordId } = await params;
-    const word = expandedWords.find((w) => w.id === wordId);
+    const word = allWords.find((w) => w.id === wordId);
 
     if (!word) {
         return <div className="p-8">Word not found</div>;
