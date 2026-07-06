@@ -1,18 +1,37 @@
 export const ja = {
     "app.title": "語源の雫",
 
-    "nav.path": "学習の道",
-    "nav.dictionary": "辞典",
-    "nav.progress": "記録",
+    "nav.path": "Path",
+    "nav.dictionary": "Dictionary",
+    "nav.progress": "Progress",
+
+    "home.courses": "コース",
 
     "streak.label": "連続学習日数",
 
-    "onboarding.title": "すべての言葉には物語がある",
-    "onboarding.intro": "毎日使っている言葉には、隠された歴史があります。言葉を分解する方法を学べば、世界の見え方が変わります。",
-    "onboarding.example": "睡眠は一日で最も長い断食。Breakfast はその断食（fast）を破る（break）食事です。",
-    "onboarding.begin": "Breakfast から始める",
-    "onboarding.kanji_hook": "漢字を分解できるように、英単語も分解できます。",
-    "lesson.tip_label": "豆知識",
+    // Guided onboarding
+    "guide.ask": "突然ですが、この「鳴」という漢字の意味がわからないとしたら、あなたはどうアプローチしますか？",
+    "guide.ask.guess": "当てずっぽうする",
+    "guide.ask.other": "別のアプローチを取る",
+    "guide.split_idea.guess_prefix": "もちろん当てずっぽうでもいいのですが、どうせなら、もう少し精度の良い予想を立てたくなるところでしょう。",
+    "guide.split_idea": "そこで、この漢字を1つのかたまりとして見るのではなく、分けてみることにしましょう。",
+    "guide.split": "すると、どうでしょう。「口」と「鳥」という、二つの簡単な漢字に分けられました。\n\n元々何もなかった情報から、口と鳥という漢字を含んでいることがわかるところまで来ました。ここから、意味がずっと予想しやすくなったのではないでしょうか。",
+    "guide.quiz.prompt": "これらの選択肢だったら、何を選びますか？",
+    "guide.quiz.opt1": "泣く",
+    "guide.quiz.opt2": "鳴く",
+    "guide.quiz.opt3": "飛ぶ",
+    "guide.quiz.opt4": "食べる",
+    "guide.quiz.reveal": "口と鳥だから、「鳴く」が正解です。\n\nこのプロセスは、漢字に触れたことのある人であれば、一度は試してきた考え方なのではないでしょうか。",
+    "guide.bridge.lead": "では、こちらはどうでしょう。",
+    "guide.bridge": "ちなみに意味は……そうですね、「朝食」という意味の英単語です。\n\nただ、なぜ breakfast という単語が「朝食」という意味を持つのでしょうか。morning food でもいいのではないでしょうか。ここで「そういうものだから」と終わらせてしまうのは勿体ないですよね。\n\n実は breakfast は、「鳴」と同じように、分解ができるんです。",
+    "guide.bridge.cta": "分解してみる",
+    "guide.slice.hint": "部品の間の隙間をタップして、分解してみましょう。",
+    "guide.assoc1": "お見事です！このように、breakfast は break と fast に分解できます。\n\nただ、分解できたとしても、break と fast では意味がまだ掴めません。break は壊す？ fast は早い？……と思われるかもしれません。\n\n実は、break は「壊す」でいいのですが、fast は fasting、つまり「断食」を意味する言葉です。よって、「断食を壊す」ということになります。",
+    "guide.assoc2": "それでも、まだ「朝食」に行き着くのは難しいですね。では、朝食の側から考えてみましょう。\n\n朝食は、寝て起きてから一番初めの食事です。そして寝ている間は、何も食べていない状態——つまり、断食をしている状態です。\n\nよって、寝ているという断食の状態を初めて破る食事、つまり「断食を壊す」行為、それが朝食というわけです。こうして breakfast から「朝食」という意味を導けました。",
+    "guide.moral": "知らなければ、この連想ゲームは難しかったかもしれません。\n\nしかし、多くの英単語は、こうした分解と連想によって、自分の知っている言葉から、知らない言葉の意味を類推することができます。\n\nこれは単に英単語が定着しやすくなるだけではありません。言葉の歴史を知ることができ、言語全体の雰囲気も掴めてくるようになります。その雰囲気を掴めれば、言語はより自然にあなたのものになるはずです。",
+    "guide.final": "では、いざ語源の世界へ。",
+    "guide.begin": "始める",
+    "guide.continue": "続ける",
 
     "lesson.steps.priming": "物語",
     "lesson.steps.practice": "分解",
@@ -21,6 +40,7 @@ export const ja = {
 
     "lesson.priming.origin_story": "言葉の物語",
     "lesson.priming.i_understand": "分解してみる",
+    "lesson.tip_label": "豆知識",
 
     "lesson.slicer.title": "言葉を分解する",
     "lesson.slicer.instruction": "部品と部品の境目を見つけましょう。",
@@ -38,9 +58,11 @@ export const ja = {
     "lesson.proficiency.hide_hint": "部品を隠す",
 
     "lesson.complete.title": "習得しました",
+    "lesson.complete.course": "コース修了",
     "lesson.complete.subtitle": "があなたの語彙に加わりました。",
+    "lesson.complete.related": "同じ部品を持つ言葉",
     "lesson.complete.continue": "次の言葉へ",
-    "lesson.complete.back": "学習の道に戻る",
+    "lesson.complete.back": "コース一覧に戻る",
 
     "codex.title": "辞典",
     "codex.search_placeholder": "部品や意味を検索…",
