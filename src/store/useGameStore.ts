@@ -1,9 +1,15 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
+export interface MasteryEntry {
+    id: string;
+    date: string | null; // ISO date (YYYY-MM-DD); null for progress migrated from before logging
+}
+
 interface GameState {
     unlockedWords: string[];
     masteredWords: string[];
+    masteryLog: MasteryEntry[];
 
     streak: number;
     lastActiveDate: string | null; // ISO date (YYYY-MM-DD) of last completed lesson
@@ -35,6 +41,7 @@ export const useGameStore = create<GameState>()(
         (set) => ({
             unlockedWords: [],
             masteredWords: [],
+            masteryLog: [],
             streak: 0,
             lastActiveDate: null,
             hasSeenOnboarding: false,
@@ -50,6 +57,7 @@ export const useGameStore = create<GameState>()(
                 const updates: Partial<GameState> = {};
                 if (!state.masteredWords.includes(wordId)) {
                     updates.masteredWords = [...state.masteredWords, wordId];
+                    updates.masteryLog = [...state.masteryLog, { id: wordId, date: isoDate(new Date()) }];
                 }
                 if (!state.unlockedWords.includes(wordId)) {
                     updates.unlockedWords = [...state.unlockedWords, wordId];
@@ -74,13 +82,14 @@ export const useGameStore = create<GameState>()(
             resetProgress: () => set({
                 unlockedWords: [],
                 masteredWords: [],
+                masteryLog: [],
                 streak: 0,
                 lastActiveDate: null,
             }),
         }),
         {
             name: 'etymology-quest-storage',
-            version: 2,
+            version: 3,
             migrate: (persisted, version) => {
                 const old = (persisted ?? {}) as Record<string, unknown>;
 
@@ -89,6 +98,7 @@ export const useGameStore = create<GameState>()(
                     ? {
                         unlockedWords: Array.isArray(old.unlockedWords) ? old.unlockedWords as string[] : [],
                         masteredWords: Array.isArray(old.masteredWords) ? old.masteredWords as string[] : [],
+                        masteryLog: Array.isArray(old.masteryLog) ? old.masteryLog as MasteryEntry[] : [],
                         streak: typeof old.streak === 'number' ? old.streak : 0,
                         lastActiveDate: typeof old.lastActiveDate === 'string' ? old.lastActiveDate : null,
                         hasSeenOnboarding: old.hasSeenOnboarding === true,
@@ -96,6 +106,7 @@ export const useGameStore = create<GameState>()(
                     : {
                         unlockedWords: Array.isArray(old.unlockedWords) ? old.unlockedWords as string[] : [],
                         masteredWords: Array.isArray(old.masteredWords) ? old.masteredWords as string[] : [],
+                        masteryLog: [] as MasteryEntry[],
                         streak: 0,
                         lastActiveDate: null,
                         hasSeenOnboarding: old.hasSeenOnboarding === true,
@@ -124,6 +135,15 @@ export const useGameStore = create<GameState>()(
                     unlockedWords: carryOver(state.unlockedWords),
                     masteredWords: carryOver(state.masteredWords),
                 };
+
+                // v3: introduce the mastery log. Seed it from any mastered words we
+                // don't yet have a dated entry for (undated = learned "earlier").
+                const logged = new Set(state.masteryLog.map(e => e.id));
+                const seeded: MasteryEntry[] = [
+                    ...state.masteryLog,
+                    ...state.masteredWords.filter(id => !logged.has(id)).map(id => ({ id, date: null })),
+                ];
+                state = { ...state, masteryLog: seeded };
                 return state;
             },
         }

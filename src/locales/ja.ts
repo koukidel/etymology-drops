@@ -65,6 +65,7 @@ export const ja = {
     "lesson.complete.back": "コース一覧に戻る",
 
     "codex.title": "辞典",
+    "codex.common_parts": "よく出る部品",
     "codex.search_placeholder": "部品や意味を検索…",
     "codex.related_words": "この部品を使う言葉",
 };

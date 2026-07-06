@@ -16,6 +16,7 @@ export default function DictionaryPage() {
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedBlock, setSelectedBlock] = useState<Block | null>(null);
 
+    const ja = language === 'ja';
     const localized = (s: string | { en: string; ja: string }) =>
         typeof s === 'string' ? s : s[language];
 
@@ -32,6 +33,22 @@ export default function DictionaryPage() {
         return Array.from(map.values()).sort((a, b) => a.label.localeCompare(b.label));
     }, []);
 
+    // Parts ranked by how many words contain them — the highest-leverage parts to learn.
+    const ranked = useMemo(() => {
+        const counts = new Map<string, number>();
+        allWords.forEach(word => {
+            const seen = new Set<string>();
+            word.blocks.forEach(block => {
+                const key = `${block.type}-${block.id}`;
+                if (!seen.has(key)) { seen.add(key); counts.set(key, (counts.get(key) ?? 0) + 1); }
+            });
+        });
+        const withCounts = dictionary.map(b => ({ block: b, count: counts.get(`${b.type}-${b.id}`) ?? 0 }));
+        return withCounts.sort((a, b) => b.count - a.count).slice(0, 10);
+    }, [dictionary]);
+
+    const maxCount = ranked.length ? ranked[0].count : 1;
+
     const filtered = dictionary.filter(b => {
         const matchesFilter = filter === 'all' || b.type === filter;
         const meaning = localized(b.meaning);
@@ -47,8 +64,10 @@ export default function DictionaryPage() {
         );
     }, [selectedBlock]);
 
-    const displayLabel = (block: Block) =>
-        block.type === 'prefix' ? `${block.label}-` : block.type === 'suffix' ? `-${block.label}` : block.label;
+    const displayLabel = (block: Block) => {
+        const bare = block.label.replace(/-/g, '');
+        return block.type === 'prefix' ? `${bare}-` : block.type === 'suffix' ? `-${bare}` : bare;
+    };
 
     const typeLabel = (type: string) => {
         if (language === 'ja') {
@@ -63,6 +82,34 @@ export default function DictionaryPage() {
 
             <main className="max-w-3xl mx-auto px-6 py-12">
                 <h1 className="font-serif text-4xl text-foreground mb-8">{t('codex.title')}</h1>
+
+                {/* Most common parts — highest-leverage ranking */}
+                <section className="mb-12">
+                    <h2 className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-4">
+                        {t('codex.common_parts')}
+                    </h2>
+                    <ol className="space-y-2.5">
+                        {ranked.map(({ block, count }, i) => (
+                            <li key={`${block.type}-${block.id}`}>
+                                <button
+                                    onClick={() => setSelectedBlock(block)}
+                                    className="w-full flex items-center gap-4 text-left group"
+                                >
+                                    <span className="text-sm text-muted-foreground/60 w-5 shrink-0 tabular-nums">{i + 1}</span>
+                                    <span className={`font-serif text-lg shrink-0 w-28 ${block.type === 'root' ? 'text-accent' : 'text-foreground'}`}>
+                                        {displayLabel(block)}
+                                    </span>
+                                    <span className="flex-1 h-1 rounded-full bg-muted overflow-hidden">
+                                        <span className="block h-full bg-accent/70 group-hover:bg-accent transition-colors" style={{ width: `${(count / maxCount) * 100}%` }} />
+                                    </span>
+                                    <span className="text-sm text-muted-foreground w-16 text-right shrink-0 tabular-nums">
+                                        {count} {ja ? '語' : ''}
+                                    </span>
+                                </button>
+                            </li>
+                        ))}
+                    </ol>
+                </section>
 
                 {/* Search */}
                 <input

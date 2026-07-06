@@ -65,6 +65,7 @@ export const en = {
     "lesson.complete.back": "Back to courses",
 
     "codex.title": "Dictionary",
+    "codex.common_parts": "Most common parts",
     "codex.search_placeholder": "Search parts and meanings…",
     "codex.related_words": "Words built with this part",
 };
