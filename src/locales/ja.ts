@@ -1,9 +1,9 @@
 export const ja = {
     "app.title": "語源の雫",
 
-    "nav.path": "学習の道",
-    "nav.dictionary": "辞典",
-    "nav.progress": "記録",
+    "nav.path": "Path",
+    "nav.dictionary": "Dictionary",
+    "nav.progress": "Progress",
 
     "streak.label": "連続学習日数",
 

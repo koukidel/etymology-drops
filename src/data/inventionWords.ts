@@ -126,7 +126,7 @@ export const inventionWords: Word[] = [
         icon: "TrainFront",
         tip: {
             en: "SUB (under) surfaces in submarine (under the sea), subtitle (under the picture), and submit — literally 'to send under'.",
-            ja: "SUB（下）は submarine（海の下）、subtitle（映像の下の字幕）、そして submit（文字通り「下に送る」）に顔を出します。",
+            ja: "SUB（下）は submarine（海の下）、subtitle（映像の下の字幕）、そして submit（「下に送る」）に顔を出します。",
         },
     },
 ];

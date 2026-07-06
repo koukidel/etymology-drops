@@ -7,7 +7,7 @@ export interface CampaignLevel {
     chapter: LocalizedString;
 }
 
-const FAMILIAR_CHAPTER: LocalizedString = { en: "Words You Already Know", ja: "実は知っている言葉" };
+const FAMILIAR_CHAPTER: LocalizedString = { en: "Words You Already Know", ja: "身近な言葉" };
 const BUILDER_CHAPTER: LocalizedString = { en: "Build Your Own", ja: "言葉を組み立てる" };
 const INVENTION_CHAPTER: LocalizedString = { en: "Everyday Inventions", ja: "身近な発明品" };
 const LATIN_CHAPTER: LocalizedString = { en: "Latin Roots", ja: "ラテン語の語根" };

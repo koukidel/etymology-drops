@@ -8,7 +8,7 @@ import { useMounted } from "@/hooks/useMounted";
 import { useGameStore, currentStreak } from "@/store/useGameStore";
 
 export function Header() {
-    const { t, language } = useTranslation();
+    const { t } = useTranslation();
     const pathname = usePathname();
     const { streak, lastActiveDate } = useGameStore();
     const mounted = useMounted();
@@ -47,7 +47,7 @@ export function Header() {
 
                     {activeStreak > 0 && (
                         <span className="text-sm text-muted-foreground hidden sm:inline" title={t('streak.label')}>
-                            {language === 'ja' ? `${activeStreak}日目` : `Day ${activeStreak}`}
+                            {`Day ${activeStreak}`}
                         </span>
                     )}
 

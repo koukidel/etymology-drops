@@ -12,7 +12,7 @@ export const familiarWords: Word[] = [
         },
         history: {
             en: "'Break' + 'fast' (a period without food). Sleep is the longest fast of your day — the morning meal literally breaks it.",
-            ja: "'break'（破る）+ 'fast'（断食）。睡眠は一日で最も長い断食であり、朝食は文字通りその断食を破る食事です。",
+            ja: "'break'（破る）+ 'fast'（断食）。睡眠は一日で最も長い断食であり、朝食はその断食を破る食事です。",
         },
         blocks: [
             { id: "break", label: "Break", meaning: { en: "To end, to shatter", ja: "破る" }, type: "root" },
@@ -117,7 +117,7 @@ export const familiarWords: Word[] = [
         },
         history: {
             en: "'Com-' (with) + 'panis' (bread): literally, someone you share your bread with.",
-            ja: "'com-'（共に）+ 'panis'（パン）。文字通り「パンを分かち合う人」を意味します。",
+            ja: "'com-'（共に）+ 'panis'（パン）。「パンを分かち合う人」を意味します。",
         },
         blocks: [
             { id: "com", label: "Com", meaning: { en: "With, together", ja: "共に" }, type: "prefix" },
@@ -127,7 +127,7 @@ export const familiarWords: Word[] = [
         icon: "Users",
         tip: {
             en: "Reading researchers estimate that a single Latin or Greek root or affix can aid the understanding of 20 or more English words (Rasinski, Padak, Newton & Newton, 2011).",
-            ja: "読解研究者の推定によれば、ラテン語・ギリシャ語の語根や接辞ひとつが、20語以上の英単語の理解を助けてくれます（Rasinski, Padak, Newton & Newton, 2011）。",
+            ja: "研究によれば、ラテン語・ギリシャ語の語根や接辞ひとつが、20語以上の英単語の理解を助けてくれます（Rasinski, Padak, Newton & Newton, 2011）。",
         },
     },
     {
@@ -169,7 +169,7 @@ export const familiarWords: Word[] = [
         icon: "Mouse",
         tip: {
             en: "Greek made the same joke: mys meant both 'mouse' and 'muscle' — which is why doctors still say myo- for muscle, as in myocarditis.",
-            ja: "ギリシャ語も同じ冗談を言いました。mys は「ネズミ」と「筋肉」の両方を意味し、だから医師は今でも筋肉を myo- と呼びます（myocarditis 心筋炎など）。",
+            ja: "ギリシャ語にも似た冗談があります。mys は「ネズミ」と「筋肉」の両方を意味し、だから医師は今でも筋肉を myo- と呼びます（myocarditis 心筋炎など）。",
         },
     },
     {
@@ -181,7 +181,7 @@ export const familiarWords: Word[] = [
         },
         history: {
             en: "From Latin 'salarium', related to 'sal' (salt) — in Rome it named a soldier's allowance. The tale that soldiers were literally paid in salt is a legend, but the salty root is real: to be 'worth your salt' keeps it alive.",
-            ja: "ラテン語の 'salarium' から。'sal'（塩）に関係し、ローマ兵の手当を指しました。「兵士が塩で給料を受け取った」という話は伝説ですが、塩の語根は本物。'worth your salt'（給料に値する）という表現に今も生きています。",
+            ja: "ラテン語の 'salarium' から。'sal'（塩）に関係し、ローマ兵の手当を指しました。「兵士が塩で給料を受け取った」という話は諸説ありますが、塩の語根は本物。'worth your salt'（給料に値する）という表現に今も生きています。",
         },
         blocks: [
             { id: "sal", label: "Sal", meaning: { en: "Salt", ja: "塩" }, type: "root" },
