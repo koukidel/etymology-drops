@@ -76,7 +76,11 @@ export const expandedWords: Word[] = [
         meaning: { en: "To consent to receive.", ja: "受け取ることに同意する。" },
         history: { en: "From 'ad-' (to) + 'cept' (take). To take to oneself.", ja: "'ad-' (〜へ) + 'cept' (取る) に由来。自分の方へ取る（受け入れる）。" },
         blocks: [{ id: "ac", label: "Ac-", meaning: { en: "To", ja: "〜へ" }, type: "prefix" }, { id: "cept", label: "Cept", meaning: { en: "Take", ja: "取る" }, type: "root" }],
-        icon: "CheckCircle"
+        icon: "CheckCircle",
+        tip: {
+            en: "CEPT is Latin capere, 'to take' — hiding in 120+ English words, from capture to participate. Its hardest cousin, precept ('a rule taken beforehand'), is one of Brown's 14 master words.",
+            ja: "CEPT はラテン語 capere（取る）。capture から participate まで、120以上の英単語に潜んでいます。最難関のいとこ precept（前もって取られた規則＝教訓）は、ブラウンの14マスターワードのひとつです。",
+        },
     },
     {
         id: "concept",
@@ -125,7 +129,11 @@ export const expandedWords: Word[] = [
         meaning: { en: "To have or hold within.", ja: "内部に持つ、含む。" },
         history: { en: "From 'con-' (together) + 'tain' (hold). To hold together.", ja: "'con-' (共に) + 'tain' (保つ) に由来。共に保つ（包含する）。" },
         blocks: [{ id: "con", label: "Con-", meaning: { en: "Together", ja: "共に" }, type: "prefix" }, { id: "tain", label: "Tain", meaning: { en: "Hold", ja: "保つ" }, type: "root" }],
-        icon: "Box"
+        icon: "Box",
+        tip: {
+            en: "TAIN (Latin tenere, 'to hold') also holds maintain, obtain, retain, sustain, entertain. Its master word is detain — 'to hold down'.",
+            ja: "TAIN（ラテン語 tenere「保つ」）は maintain、obtain、retain、sustain、entertain も抱えています。マスターワードは detain ——「押さえて留める（拘留する）」。",
+        },
     },
     {
         id: "maintain",
@@ -151,7 +159,11 @@ export const expandedWords: Word[] = [
         meaning: { en: "Accept or yield to a superior force.", ja: "優れた力に屈する、または受け入れる。" },
         history: { en: "From 'sub-' (under) + 'mit' (send). To send oneself under.", ja: "'sub-' (下に) + 'mit' (送る) に由来。自分を下に送る（服従する/提出する）。" },
         blocks: [{ id: "sub", label: "Sub-", meaning: { en: "Under", ja: "下に" }, type: "prefix" }, { id: "mit", label: "Mit", meaning: { en: "Send", ja: "送る" }, type: "root" }],
-        icon: "CornerDownRight"
+        icon: "CornerDownRight",
+        tip: {
+            en: "MIT (Latin mittere, 'to send') sends transmit, permit, admit, emit — and mission, 'a sending'. Master word: intermittent, 'sending between' — stopping and starting.",
+            ja: "MIT（ラテン語 mittere「送る」）は transmit、permit、admit、emit、そして mission（送ること）を送り出します。マスターワードは intermittent ——「間に送る」＝断続的な。",
+        },
     },
     {
         id: "transmit",
@@ -169,7 +181,11 @@ export const expandedWords: Word[] = [
         meaning: { en: "Present or proffer (something) for (someone) to accept or reject.", ja: "（誰かに）受け入れるか拒否するかを選択させるために（何かを）提示する。" },
         history: { en: "From 'ob-' (towards) + 'fer' (carry). To carry towards someone.", ja: "'ob-' (〜の方へ) + 'fer' (運ぶ) に由来。誰かの方へ運ぶ（提供する）。" },
         blocks: [{ id: "of", label: "Of-", meaning: { en: "Towards (from Ob-)", ja: "〜の方へ" }, type: "prefix" }, { id: "fer", label: "Fer", meaning: { en: "Carry", ja: "運ぶ" }, type: "root" }],
-        icon: "Gift"
+        icon: "Gift",
+        tip: {
+            en: "Offer itself is one of Brown's 14 master words. FER (Latin ferre, 'to carry') also carries transfer, refer, prefer, differ — and ferry.",
+            ja: "offer 自体がブラウンの14マスターワードのひとつです。FER（ラテン語 ferre「運ぶ」）は transfer、refer、prefer、differ、そして ferry も運びます。",
+        },
     },
     {
         id: "transfer",
@@ -211,7 +227,11 @@ export const expandedWords: Word[] = [
         meaning: { en: "Help (someone), typically by doing a share of the work.", ja: "（誰かを）手伝う、通常は仕事の一部を分担することによって。" },
         history: { en: "From 'ad-' (to) + 'sist' (stand). To stand by/near someone to help.", ja: "'ad-' (〜へ) + 'sist' (立つ) に由来。助けるために誰かのそばに立つ（支援する）。" },
         blocks: [{ id: "as", label: "As-", meaning: { en: "To/Near (from Ad-)", ja: "〜へ/近くに" }, type: "prefix" }, { id: "sist", label: "Sist", meaning: { en: "Stand", ja: "立つ" }, type: "root" }],
-        icon: "HelpingHand"
+        icon: "HelpingHand",
+        tip: {
+            en: "SIST (Latin sistere, 'to stand') stands in persist, resist, exist, consist. Master word: insist — 'to stand upon' your point.",
+            ja: "SIST（ラテン語 sistere「立つ」）は persist、resist、exist、consist に立っています。マスターワードは insist ——自分の主張の「上に立つ」。",
+        },
     },
 
     // 6. GRAPH (Write - 書く)
@@ -229,7 +249,11 @@ export const expandedWords: Word[] = [
         meaning: { en: "A signature, especially that of a celebrity.", ja: "署名、特に有名人のサイン。" },
         history: { en: "From 'auto-' (self) + 'graph' (write). Self-written.", ja: "'auto-' (自身) + 'graph' (書く) に由来。自分で書いたもの。" },
         blocks: [{ id: "auto", label: "Auto-", meaning: { en: "Self", ja: "自身" }, type: "prefix" }, { id: "graph", label: "Graph", meaning: { en: "Write", ja: "書く" }, type: "root" }],
-        icon: "Pen"
+        icon: "Pen",
+        tip: {
+            en: "GRAPH (Greek graphein, 'to write') writes telegraph, biography, paragraph, graphite — you met it in photograph. Master word: monograph, 'a single writing'.",
+            ja: "GRAPH（ギリシャ語 graphein「書く」）は telegraph、biography、paragraph、graphite を書きます —— photograph でも出会いましたね。マスターワードは monograph（単一の書き物＝専門論文）。",
+        },
     },
     {
         id: "telegraph",
@@ -263,7 +287,11 @@ export const expandedWords: Word[] = [
         meaning: { en: "Reasoning conducted or assessed according to strict principles.", ja: "厳密な原則に従って行われる、または評価される推論（論理）。" },
         history: { en: "From 'log' (word/reason). The art of reasoning.", ja: "'log' (言葉/理性) に由来。推論の技術。" },
         blocks: [{ id: "log", label: "Log", meaning: { en: "Reason", ja: "理性" }, type: "root" }, { id: "ic", label: "-ic", meaning: { en: "Nature of", ja: "〜の性質" }, type: "suffix" }],
-        icon: "Brain"
+        icon: "Brain",
+        tip: {
+            en: "LOG (Greek logos, 'word, reason') speaks in dialogue, apology, biology — every -logy is 'the study of'. Master word: epilogue, the words 'upon' the end.",
+            ja: "LOG（ギリシャ語 logos「言葉・理性」）は dialogue、apology、biology に語っています —— あらゆる -logy は「〜学」。マスターワードは epilogue（終わりの「上に」置かれた言葉＝結び）。",
+        },
     },
 
     // 8. SPECT (Look - 見る)
@@ -281,7 +309,11 @@ export const expandedWords: Word[] = [
         meaning: { en: "To look into closely.", ja: "詳しく調べる（検査する）。" },
         history: { en: "From 'in-' (into) + 'spect' (look). To look into.", ja: "'in-' (中へ) + 'spect' (見る) に由来。中を見る。" },
         blocks: [{ id: "in", label: "In-", meaning: { en: "Into", ja: "中へ" }, type: "prefix" }, { id: "spect", label: "Spect", meaning: { en: "Look", ja: "見る" }, type: "root" }],
-        icon: "Search"
+        icon: "Search",
+        tip: {
+            en: "SPECT is Latin specere, 'to look' — with 60+ English descendants: respect, expect, spectator, perspective, even species. Master word: aspect, 'a looking at'.",
+            ja: "SPECT はラテン語 specere（見る）。respect、expect、spectator、perspective、さらには species まで、60以上の英単語の祖先です。マスターワードは aspect（見ること＝側面）。",
+        },
     },
     {
         id: "spectacle",
@@ -307,7 +339,11 @@ export const expandedWords: Word[] = [
         meaning: { en: "Say something in response to something someone has said.", ja: "誰かが言ったことに対して何かを言う（返信する）。" },
         history: { en: "From 're-' (back) + 'ply' (fold). To fold back (an answer).", ja: "'re-' (後ろへ) + 'ply' (折る) に由来。（答えを）折り返す。" },
         blocks: [{ id: "re", label: "Re-", meaning: { en: "Back", ja: "後ろへ" }, type: "prefix" }, { id: "ply", label: "Ply", meaning: { en: "Fold", ja: "折る" }, type: "root" }],
-        icon: "MessageSquare"
+        icon: "MessageSquare",
+        tip: {
+            en: "PLY (Latin plicare, 'to fold') folds into multiply, apply, complicate, and plywood. Master word: uncomplicated — 'not folded together'.",
+            ja: "PLY（ラテン語 plicare「折る」）は multiply、apply、complicate、plywood（合板）に折り込まれています。マスターワードは uncomplicated ——「共に折られていない」＝複雑でない。",
+        },
     },
     {
         id: "multiply",
@@ -333,7 +369,11 @@ export const expandedWords: Word[] = [
         meaning: { en: "Cause to cover a larger area; make longer or wider.", ja: "より広い範囲をカバーさせる、長くする、または広くする（拡張する）。" },
         history: { en: "From 'ex-' (out) + 'tend' (stretch). To stretch out.", ja: "'ex-' (外へ) + 'tend' (伸ばす) に由来。外へ伸ばす。" },
         blocks: [{ id: "ex", label: "Ex-", meaning: { en: "Out", ja: "外へ" }, type: "prefix" }, { id: "tend", label: "Tend", meaning: { en: "Stretch", ja: "伸ばす" }, type: "root" }],
-        icon: "Maximize"
+        icon: "Maximize",
+        tip: {
+            en: "TEND (Latin tendere, 'to stretch') stretches through attend, intend, tension, tent — a stretched shelter. Master word: nonextended.",
+            ja: "TEND（ラテン語 tendere「伸ばす」）は attend、intend、tension、そして tent（張られた住まい）まで伸びています。マスターワードは nonextended。",
+        },
     },
     {
         id: "attend",
@@ -359,7 +399,11 @@ export const expandedWords: Word[] = [
         meaning: { en: "Organize and carry out.", ja: "組織して実行する（実施する/指揮する）。" },
         history: { en: "From 'con-' (together) + 'duct' (lead). To lead together.", ja: "'con-' (共に) + 'duct' (導く) に由来。共に導くこと。" },
         blocks: [{ id: "con", label: "Con-", meaning: { en: "Together", ja: "共に" }, type: "prefix" }, { id: "duct", label: "Duct", meaning: { en: "Lead", ja: "導く" }, type: "root" }],
-        icon: "Gavel"
+        icon: "Gavel",
+        tip: {
+            en: "DUCT (Latin ducere, 'to lead') leads introduce, produce, educate — 'to lead out' what is within — and the air duct in your ceiling. Master word: reproduction.",
+            ja: "DUCT（ラテン語 ducere「導く」）は introduce、produce、educate（内にあるものを「外へ導く」）、そして天井の air duct（ダクト）まで導きます。マスターワードは reproduction。",
+        },
     },
     {
         id: "introduce",
@@ -385,7 +429,11 @@ export const expandedWords: Word[] = [
         meaning: { en: "Write or create (a work of art, especially music or poetry).", ja: "（芸術作品、特に音楽や詩を）書く、または創作する（構成する）。" },
         history: { en: "From 'com-' (together) + 'pose' (put). To put together.", ja: "'com-' (共に) + 'pose' (置く) に由来。共に置くこと。" },
         blocks: [{ id: "com", label: "Com-", meaning: { en: "Together", ja: "共に" }, type: "prefix" }, { id: "pose", label: "Pose", meaning: { en: "Put", ja: "置く" }, type: "root" }],
-        icon: "Edit3"
+        icon: "Edit3",
+        tip: {
+            en: "POSE (Latin ponere, 'to put') places oppose, propose, expose, position. Master word: indisposed — 'not put in order', politely unwell.",
+            ja: "POSE（ラテン語 ponere「置く」）は oppose、propose、expose、position を配置します。マスターワードは indisposed ——「整えて置かれていない」＝体調がすぐれない。",
+        },
     },
     {
         id: "oppose",
@@ -411,7 +459,11 @@ export const expandedWords: Word[] = [
         meaning: { en: "Literature in the form of prose, especially short stories and novels, that describes imaginary events and people.", ja: "架空の出来事や人々を描写する、特に短編小説や小説の形式の文学（フィクション）。" },
         history: { en: "From 'fic' (make). Something made up.", ja: "'fic' (作る) に由来。作り上げられたもの。" },
         blocks: [{ id: "fict", label: "Fict", meaning: { en: "Make", ja: "作る" }, type: "root" }, { id: "ion", label: "-ion", meaning: { en: "State", ja: "状態" }, type: "suffix" }],
-        icon: "BookKey"
+        icon: "BookKey",
+        tip: {
+            en: "FIC (Latin facere, 'to make') makes factory, efficient, magnificent, sufficient. Master word: oversufficient — three parts stacked on one root.",
+            ja: "FIC（ラテン語 facere「作る」）は factory、efficient、magnificent、sufficient を作ります。マスターワードは oversufficient ——ひとつの語根に部品が三つ重なった言葉です。",
+        },
     },
     {
         id: "efficient",
@@ -437,6 +489,10 @@ export const expandedWords: Word[] = [
         meaning: { en: "Arrange to receive something independently of other people.", ja: "他の人とは独立して何かを受け取るように手配する（定期購読する）。" },
         history: { en: "From 'sub-' (under) + 'scribe' (write). To write (name) under.", ja: "'sub-' (下に) + 'scribe' (書く) に由来。（名前を）下に書くこと。" },
         blocks: [{ id: "sub", label: "Sub-", meaning: { en: "Under", ja: "下に" }, type: "prefix" }, { id: "scribe", label: "Scribe", meaning: { en: "Write", ja: "書く" }, type: "root" }],
-        icon: "Bell"
+        icon: "Bell",
+        tip: {
+            en: "SCRIBE (Latin scribere, 'to write') writes describe, prescribe, script, manuscript. Master word: mistranscribe — the last of Brown's 14. Finish this lesson and you have met every part he estimated appears in 100,000+ dictionary words.",
+            ja: "SCRIBE（ラテン語 scribere「書く」）は describe、prescribe、script、manuscript を書きます。マスターワードは mistranscribe ——ブラウンの14語の最後のひとつ。このレッスンを終えれば、10万語以上に現れると推定された部品のすべてに出会ったことになります。",
+        },
     }
 ];

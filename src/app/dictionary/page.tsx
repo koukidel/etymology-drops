@@ -1,23 +1,27 @@
 "use client";
 
-import { expandedWords } from "@/data/expandedWords";
-import { Block, Word } from "@/data/types";
+import { allWords } from "@/data/words";
+import { Block } from "@/data/types";
 import { useState, useMemo } from "react";
-import Link from "next/link";
-import { ArrowLeft, Book, Search, X, ChevronRight } from "lucide-react";
+import { X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "@/hooks/useTranslation";
+import { Header } from "@/components/layout/Header";
+
+type Filter = 'all' | 'prefix' | 'root' | 'suffix';
 
 export default function DictionaryPage() {
-    const { t } = useTranslation();
-    const [filter, setFilter] = useState<'all' | 'prefix' | 'root' | 'suffix'>('all');
+    const { t, language } = useTranslation();
+    const [filter, setFilter] = useState<Filter>('all');
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedBlock, setSelectedBlock] = useState<Block | null>(null);
 
-    // Extract all unique blocks
+    const localized = (s: string | { en: string; ja: string }) =>
+        typeof s === 'string' ? s : s[language];
+
     const dictionary = useMemo(() => {
         const map = new Map<string, Block>();
-        expandedWords.forEach(word => {
+        allWords.forEach(word => {
             word.blocks.forEach(block => {
                 const key = `${block.type}-${block.id}`;
                 if (!map.has(key)) {
@@ -30,94 +34,93 @@ export default function DictionaryPage() {
 
     const filtered = dictionary.filter(b => {
         const matchesFilter = filter === 'all' || b.type === filter;
+        const meaning = localized(b.meaning);
         const matchesSearch = b.label.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            (typeof b.meaning === 'string' ? b.meaning : b.meaning.en).toLowerCase().includes(searchQuery.toLowerCase());
+            meaning.toLowerCase().includes(searchQuery.toLowerCase());
         return matchesFilter && matchesSearch;
     });
 
-    // Find words related to the selected block
     const relatedWords = useMemo(() => {
         if (!selectedBlock) return [];
-        return expandedWords.filter(word =>
+        return allWords.filter(word =>
             word.blocks.some(b => b.id === selectedBlock.id && b.type === selectedBlock.type)
         );
     }, [selectedBlock]);
 
+    const displayLabel = (block: Block) =>
+        block.type === 'prefix' ? `${block.label}-` : block.type === 'suffix' ? `-${block.label}` : block.label;
+
+    const typeLabel = (type: string) => {
+        if (language === 'ja') {
+            return type === 'prefix' ? '接頭辞' : type === 'suffix' ? '接尾辞' : type === 'root' ? '語根' : 'すべて';
+        }
+        return type;
+    };
+
     return (
-        <main className="min-h-screen bg-slate-50 text-slate-900 pb-24">
-            <header className="px-6 py-6 border-b border-slate-200 bg-white sticky top-0 z-10 flex flex-col gap-4">
-                <div className="flex items-center gap-4">
-                    <Link href="/" className="p-2 hover:bg-slate-100 rounded-full transition-colors">
-                        <ArrowLeft size={24} className="text-slate-500" />
-                    </Link>
-                    <div className="flex-1">
-                        <h1 className="text-xl font-bold flex items-center gap-2">
-                            <Book className="text-indigo-600" />
-                            {t('codex.title')}
-                        </h1>
-                    </div>
-                </div>
+        <div className="min-h-screen">
+            <Header />
 
-                {/* Search Bar */}
-                <div className="relative">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-                    <input
-                        type="text"
-                        placeholder={t('codex.search_placeholder')}
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full pl-10 pr-4 py-3 bg-slate-100 rounded-xl border-none focus:ring-2 focus:ring-indigo-500 outline-none font-medium"
-                    />
-                </div>
-            </header>
+            <main className="max-w-3xl mx-auto px-6 py-12">
+                <h1 className="font-serif text-4xl text-foreground mb-8">{t('codex.title')}</h1>
 
-            <div className="max-w-4xl mx-auto px-6 py-6">
+                {/* Search */}
+                <input
+                    type="text"
+                    placeholder={t('codex.search_placeholder')}
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full px-0 py-3 bg-transparent border-0 border-b border-border focus:border-foreground outline-none text-lg placeholder:text-muted-foreground/60 transition-colors mb-6"
+                />
+
                 {/* Filters */}
-                <div className="flex gap-2 mb-6 overflow-x-auto pb-2 no-scrollbar">
-                    {['all', 'root', 'prefix', 'suffix'].map((type) => (
+                <div className="flex gap-5 mb-10">
+                    {(['all', 'root', 'prefix', 'suffix'] as Filter[]).map((type) => (
                         <button
                             key={type}
-                            onClick={() => setFilter(type as any)}
-                            className={`px-4 py-2 rounded-full font-bold text-sm capitalize whitespace-nowrap transition-all ${filter === type
-                                ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-200'
-                                : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
+                            onClick={() => setFilter(type)}
+                            className={`text-sm capitalize transition-colors ${filter === type
+                                ? 'text-foreground underline underline-offset-8'
+                                : 'text-muted-foreground hover:text-foreground'
                                 }`}
                         >
-                            {type}s
+                            {typeLabel(type)}
                         </button>
                     ))}
                 </div>
 
-                {/* Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                {/* List */}
+                <ul className="divide-y divide-border border-y border-border">
                     {filtered.map((block) => (
-                        <motion.button
-                            key={`${block.type}-${block.id}`}
-                            layoutId={`${block.type}-${block.id}`}
-                            onClick={() => setSelectedBlock(block)}
-                            className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-all flex items-start gap-4 text-left w-full"
-                        >
-                            <div className={`p-3 rounded-lg font-bold text-lg shrink-0 ${block.type === 'root' ? 'bg-indigo-50 text-indigo-700' :
-                                block.type === 'prefix' ? 'bg-emerald-50 text-emerald-700' :
-                                    'bg-amber-50 text-amber-700'
-                                }`}>
-                                {block.type === 'prefix' ? `${block.label}-` : block.type === 'suffix' ? `-${block.label}` : block.label}
-                            </div>
-                            <div>
-                                <h3 className="font-bold text-slate-900">{block.label}</h3>
-                                <p className="text-slate-500 text-sm mt-1 line-clamp-2">
-                                    {typeof block.meaning === 'string' ? block.meaning : block.meaning.en}
-                                </p>
-                                <span className="text-[10px] font-bold text-slate-400 mt-2 inline-block uppercase tracking-wider bg-slate-100 px-2 py-0.5 rounded-full">
-                                    {block.type}
+                        <li key={`${block.type}-${block.id}`}>
+                            <button
+                                onClick={() => setSelectedBlock(block)}
+                                className="w-full flex items-baseline justify-between gap-4 py-4 text-left hover:bg-muted/40 -mx-3 px-3 transition-colors"
+                            >
+                                <div className="flex items-baseline gap-4 min-w-0">
+                                    <span className={`font-serif text-xl shrink-0 ${block.type === 'root' ? 'text-accent' : 'text-foreground'}`}>
+                                        {displayLabel(block)}
+                                    </span>
+                                    <span className="text-sm text-muted-foreground truncate">
+                                        {localized(block.meaning)}
+                                    </span>
+                                </div>
+                                <span className="text-[11px] uppercase tracking-[0.15em] text-muted-foreground/70 shrink-0">
+                                    {typeLabel(block.type)}
                                 </span>
-                            </div>
-                        </motion.button>
+                            </button>
+                        </li>
                     ))}
-                </div>
-            </div>
+                </ul>
 
-            {/* Detailed View Modal */}
+                {filtered.length === 0 && (
+                    <p className="text-sm text-muted-foreground mt-8 text-center">
+                        {language === 'ja' ? '見つかりませんでした。' : 'Nothing found.'}
+                    </p>
+                )}
+            </main>
+
+            {/* Detail panel */}
             <AnimatePresence>
                 {selectedBlock && (
                     <>
@@ -126,62 +129,49 @@ export default function DictionaryPage() {
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                             onClick={() => setSelectedBlock(null)}
-                            className="fixed inset-0 bg-black/60 z-50 backdrop-blur-sm"
+                            className="fixed inset-0 bg-foreground/20 z-50"
                         />
                         <motion.div
-                            layoutId={`${selectedBlock.type}-${selectedBlock.id}`}
-                            className="fixed inset-x-4 top-[10%] bottom-[10%] md:inset-x-auto md:left-1/2 md:-translate-x-1/2 md:w-full md:max-w-lg bg-white rounded-3xl z-50 overflow-hidden flex flex-col shadow-2xl"
+                            initial={{ opacity: 0, y: 16 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: 16 }}
+                            transition={{ duration: 0.2 }}
+                            className="fixed inset-x-4 top-[12%] max-h-[76vh] md:inset-x-auto md:left-1/2 md:-translate-x-1/2 md:w-full md:max-w-lg bg-card border border-border rounded-xl z-50 overflow-hidden flex flex-col"
                         >
-                            {/* Modal Header */}
-                            <div className="p-6 border-b border-slate-100 flex justify-between items-start bg-slate-50/50">
-                                <div className="flex gap-4">
-                                    <div className={`p-4 rounded-2xl font-black text-3xl shadow-sm ${selectedBlock.type === 'root' ? 'bg-indigo-100 text-indigo-700' :
-                                        selectedBlock.type === 'prefix' ? 'bg-emerald-100 text-emerald-700' :
-                                            'bg-amber-100 text-amber-700'
-                                        }`}>
-                                        {selectedBlock.type === 'prefix' ? `${selectedBlock.label}-` : selectedBlock.type === 'suffix' ? `-${selectedBlock.label}` : selectedBlock.label}
-                                    </div>
-                                    <div>
-                                        <h2 className="text-2xl font-bold text-slate-900">{selectedBlock.label}</h2>
-                                        <p className="text-slate-500 font-medium">
-                                            {typeof selectedBlock.meaning === 'string' ? selectedBlock.meaning : selectedBlock.meaning.en}
-                                        </p>
-                                        <span className="text-xs font-bold text-slate-400 mt-2 inline-block uppercase tracking-wider bg-white border border-slate-200 px-2 py-1 rounded-full">
-                                            {selectedBlock.type}
-                                        </span>
-                                    </div>
+                            <div className="p-6 border-b border-border flex justify-between items-start">
+                                <div>
+                                    <p className="text-[11px] uppercase tracking-[0.15em] text-muted-foreground mb-1">
+                                        {typeLabel(selectedBlock.type)}
+                                    </p>
+                                    <h2 className="font-serif text-3xl text-foreground">{displayLabel(selectedBlock)}</h2>
+                                    <p className="text-muted-foreground mt-1">{localized(selectedBlock.meaning)}</p>
                                 </div>
                                 <button
                                     onClick={() => setSelectedBlock(null)}
-                                    className="p-2 bg-slate-200 hover:bg-slate-300 rounded-full transition-colors"
+                                    aria-label="Close"
+                                    className="p-2 text-muted-foreground hover:text-foreground transition-colors"
                                 >
-                                    <X size={20} className="text-slate-600" />
+                                    <X size={18} />
                                 </button>
                             </div>
 
-                            {/* Modal Content */}
                             <div className="flex-1 overflow-y-auto p-6">
-                                <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4">
+                                <h3 className="text-[11px] uppercase tracking-[0.15em] text-muted-foreground mb-4">
                                     {t('codex.related_words')} ({relatedWords.length})
                                 </h3>
-                                <div className="space-y-3">
+                                <ul className="divide-y divide-border">
                                     {relatedWords.map((word) => (
-                                        <div key={word.id} className="flex items-center justify-between p-4 bg-white border border-slate-200 rounded-xl hover:border-indigo-300 transition-colors group">
-                                            <div>
-                                                <h4 className="font-bold text-slate-900 text-lg">{word.word}</h4>
-                                                <p className="text-slate-500 text-sm">
-                                                    {typeof word.meaning === 'string' ? word.meaning : word.meaning.en}
-                                                </p>
-                                            </div>
-                                            <ChevronRight size={20} className="text-slate-300 group-hover:text-indigo-500 transition-colors" />
-                                        </div>
+                                        <li key={word.id} className="py-3">
+                                            <p className="font-serif text-lg text-foreground">{word.word}</p>
+                                            <p className="text-sm text-muted-foreground">{localized(word.meaning)}</p>
+                                        </li>
                                     ))}
-                                </div>
+                                </ul>
                             </div>
                         </motion.div>
                     </>
                 )}
             </AnimatePresence>
-        </main>
+        </div>
     );
 }

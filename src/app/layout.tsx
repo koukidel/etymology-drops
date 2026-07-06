@@ -1,12 +1,7 @@
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Newsreader } from "next/font/google";
 import "./globals.css";
 import { LanguageProvider } from "@/contexts/LanguageContext";
-import { BadgeFixer } from "@/components/layout/BadgeFixer";
-import { FloatingNav } from "@/components/layout/FloatingNav";
-import { GlobalNavigation } from "@/components/layout/GlobalNavigation";
-import { AchievementToast } from "@/components/gamification/AchievementToast";
-import { DailyReward } from "@/components/gamification/DailyReward";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -14,25 +9,32 @@ const inter = Inter({
   display: "swap",
 });
 
+const newsreader = Newsreader({
+  subsets: ["latin"],
+  variable: "--font-newsreader",
+  style: ["normal", "italic"],
+  display: "swap",
+});
+
 export const viewport: Viewport = {
-  themeColor: "#6366f1",
+  themeColor: "#faf7f2",
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
 };
 
 export const metadata: Metadata = {
-  title: "Etymology Quest",
-  description: "Master word origins in this gamified adventure.",
+  title: "Etymology Drops",
+  description: "Every word has a story. Learn the hidden histories inside everyday English.",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "Etymology Quest",
+    title: "Etymology Drops",
   },
   openGraph: {
-    title: "Etymology Quest",
-    description: "Gamified etymology learning adventure.",
+    title: "Etymology Drops",
+    description: "Every word has a story. Learn the hidden histories inside everyday English.",
     type: "website",
   },
 };
@@ -44,18 +46,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.variable} antialiased font-sans bg-slate-50 text-slate-900 relative`} suppressHydrationWarning>
+      <body className={`${inter.variable} ${newsreader.variable} antialiased font-sans`} suppressHydrationWarning>
         <LanguageProvider>
-          <BadgeFixer />
-
-          {/* === Global Navigation === */}
-          {/* This sits outside of <main>, so page content cannot hide it. */}
-          {/* <GlobalNavigation /> - Removed as per user request */}
-          <FloatingNav />
-
-          <AchievementToast />
-          <DailyReward />
-
           <main className="relative">
             {children}
           </main>
