@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { useTranslation } from "@/hooks/useTranslation";
+import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
 
 interface OnboardingProps {
     onComplete: () => void;
@@ -11,7 +12,10 @@ export function Onboarding({ onComplete }: OnboardingProps) {
     const { t } = useTranslation();
 
     return (
-        <div className="min-h-screen flex items-center justify-center p-6">
+        <div className="min-h-screen flex items-center justify-center p-6 relative">
+            <div className="absolute top-6 right-6">
+                <LanguageSwitcher />
+            </div>
             <motion.div
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}

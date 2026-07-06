@@ -1,9 +1,13 @@
 @import "tailwindcss";
 
-@theme {
+/* Font tokens must be inlined: next/font defines the --font-* variables on
+   <body>, so a :root-level reference would resolve to nothing. */
+@theme inline {
   --font-sans: var(--font-inter), system-ui, sans-serif;
   --font-serif: var(--font-newsreader), Georgia, serif;
+}
 
+@theme {
   /* Editorial palette: warm paper, ink, one restrained accent */
   --color-background: #faf7f2;
   --color-foreground: #1c1917;
