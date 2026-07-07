@@ -4,6 +4,7 @@ export const ja = {
     "nav.path": "Path",
     "nav.dictionary": "見つける",
     "nav.progress": "Progress",
+    "nav.speedrun": "分解ラン",
 
     "home.courses": "Path",
 
@@ -39,7 +40,7 @@ export const ja = {
     "lesson.steps.mastery": "確認",
 
     "lesson.priming.origin_story": "言葉の物語",
-    "lesson.priming.i_understand": "分解してみる",
+    "lesson.priming.i_understand": "覚えた",
     "lesson.tip_label": "豆知識",
 
     "lesson.slicer.title": "言葉を分解する",
@@ -67,4 +68,19 @@ export const ja = {
     "codex.title": "見つける",
     "codex.search_placeholder": "部品や意味を検索…",
     "codex.related_words": "この部品を使う言葉",
+
+    "speedrun.eyebrow": "分解ドリル",
+    "speedrun.title": "ひたすら分解",
+    "speedrun.subtitle": "できるだけ多くの言葉を、部品に分解しよう。クイズなし、境目だけ。",
+    "speedrun.start": "はじめる",
+    "speedrun.next": "次へ",
+    "speedrun.finish": "やめる",
+    "speedrun.decomposed": "分解",
+    "speedrun.done_title": "お見事",
+    "speedrun.done_count": "語を分解しました",
+    "speedrun.per_min": "語/分",
+    "speedrun.again": "もう一度",
+    "speedrun.back": "Pathへ戻る",
+    "home.speedrun.title": "ひたすら分解",
+    "home.speedrun.desc": "分解だけ。時間内に、次々と言葉を切り分けよう。",
 };

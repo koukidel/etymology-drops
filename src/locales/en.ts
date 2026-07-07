@@ -4,6 +4,7 @@ export const en = {
     "nav.path": "Path",
     "nav.dictionary": "Find",
     "nav.progress": "Progress",
+    "nav.speedrun": "Speedrun",
 
     "home.courses": "Path",
 
@@ -39,7 +40,7 @@ export const en = {
     "lesson.steps.mastery": "Recall",
 
     "lesson.priming.origin_story": "The story",
-    "lesson.priming.i_understand": "Take it apart",
+    "lesson.priming.i_understand": "Got it",
     "lesson.tip_label": "Margin note",
 
     "lesson.slicer.title": "Take the word apart",
@@ -67,4 +68,19 @@ export const en = {
     "codex.title": "Find",
     "codex.search_placeholder": "Search parts and meanings…",
     "codex.related_words": "Words built with this part",
+
+    "speedrun.eyebrow": "Decomposition drill",
+    "speedrun.title": "Speedrun",
+    "speedrun.subtitle": "Slice as many words into their parts as you can. No quizzes — just seams.",
+    "speedrun.start": "Start",
+    "speedrun.next": "Next",
+    "speedrun.finish": "Finish",
+    "speedrun.decomposed": "decomposed",
+    "speedrun.done_title": "Nice run",
+    "speedrun.done_count": "words decomposed",
+    "speedrun.per_min": "/ min",
+    "speedrun.again": "Go again",
+    "speedrun.back": "Back to Path",
+    "home.speedrun.title": "Speedrun",
+    "home.speedrun.desc": "Just decompose — slice word after word against the clock.",
 };

@@ -87,7 +87,8 @@ export function LessonContainer({ word }: Props) {
         setViewIndex(4);
     };
 
-    const STEPS = [t('lesson.steps.priming'), t('lesson.steps.practice'), t('lesson.steps.synthesis'), t('lesson.steps.mastery')];
+    // Learning order: decompose → reconstruct → predict → story reveal.
+    const STEPS = [t('lesson.steps.practice'), t('lesson.steps.synthesis'), t('lesson.steps.mastery'), t('lesson.steps.priming')];
 
     // Completion
     if (viewIndex === 4) {
@@ -173,10 +174,10 @@ export function LessonContainer({ word }: Props) {
                         exit={{ opacity: 0, x: -20 }}
                         className="w-full h-full flex flex-col justify-center"
                     >
-                        {viewIndex === 0 && <PrimingView word={word} onNext={handleNext} />}
-                        {viewIndex === 1 && <SlicerView word={word} onNext={handleNext} />}
-                        {viewIndex === 2 && <MatrixView word={word} onNext={handleNext} />}
-                        {viewIndex === 3 && <ProficiencyView word={word} onNext={handleNext} />}
+                        {viewIndex === 0 && <SlicerView word={word} onNext={handleNext} />}
+                        {viewIndex === 1 && <MatrixView word={word} onNext={handleNext} />}
+                        {viewIndex === 2 && <ProficiencyView word={word} onNext={handleNext} />}
+                        {viewIndex === 3 && <PrimingView word={word} onNext={handleNext} />}
                     </motion.div>
                 </AnimatePresence>
             </div>
