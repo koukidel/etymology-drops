@@ -6,6 +6,7 @@ import { useMounted } from "@/hooks/useMounted";
 import { COURSES } from "@/data/courses";
 import { allWords } from "@/data/words";
 import { Header } from "@/components/layout/Header";
+import { GrowthTree } from "@/components/progress/GrowthTree";
 
 export default function ProfilePage() {
     const { masteredWords, masteryLog, streak, lastActiveDate, resetProgress } = useGameStore();
@@ -40,6 +41,9 @@ export default function ProfilePage() {
                 </header>
 
                 <div className="w-full max-w-xl space-y-12">
+                    {/* Growth tree */}
+                    <GrowthTree />
+
                     {/* Stat tiles */}
                     <div className="grid grid-cols-3 gap-4">
                         {tiles.map(t => (
