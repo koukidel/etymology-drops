@@ -6,6 +6,14 @@ export interface MasteryEntry {
     date: string | null; // ISO date (YYYY-MM-DD); null for progress migrated from before logging
 }
 
+export type LearnerLevel = 'beginner' | 'intermediate' | 'advanced';
+
+export interface OnboardingProfile {
+    goal: string;         // why they're learning (exam / work / culture / travel)
+    commitment: string;   // how much they want to do (light / steady / serious)
+    selfLevel: LearnerLevel;
+}
+
 interface GameState {
     unlockedWords: string[];
     masteredWords: string[];
@@ -14,11 +22,14 @@ interface GameState {
     streak: number;
     lastActiveDate: string | null; // ISO date (YYYY-MM-DD) of last completed lesson
 
-    hasSeenOnboarding: boolean;
+    hasCompletedIntake: boolean;   // finished the first-run intake (goal/commitment/level)
+    profile: OnboardingProfile | null;
+    hasSeenOnboarding: boolean;    // has played Lesson 0 (the 鳴→breakfast walkthrough)
 
     unlockWord: (wordId: string) => void;
     masterWord: (wordId: string) => void;
     recordLessonComplete: () => void;
+    completeIntake: (profile: OnboardingProfile) => void;
     completeOnboarding: () => void;
     resetProgress: () => void;
 }
@@ -44,6 +55,8 @@ export const useGameStore = create<GameState>()(
             masteryLog: [],
             streak: 0,
             lastActiveDate: null,
+            hasCompletedIntake: false,
+            profile: null,
             hasSeenOnboarding: false,
 
             unlockWord: (wordId) => set((state) => {
@@ -77,6 +90,8 @@ export const useGameStore = create<GameState>()(
                 };
             }),
 
+            completeIntake: (profile) => set({ profile, hasCompletedIntake: true }),
+
             completeOnboarding: () => set({ hasSeenOnboarding: true }),
 
             resetProgress: () => set({
@@ -89,7 +104,7 @@ export const useGameStore = create<GameState>()(
         }),
         {
             name: 'etymology-quest-storage',
-            version: 3,
+            version: 4,
             migrate: (persisted, version) => {
                 const old = (persisted ?? {}) as Record<string, unknown>;
 
@@ -144,7 +159,17 @@ export const useGameStore = create<GameState>()(
                     ...state.masteredWords.filter(id => !logged.has(id)).map(id => ({ id, date: null })),
                 ];
                 state = { ...state, masteryLog: seeded };
-                return state;
+
+                // v4: onboarding intake profile. Users who already saw the old
+                // forced onboarding skip the intake; brand-new users see it.
+                const withIntake = {
+                    ...state,
+                    profile: (old.profile as OnboardingProfile) ?? null,
+                    hasCompletedIntake: typeof old.hasCompletedIntake === 'boolean'
+                        ? old.hasCompletedIntake
+                        : state.hasSeenOnboarding,
+                };
+                return withIntake;
             },
         }
     )
