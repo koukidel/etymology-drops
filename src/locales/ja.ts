@@ -4,7 +4,7 @@ export const ja = {
     "nav.path": "Path",
     "nav.dictionary": "Dictionary",
     "nav.progress": "Progress",
-    "nav.speedrun": "分解ラン",
+    "nav.speedrun": "Time Attack",
 
     "home.courses": "Path",
 
@@ -71,7 +71,7 @@ export const ja = {
     "codex.related_words": "この部品を使う言葉",
 
     "speedrun.eyebrow": "分解ドリル",
-    "speedrun.title": "ひたすら分解",
+    "speedrun.title": "Time Attack",
     "speedrun.subtitle": "できるだけ多くの言葉を、部品に分解しよう。クイズなし、境目だけ。",
     "speedrun.start": "はじめる",
     "speedrun.next": "次へ",
@@ -82,8 +82,9 @@ export const ja = {
     "speedrun.per_min": "語/分",
     "speedrun.again": "もう一度",
     "speedrun.back": "Pathへ戻る",
-    "home.speedrun.title": "ひたすら分解",
+    "home.speedrun.title": "Time Attack",
     "home.speedrun.desc": "分解だけ。時間内に、次々と言葉を切り分けよう。",
+    "home.exams": "資格対策",
     "home.lesson0.title": "Lesson 0 ・ なぜ、朝食？",
     "home.lesson0.desc": "このアプリの土台になっている、5分の気づき。",
     "home.lesson0.done": "修了",

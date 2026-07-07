@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { Zap, BookOpen, Check } from "lucide-react";
 import { CourseGrid } from "@/components/home/CourseGrid";
+import { ExamShowcase } from "@/components/home/ExamShowcase";
 import { Recommended } from "@/components/home/Recommended";
 import { Header } from "@/components/layout/Header";
 import { useGameStore } from "@/store/useGameStore";
@@ -68,6 +69,8 @@ export default function Home() {
         <Recommended />
 
         <CourseGrid />
+
+        <ExamShowcase />
       </main>
     </div>
   );

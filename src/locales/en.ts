@@ -4,7 +4,7 @@ export const en = {
     "nav.path": "Path",
     "nav.dictionary": "Dictionary",
     "nav.progress": "Progress",
-    "nav.speedrun": "Speedrun",
+    "nav.speedrun": "Time Attack",
 
     "home.courses": "Path",
 
@@ -71,7 +71,7 @@ export const en = {
     "codex.related_words": "Words built with this part",
 
     "speedrun.eyebrow": "Decomposition drill",
-    "speedrun.title": "Speedrun",
+    "speedrun.title": "Time Attack",
     "speedrun.subtitle": "Slice as many words into their parts as you can. No quizzes — just seams.",
     "speedrun.start": "Start",
     "speedrun.next": "Next",
@@ -82,8 +82,9 @@ export const en = {
     "speedrun.per_min": "/ min",
     "speedrun.again": "Go again",
     "speedrun.back": "Back to Path",
-    "home.speedrun.title": "Speedrun",
+    "home.speedrun.title": "Time Attack",
     "home.speedrun.desc": "Just decompose — slice word after word against the clock.",
+    "home.exams": "Exam prep",
     "home.lesson0.title": "Lesson 0 · Why breakfast?",
     "home.lesson0.desc": "The five-minute idea the whole app is built on.",
     "home.lesson0.done": "Done",
