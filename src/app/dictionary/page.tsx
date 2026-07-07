@@ -37,6 +37,10 @@ export default function DictionaryPage() {
             .sort((a, b) => b.count - a.count || a.block.label.localeCompare(b.block.label));
     }, []);
 
+    // Top parts by how many words use them — the highest-leverage ones to learn.
+    const ranked = dictionary.slice(0, 10);
+    const maxCount = ranked.length ? ranked[0].count : 1;
+
     const filtered = dictionary.filter(({ block: b }) => {
         const matchesFilter = filter === 'all' || b.type === filter;
         const meaning = localized(b.meaning);
@@ -70,9 +74,37 @@ export default function DictionaryPage() {
 
             <main className="max-w-3xl mx-auto px-6 py-12">
                 <h1 className="font-serif text-4xl text-foreground mb-2">{t('codex.title')}</h1>
-                <p className="text-sm text-muted-foreground mb-8">
+                <p className="text-sm text-muted-foreground mb-10">
                     {ja ? '頻出順の部品リスト。タップして詳しく。' : 'Word parts, most common first. Tap to explore.'}
                 </p>
+
+                {/* Most common parts — highest-leverage ranking */}
+                <section className="mb-12">
+                    <h2 className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-4">
+                        {t('codex.common_parts')}
+                    </h2>
+                    <ol className="space-y-2.5">
+                        {ranked.map(({ block, count }, i) => (
+                            <li key={`${block.type}-${block.id}`}>
+                                <button
+                                    onClick={() => setSelectedBlock(block)}
+                                    className="w-full flex items-center gap-4 text-left group"
+                                >
+                                    <span className="text-sm text-muted-foreground/60 w-5 shrink-0 tabular-nums">{i + 1}</span>
+                                    <span className={`font-serif text-lg shrink-0 w-28 ${block.type === 'root' ? 'text-accent' : 'text-foreground'}`}>
+                                        {displayLabel(block)}
+                                    </span>
+                                    <span className="flex-1 h-1 rounded-full bg-muted overflow-hidden">
+                                        <span className="block h-full bg-accent/70 group-hover:bg-accent transition-colors" style={{ width: `${(count / maxCount) * 100}%` }} />
+                                    </span>
+                                    <span className="text-sm text-muted-foreground w-16 text-right shrink-0 tabular-nums">
+                                        {count}{ja ? '語' : ''}
+                                    </span>
+                                </button>
+                            </li>
+                        ))}
+                    </ol>
+                </section>
 
                 {/* Search */}
                 <input
