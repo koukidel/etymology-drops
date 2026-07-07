@@ -36,7 +36,7 @@ export default function ProfilePage() {
             <Header />
             <main className="p-6 flex flex-col items-center">
                 <header className="w-full max-w-xl mb-10 mt-6">
-                    <h1 className="font-serif text-4xl text-foreground">{ja ? '学習の記録' : 'Progress'}</h1>
+                    <h1 className="font-serif text-4xl text-foreground">Progress</h1>
                 </header>
 
                 <div className="w-full max-w-xl space-y-12">

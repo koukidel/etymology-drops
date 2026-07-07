@@ -2,10 +2,10 @@ export const ja = {
     "app.title": "語源の雫",
 
     "nav.path": "Path",
-    "nav.dictionary": "Dictionary",
+    "nav.dictionary": "見つける",
     "nav.progress": "Progress",
 
-    "home.courses": "コース",
+    "home.courses": "Path",
 
     "streak.label": "連続学習日数",
 
@@ -64,8 +64,7 @@ export const ja = {
     "lesson.complete.continue": "次の言葉へ",
     "lesson.complete.back": "コース一覧に戻る",
 
-    "codex.title": "辞典",
-    "codex.common_parts": "よく出る部品",
+    "codex.title": "見つける",
     "codex.search_placeholder": "部品や意味を検索…",
     "codex.related_words": "この部品を使う言葉",
 };
