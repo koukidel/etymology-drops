@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { X } from "lucide-react";
 import { useTranslation } from "@/hooks/useTranslation";
 import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
 import { SlicerModule } from "@/components/lesson/SlicerModule";
@@ -9,6 +10,7 @@ import { allWords } from "@/data/words";
 
 interface Props {
     onComplete: () => void;
+    onExit?: () => void;
 }
 
 type Step =
@@ -36,7 +38,7 @@ function Narration({ text, cta, onNext }: { text: string; cta: string; onNext: (
     );
 }
 
-export function GuidedOnboarding({ onComplete }: Props) {
+export function GuidedOnboarding({ onComplete, onExit }: Props) {
     const { t, language } = useTranslation();
     const [step, setStep] = useState<Step>('ask');
     const [guessed, setGuessed] = useState(false);
@@ -62,6 +64,15 @@ export function GuidedOnboarding({ onComplete }: Props) {
 
     return (
         <div className="min-h-screen flex items-center justify-center p-6 relative">
+            {onExit && (
+                <button
+                    onClick={onExit}
+                    aria-label="Close"
+                    className="absolute top-6 left-6 p-2 text-muted-foreground hover:text-foreground transition-colors"
+                >
+                    <X size={20} />
+                </button>
+            )}
             <div className="absolute top-6 right-6">
                 <LanguageSwitcher />
             </div>
