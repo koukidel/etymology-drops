@@ -42,7 +42,11 @@ export function LessonContainer({ word }: Props) {
     const related = useMemo<RelatedEntry[]>(() => {
         const out: RelatedEntry[] = [];
         const seen = new Set<string>([word.word.toLowerCase()]);
-        for (const block of word.blocks) {
+        // Roots carry the meaning, so surface root-family words before the
+        // (often very common) prefix/suffix siblings.
+        const orderedBlocks = [...word.blocks].sort((a, b) =>
+            (a.type === 'root' ? 0 : 1) - (b.type === 'root' ? 0 : 1));
+        for (const block of orderedBlocks) {
             for (const w of allWords) {
                 if (w.id === word.id || seen.has(w.word.toLowerCase())) continue;
                 if (w.blocks.some(b => b.id === block.id)) {

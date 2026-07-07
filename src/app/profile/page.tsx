@@ -6,6 +6,7 @@ import { useMounted } from "@/hooks/useMounted";
 import { COURSES } from "@/data/courses";
 import { allWords } from "@/data/words";
 import { Header } from "@/components/layout/Header";
+import { GrowthTree } from "@/components/progress/GrowthTree";
 
 export default function ProfilePage() {
     const { masteredWords, masteryLog, streak, lastActiveDate, resetProgress } = useGameStore();
@@ -36,10 +37,13 @@ export default function ProfilePage() {
             <Header />
             <main className="p-6 flex flex-col items-center">
                 <header className="w-full max-w-xl mb-10 mt-6">
-                    <h1 className="font-serif text-4xl text-foreground">{ja ? '学習の記録' : 'Progress'}</h1>
+                    <h1 className="font-serif text-4xl text-foreground">Progress</h1>
                 </header>
 
                 <div className="w-full max-w-xl space-y-12">
+                    {/* Growth tree */}
+                    <GrowthTree />
+
                     {/* Stat tiles */}
                     <div className="grid grid-cols-3 gap-4">
                         {tiles.map(t => (

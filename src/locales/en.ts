@@ -2,10 +2,10 @@ export const en = {
     "app.title": "Etymology Drops",
 
     "nav.path": "Path",
-    "nav.dictionary": "Dictionary",
+    "nav.dictionary": "Find",
     "nav.progress": "Progress",
 
-    "home.courses": "Courses",
+    "home.courses": "Path",
 
     "streak.label": "Day streak",
 
@@ -64,8 +64,7 @@ export const en = {
     "lesson.complete.continue": "Next word",
     "lesson.complete.back": "Back to courses",
 
-    "codex.title": "Dictionary",
-    "codex.common_parts": "Most common parts",
+    "codex.title": "Find",
     "codex.search_placeholder": "Search parts and meanings…",
     "codex.related_words": "Words built with this part",
 };

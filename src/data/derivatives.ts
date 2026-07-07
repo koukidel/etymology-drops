@@ -207,4 +207,42 @@ export const DERIVATIVES: Record<string, Derivative[]> = {
         { word: "video", gloss: { en: "Latin 'I see'", ja: "ラテン語「私は見る」" } },
         { word: "evident", gloss: { en: "clearly seen", ja: "はっきり見える→明白な" } },
     ],
+    // Roots introduced by the exam-rank courses (準2級・2級・準1級・TOEIC 800+)
+    vent: [
+        { word: "adventure", gloss: { en: "what comes to you", ja: "やって来ること→冒険" } },
+        { word: "convention", gloss: { en: "a coming-together", ja: "共に来る→大会・慣習" } },
+    ],
+    ject: [
+        { word: "eject", gloss: { en: "to throw out", ja: "外へ投げ出す" } },
+        { word: "objection", gloss: { en: "a throwing-against", ja: "対して投げる→異議" } },
+    ],
+    struct: [
+        { word: "infrastructure", gloss: { en: "the built base beneath", ja: "下に築かれた基盤" } },
+        { word: "destruction", gloss: { en: "an un-building", ja: "築くの逆→破壊" } },
+    ],
+    sequ: [
+        { word: "sequence", gloss: { en: "things that follow in order", ja: "続く順序" } },
+        { word: "consecutive", gloss: { en: "following one after another", ja: "連続した" } },
+    ],
+    pon: [
+        { word: "postpone", gloss: { en: "to place after", ja: "後に置く→延期する" } },
+        { word: "opponent", gloss: { en: "one placed against", ja: "反対に置かれた人" } },
+    ],
+    clude: [
+        { word: "seclude", gloss: { en: "to close apart", ja: "閉じて引き離す→隔離する" } },
+        { word: "conclusion", gloss: { en: "a closing-up", ja: "閉じること→結論" } },
+    ],
+    mote: [
+        { word: "remote", gloss: { en: "moved far away", ja: "遠くへ動かされた→遠隔の" } },
+        { word: "motion", gloss: { en: "a moving", ja: "動くこと→運動" } },
+        { word: "motive", gloss: { en: "what moves you", ja: "動かすもの→動機" } },
+    ],
+    form: [
+        { word: "uniform", gloss: { en: "one shape", ja: "一つの形→制服" } },
+        { word: "format", gloss: { en: "a set shape", ja: "定まった形" } },
+    ],
+    hibit: [
+        { word: "inhibit", gloss: { en: "to hold in, restrain", ja: "中で抑える→抑制する" } },
+        { word: "exhibition", gloss: { en: "a holding-out for view", ja: "外に差し出す→展覧会" } },
+    ],
 };
