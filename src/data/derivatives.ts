@@ -155,4 +155,56 @@ export const DERIVATIVES: Record<string, Derivative[]> = {
         { word: "describe", gloss: { en: "to write down", ja: "書き記す→描写する" } },
         { word: "script", gloss: { en: "a written thing", ja: "書かれたもの→台本" } },
     ],
+    // Roots introduced by the content-expansion courses
+    port: [
+        { word: "portable", gloss: { en: "able to be carried", ja: "運べる→携帯用の" } },
+        { word: "report", gloss: { en: "to carry back news", ja: "情報を持ち帰る→報告" } },
+        { word: "support", gloss: { en: "to carry from below", ja: "下から支える→支援" } },
+    ],
+    dict: [
+        { word: "dictionary", gloss: { en: "a book of sayings", ja: "言葉の書→辞書" } },
+        { word: "contradict", gloss: { en: "to speak against", ja: "反対を言う→矛盾する" } },
+        { word: "verdict", gloss: { en: "a true saying", ja: "真実を言う→評決" } },
+    ],
+    tract: [
+        { word: "attract", gloss: { en: "to draw toward", ja: "引き寄せる" } },
+        { word: "extract", gloss: { en: "to draw out", ja: "引き出す→抽出する" } },
+        { word: "subtract", gloss: { en: "to draw from under", ja: "下から引く→引き算する" } },
+    ],
+    vers: [
+        { word: "reverse", gloss: { en: "to turn back", ja: "後ろへ回す→逆転させる" } },
+        { word: "convert", gloss: { en: "to turn together / change", ja: "変える" } },
+        { word: "anniversary", gloss: { en: "the year turning round", ja: "年が巡ること→記念日" } },
+    ],
+    rupt: [
+        { word: "interrupt", gloss: { en: "to break between", ja: "間で壊す→中断する" } },
+        { word: "erupt", gloss: { en: "to break out", ja: "外へ壊れ出る→噴火する" } },
+        { word: "bankrupt", gloss: { en: "a broken bench (merchant)", ja: "壊れた台→破産" } },
+    ],
+    pens: [
+        { word: "suspend", gloss: { en: "to hang under", ja: "下に吊るす→保留する" } },
+        { word: "expensive", gloss: { en: "much to be paid out", ja: "多く支払う→高価な" } },
+        { word: "pendulum", gloss: { en: "a hanging weight", ja: "吊るされた錘→振り子" } },
+    ],
+    pend: [
+        { word: "depend", gloss: { en: "to hang from", ja: "〜に垂れ下がる→依存する" } },
+        { word: "append", gloss: { en: "to hang onto", ja: "付け足す→添付する" } },
+    ],
+    aster: [
+        { word: "astronaut", gloss: { en: "a star sailor", ja: "星の航海者→宇宙飛行士" } },
+        { word: "asterisk", gloss: { en: "a little star", ja: "小さな星→アスタリスク" } },
+    ],
+    ced: [
+        { word: "proceed", gloss: { en: "to go forward", ja: "前へ進む" } },
+        { word: "recede", gloss: { en: "to go back", ja: "後退する" } },
+        { word: "access", gloss: { en: "a going toward", ja: "近づくこと→アクセス" } },
+    ],
+    fund: [
+        { word: "confuse", gloss: { en: "to pour together", ja: "共に注ぐ→混乱させる" } },
+        { word: "refund", gloss: { en: "to pour back", ja: "注ぎ戻す→払い戻す" } },
+    ],
+    vide: [
+        { word: "video", gloss: { en: "Latin 'I see'", ja: "ラテン語「私は見る」" } },
+        { word: "evident", gloss: { en: "clearly seen", ja: "はっきり見える→明白な" } },
+    ],
 };
