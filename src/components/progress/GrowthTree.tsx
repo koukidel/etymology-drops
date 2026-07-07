@@ -8,7 +8,6 @@ import { useTranslation } from "@/hooks/useTranslation";
 
 // Art Nouveau plate palette (deep olive ground, gold ornament, red flower hearts).
 const GREEN = "#414F3A";
-const GREEN_DEEP = "#37432F";
 const GOLD = "#CBA24C";
 const GOLD_LEAF = "#D9C37E";
 const GOLD_DARK = "#9A7A33";
