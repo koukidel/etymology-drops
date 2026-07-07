@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Course, COURSE_LEVEL_LABEL } from "@/data/courses";
+import { Course } from "@/data/courses";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useGameStore } from "@/store/useGameStore";
 import { useMounted } from "@/hooks/useMounted";
@@ -29,16 +29,13 @@ export function CourseCard({ course, className = "" }: Props) {
             className={`group flex flex-col justify-between border border-border bg-card rounded-xl p-6 hover:border-muted-foreground transition-colors ${className}`}
         >
             <div>
-                <div className="flex items-center gap-2 mb-3">
-                    <span className="text-[11px] uppercase tracking-[0.15em] text-muted-foreground border border-border rounded-full px-2.5 py-0.5">
-                        {localized(COURSE_LEVEL_LABEL[course.level])}
-                    </span>
-                    {course.exam && (
+                {course.exam && (
+                    <div className="mb-3">
                         <span className="text-[11px] uppercase tracking-[0.15em] text-accent border border-accent/40 rounded-full px-2.5 py-0.5">
                             {localized(course.exam)}
                         </span>
-                    )}
-                </div>
+                    </div>
+                )}
                 <h2 className="font-serif text-2xl text-foreground mb-1">{localized(course.title)}</h2>
                 <p className="text-sm text-muted-foreground leading-relaxed">{localized(course.description)}</p>
             </div>
