@@ -36,7 +36,7 @@ export function ExamShowcase() {
                             className="group aspect-square flex flex-col justify-between rounded-2xl border border-border bg-card p-4 hover:border-accent transition-colors"
                         >
                             <div>
-                                <span className="block font-serif text-xl text-accent leading-snug">
+                                <span className="block font-serif text-xl text-ochre leading-snug">
                                     {localized(course.exam!)}
                                 </span>
                                 <span className="block text-sm text-muted-foreground mt-0.5">
