@@ -33,17 +33,18 @@ export function ExamShowcase() {
                         <Link
                             key={course.id}
                             href={`/course/${course.id}`}
-                            className="group aspect-square flex flex-col justify-between rounded-2xl border border-border bg-card p-4 hover:border-accent transition-colors"
+                            className="group aspect-square flex flex-col justify-between rounded-2xl p-4 transition-transform hover:-translate-y-0.5"
+                            style={{ backgroundColor: "#3c4a34", boxShadow: "inset 0 0 0 1px #cba24c33" }}
                         >
                             <div>
-                                <span className="block font-serif text-xl text-ochre leading-snug">
+                                <span className="block font-serif text-xl leading-snug" style={{ color: "#d4a94a" }}>
                                     {localized(course.exam!)}
                                 </span>
-                                <span className="block text-sm text-muted-foreground mt-0.5">
+                                <span className="block text-sm mt-0.5" style={{ color: "#c6c1a4" }}>
                                     {ja ? "対策単語" : "vocabulary"}
                                 </span>
                             </div>
-                            <span className="text-xs text-muted-foreground tabular-nums">
+                            <span className="text-xs tabular-nums" style={{ color: "#a9ac8e" }}>
                                 {done} / {total}
                             </span>
                         </Link>
