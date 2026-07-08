@@ -35,12 +35,14 @@ export function ExamShowcase() {
                             href={`/course/${course.id}`}
                             className="group aspect-square flex flex-col justify-between rounded-2xl border border-border bg-card p-4 hover:border-accent transition-colors"
                         >
-                            <span className="text-[11px] uppercase tracking-[0.12em] text-accent">
-                                {localized(course.exam!)}
-                            </span>
-                            <span className="font-serif text-lg text-foreground leading-snug">
-                                {localized(course.title)}
-                            </span>
+                            <div>
+                                <span className="block font-serif text-xl text-accent leading-snug">
+                                    {localized(course.exam!)}
+                                </span>
+                                <span className="block text-sm text-muted-foreground mt-0.5">
+                                    {ja ? "対策単語" : "vocabulary"}
+                                </span>
+                            </div>
                             <span className="text-xs text-muted-foreground tabular-nums">
                                 {done} / {total}
                             </span>
