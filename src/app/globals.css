@@ -8,23 +8,29 @@
 }
 
 @theme {
-  /* Editorial palette: warm paper, ink, one restrained accent */
-  --color-background: #faf7f2;
-  --color-foreground: #1c1917;
+  /* William Morris "Acanthus Portière" palette: warm ivory ground, ink-brown
+     text, terracotta accent, with sage / ochre / dusty-blue as scarce secondaries. */
+  --color-background: #f2ead9;
+  --color-foreground: #2a2320;
 
-  --color-muted: #f1ece4;
-  --color-muted-foreground: #78716c;
+  --color-muted: #e8ddc7;
+  --color-muted-foreground: #86765e;
 
-  --color-card: #fffdf9;
-  --color-card-foreground: #1c1917;
+  --color-card: #fbf5e8;
+  --color-card-foreground: #2a2320;
 
-  --color-border: #e7e0d8;
-  --color-input: #e7e0d8;
+  --color-border: #ddd0b7;
+  --color-input: #ddd0b7;
 
-  --color-accent: #9c4221;
-  --color-accent-foreground: #ffffff;
+  --color-accent: #b0472f;
+  --color-accent-foreground: #fbf5e8;
 
-  --color-ring: #9c4221;
+  --color-ring: #b0472f;
+
+  /* Morris secondaries (used sparingly for variety) */
+  --color-sage: #6f7a52;
+  --color-ochre: #c1912f;
+  --color-indigo: #5f7d90;
 
   --radius-lg: 0.75rem;
   --radius-md: 0.5rem;
