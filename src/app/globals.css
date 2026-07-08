@@ -8,28 +8,29 @@
 }
 
 @theme {
-  /* William Morris "Acanthus Portière" palette: warm ivory ground, ink-brown
-     text, terracotta accent, with sage / ochre / dusty-blue as scarce secondaries. */
-  --color-background: #f2ead9;
-  --color-foreground: #2a2320;
+  /* Light ground, green + gold ornament (Morris-poster logic): a near-white
+     cream page, deep green-ink text, forest-green primary accent, and gold
+     for ornamental touches (level bars, exam labels). */
+  --color-background: #f7f3e9;
+  --color-foreground: #242a20;
 
-  --color-muted: #e8ddc7;
-  --color-muted-foreground: #86765e;
+  --color-muted: #ece6d5;
+  --color-muted-foreground: #6e735a;
 
-  --color-card: #fbf5e8;
-  --color-card-foreground: #2a2320;
+  --color-card: #fffdf6;
+  --color-card-foreground: #242a20;
 
-  --color-border: #ddd0b7;
-  --color-input: #ddd0b7;
+  --color-border: #ded7c0;
+  --color-input: #ded7c0;
 
-  --color-accent: #b0472f;
-  --color-accent-foreground: #fbf5e8;
+  --color-accent: #46603b;
+  --color-accent-foreground: #fbf7ec;
 
-  --color-ring: #b0472f;
+  --color-ring: #46603b;
 
-  /* Morris secondaries (used sparingly for variety) */
-  --color-sage: #6f7a52;
-  --color-ochre: #c1912f;
+  /* ornament secondaries: green + gold */
+  --color-sage: #6e8a4a;
+  --color-ochre: #a6842b;
   --color-indigo: #5f7d90;
 
   --radius-lg: 0.75rem;

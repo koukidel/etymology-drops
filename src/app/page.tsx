@@ -30,16 +30,17 @@ export default function Home() {
         {/* Time Attack — quick-play, above everything */}
         <Link
           href="/speedrun"
-          className="group flex items-center gap-4 mb-10 rounded-xl border border-border bg-card px-5 py-4 hover:border-accent transition-colors"
+          className="group flex items-center gap-4 mb-10 rounded-xl px-5 py-4 transition-transform hover:-translate-y-0.5"
+          style={{ backgroundColor: "#3c4a34", boxShadow: "inset 0 0 0 1px #cba24c33" }}
         >
-          <span className="shrink-0 grid place-items-center w-10 h-10 rounded-full border border-border text-accent group-hover:border-accent transition-colors">
+          <span className="shrink-0 grid place-items-center w-10 h-10 rounded-full" style={{ color: "#d4a94a", boxShadow: "inset 0 0 0 1px #d4a94a66" }}>
             <Zap size={18} />
           </span>
           <span className="min-w-0">
-            <span className="block font-serif text-lg text-foreground">{t('home.speedrun.title')}</span>
-            <span className="block text-sm text-muted-foreground truncate">{t('home.speedrun.desc')}</span>
+            <span className="block font-serif text-lg" style={{ color: "#e8e0cc" }}>{t('home.speedrun.title')}</span>
+            <span className="block text-sm truncate" style={{ color: "#b9b59a" }}>{t('home.speedrun.desc')}</span>
           </span>
-          <span className="ml-auto text-accent">→</span>
+          <span className="ml-auto" style={{ color: "#d4a94a" }}>→</span>
         </Link>
 
         <h1 className="font-serif text-3xl text-foreground mb-8">{t('home.courses')}</h1>
@@ -47,23 +48,24 @@ export default function Home() {
         {/* Lesson 0 — the guided walkthrough, always replayable */}
         <Link
           href="/guide"
-          className="group flex items-center gap-4 mb-4 rounded-xl border border-border bg-card px-5 py-4 hover:border-accent transition-colors"
+          className="group flex items-center gap-4 mb-4 rounded-xl px-5 py-4 transition-transform hover:-translate-y-0.5"
+          style={{ backgroundColor: "#3c4a34", boxShadow: "inset 0 0 0 1px #cba24c33" }}
         >
-          <span className="shrink-0 grid place-items-center w-10 h-10 rounded-full border border-border text-accent group-hover:border-accent transition-colors">
+          <span className="shrink-0 grid place-items-center w-10 h-10 rounded-full" style={{ color: "#d4a94a", boxShadow: "inset 0 0 0 1px #d4a94a66" }}>
             <BookOpen size={18} />
           </span>
           <span className="min-w-0">
             <span className="flex items-center gap-2">
-              <span className="font-serif text-lg text-foreground">{t('home.lesson0.title')}</span>
+              <span className="font-serif text-lg" style={{ color: "#e8e0cc" }}>{t('home.lesson0.title')}</span>
               {hasSeenOnboarding && (
-                <span className="inline-flex items-center gap-1 text-[11px] text-muted-foreground">
+                <span className="inline-flex items-center gap-1 text-[11px]" style={{ color: "#a9ac8e" }}>
                   <Check size={12} /> {t('home.lesson0.done')}
                 </span>
               )}
             </span>
-            <span className="block text-sm text-muted-foreground truncate">{t('home.lesson0.desc')}</span>
+            <span className="block text-sm truncate" style={{ color: "#b9b59a" }}>{t('home.lesson0.desc')}</span>
           </span>
-          <span className="ml-auto text-accent">→</span>
+          <span className="ml-auto" style={{ color: "#d4a94a" }}>→</span>
         </Link>
 
         <Recommended />

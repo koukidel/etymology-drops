@@ -26,25 +26,29 @@ export function CourseCard({ course, className = "" }: Props) {
     return (
         <Link
             href={`/course/${course.id}`}
-            className={`group flex flex-col justify-between border border-border bg-card rounded-xl p-6 hover:border-muted-foreground transition-colors ${className}`}
+            className={`group flex flex-col justify-between rounded-xl p-6 transition-transform hover:-translate-y-0.5 ${className}`}
+            style={{ backgroundColor: "#3c4a34", boxShadow: "inset 0 0 0 1px #cba24c33" }}
         >
             <div>
                 {course.exam && (
                     <div className="mb-3">
-                        <span className="text-[11px] uppercase tracking-[0.15em] text-accent border border-accent/40 rounded-full px-2.5 py-0.5">
+                        <span
+                            className="text-[11px] uppercase tracking-[0.15em] rounded-full px-2.5 py-0.5"
+                            style={{ color: "#d4a94a", boxShadow: "inset 0 0 0 1px #d4a94a66" }}
+                        >
                             {localized(course.exam)}
                         </span>
                     </div>
                 )}
-                <h2 className="font-serif text-2xl text-foreground mb-1">{localized(course.title)}</h2>
-                <p className="text-sm text-muted-foreground leading-relaxed">{localized(course.description)}</p>
+                <h2 className="font-serif text-2xl mb-1" style={{ color: "#e8e0cc" }}>{localized(course.title)}</h2>
+                <p className="text-sm leading-relaxed" style={{ color: "#b9b59a" }}>{localized(course.description)}</p>
             </div>
 
             <div className="flex items-baseline justify-between mt-6">
-                <span className="text-sm text-muted-foreground">
+                <span className="text-sm tabular-nums" style={{ color: "#a9ac8e" }}>
                     {done} / {total}
                 </span>
-                <span className={`text-sm transition-colors ${complete ? "text-muted-foreground" : "text-accent"}`}>
+                <span className="text-sm" style={{ color: "#d4a94a" }}>
                     {complete
                         ? (language === 'ja' ? '修了' : 'Complete')
                         : <>{language === 'ja' ? (done > 0 ? '続きから' : '始める') : (done > 0 ? 'Continue' : 'Start')} &rarr;</>}
