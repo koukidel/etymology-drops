@@ -27,6 +27,21 @@ export default function Home() {
     <div className="min-h-screen">
       <Header />
       <main className="max-w-3xl mx-auto px-6 py-12">
+        {/* Time Attack — quick-play, above everything */}
+        <Link
+          href="/speedrun"
+          className="group flex items-center gap-4 mb-10 rounded-xl border border-border bg-card px-5 py-4 hover:border-accent transition-colors"
+        >
+          <span className="shrink-0 grid place-items-center w-10 h-10 rounded-full border border-border text-accent group-hover:border-accent transition-colors">
+            <Zap size={18} />
+          </span>
+          <span className="min-w-0">
+            <span className="block font-serif text-lg text-foreground">{t('home.speedrun.title')}</span>
+            <span className="block text-sm text-muted-foreground truncate">{t('home.speedrun.desc')}</span>
+          </span>
+          <span className="ml-auto text-accent">→</span>
+        </Link>
+
         <h1 className="font-serif text-3xl text-foreground mb-8">{t('home.courses')}</h1>
 
         {/* Lesson 0 — the guided walkthrough, always replayable */}
@@ -47,21 +62,6 @@ export default function Home() {
               )}
             </span>
             <span className="block text-sm text-muted-foreground truncate">{t('home.lesson0.desc')}</span>
-          </span>
-          <span className="ml-auto text-accent">→</span>
-        </Link>
-
-        {/* Speedrun */}
-        <Link
-          href="/speedrun"
-          className="group flex items-center gap-4 mb-10 rounded-xl border border-border bg-card px-5 py-4 hover:border-accent transition-colors"
-        >
-          <span className="shrink-0 grid place-items-center w-10 h-10 rounded-full border border-border text-accent group-hover:border-accent transition-colors">
-            <Zap size={18} />
-          </span>
-          <span className="min-w-0">
-            <span className="block font-serif text-lg text-foreground">{t('home.speedrun.title')}</span>
-            <span className="block text-sm text-muted-foreground truncate">{t('home.speedrun.desc')}</span>
           </span>
           <span className="ml-auto text-accent">→</span>
         </Link>
