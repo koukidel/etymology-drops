@@ -18,7 +18,7 @@ export function Header() {
     const links = [
         { href: "/", label: t('nav.path') },
         { href: "/dictionary", label: t('nav.dictionary') },
-        { href: "/speedrun", label: t('nav.speedrun') },
+        { href: "/practice", label: t('nav.practice') },
         { href: "/profile", label: t('nav.progress') },
     ];
 

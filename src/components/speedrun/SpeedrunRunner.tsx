@@ -31,9 +31,12 @@ const fmt = (ms: number) => {
 
 type Phase = "ready" | "running" | "done";
 
+const DURATIONS = [30, 60, 90];
+
 export function SpeedrunRunner() {
     const { t } = useTranslation();
     const [phase, setPhase] = useState<Phase>("ready");
+    const [durationSec, setDurationSec] = useState(60);
     const [queue, setQueue] = useState<Word[]>(LESSON_WORDS);
     const [idx, setIdx] = useState(0);
     const [count, setCount] = useState(0);
@@ -41,14 +44,24 @@ export function SpeedrunRunner() {
     const [nowMs, setNowMs] = useState(0);
     const [endMs, setEndMs] = useState(0);
 
-    // Live timer while running.
+    const deadline = startMs + durationSec * 1000;
+
+    // Live countdown while running; auto-finish when the clock runs out.
     useEffect(() => {
         if (phase !== "running") return;
-        const id = setInterval(() => setNowMs(Date.now()), 250);
+        const id = setInterval(() => {
+            const now = Date.now();
+            setNowMs(now);
+            if (now >= deadline) {
+                setEndMs(deadline);
+                setPhase("done");
+            }
+        }, 250);
         return () => clearInterval(id);
-    }, [phase]);
+    }, [phase, deadline]);
 
     const elapsed = phase === "done" ? endMs - startMs : nowMs - startMs;
+    const remaining = Math.max(0, deadline - (phase === "done" ? endMs : nowMs));
     const current = queue[idx % queue.length];
 
     const start = () => {
@@ -87,6 +100,20 @@ export function SpeedrunRunner() {
                 <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">{t("speedrun.eyebrow")}</p>
                 <h1 className="font-serif text-4xl text-foreground">{t("speedrun.title")}</h1>
                 <p className="text-muted-foreground">{t("speedrun.subtitle")}</p>
+                <div className="flex flex-col items-center gap-3">
+                    <span className="text-xs uppercase tracking-[0.2em] text-muted-foreground">{t("speedrun.time_limit")}</span>
+                    <div className="inline-flex rounded-full border border-border p-1">
+                        {DURATIONS.map(d => (
+                            <button
+                                key={d}
+                                onClick={() => setDurationSec(d)}
+                                className={`px-4 py-1.5 text-sm rounded-full transition-colors ${durationSec === d ? "bg-foreground text-background" : "text-muted-foreground hover:text-foreground"}`}
+                            >
+                                {d}{t("speedrun.seconds")}
+                            </button>
+                        ))}
+                    </div>
+                </div>
                 <button onClick={start} className="px-10 py-3 bg-foreground text-background rounded-full hover:opacity-90 transition-opacity">
                     {t("speedrun.start")}
                 </button>
@@ -129,7 +156,7 @@ export function SpeedrunRunner() {
                     <span className="font-serif text-3xl text-accent tabular-nums">{count}</span>
                     <span className="text-xs text-muted-foreground">{t("speedrun.decomposed")}</span>
                 </div>
-                <span className="text-sm text-muted-foreground tabular-nums">{fmt(elapsed)}</span>
+                <span className={`text-sm tabular-nums ${remaining <= 10000 ? "text-accent" : "text-muted-foreground"}`}>{fmt(remaining)}</span>
                 <button onClick={finish} className="text-sm text-muted-foreground hover:text-accent underline underline-offset-4">
                     {t("speedrun.finish")}
                 </button>

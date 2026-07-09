@@ -5,6 +5,18 @@ export const en = {
     "nav.dictionary": "Dictionary",
     "nav.progress": "Progress",
     "nav.speedrun": "Time Attack",
+    "nav.practice": "Practice",
+
+    "practice.title": "Practice",
+    "practice.subtitle": "Drills to sharpen decomposing — and, soon, building.",
+    "practice.locked": "Finish Lesson 0 first",
+    "practice.timeattack.title": "Time Attack",
+    "practice.timeattack.desc": "Decompose as many words as you can before the clock runs out.",
+    "practice.study.title": "Decompose & Learn",
+    "practice.study.desc": "Slice a word, then read what it means. No timer.",
+    "practice.study.reveal": "Show the meaning",
+    "practice.study.next": "Next word",
+    "practice.study.finish": "Finish",
 
     "home.courses": "Path",
 
@@ -38,6 +50,7 @@ export const en = {
     "lesson.steps.practice": "Take apart",
     "lesson.steps.synthesis": "Rebuild",
     "lesson.steps.mastery": "Recall",
+    "lesson.back": "Back",
 
     "lesson.priming.origin_story": "The story",
     "lesson.priming.i_understand": "Got it",
@@ -71,6 +84,8 @@ export const en = {
     "codex.related_words": "Words built with this part",
 
     "speedrun.eyebrow": "Decomposition drill",
+    "speedrun.time_limit": "Time limit",
+    "speedrun.seconds": "s",
     "speedrun.title": "Time Attack",
     "speedrun.subtitle": "Slice as many words into their parts as you can. No quizzes, just seams.",
     "speedrun.start": "Start",
@@ -88,6 +103,7 @@ export const en = {
     "home.lesson0.title": "Lesson 0 · Why breakfast?",
     "home.lesson0.desc": "The five-minute idea the whole app is built on.",
     "home.lesson0.done": "Done",
+    "home.firstrun.hint": "Start here",
 
     "intake.goal": "Why are you learning English?",
     "intake.goal.exam": "For an exam",

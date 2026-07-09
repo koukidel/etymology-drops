@@ -12,7 +12,8 @@ const listeners = new Set<() => void>();
 
 const readLanguage = (): Language => {
     const saved = localStorage.getItem(STORAGE_KEY);
-    return saved === 'ja' ? 'ja' : 'en';
+    // Japanese-first: default to 'ja' unless the user has explicitly chosen English.
+    return saved === 'en' ? 'en' : 'ja';
 };
 
 const subscribe = (listener: () => void) => {
@@ -33,7 +34,7 @@ interface LanguageContextType {
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
-    const language = useSyncExternalStore(subscribe, readLanguage, () => 'en' as Language);
+    const language = useSyncExternalStore(subscribe, readLanguage, () => 'ja' as Language);
     const setLanguage = useCallback((lang: Language) => writeLanguage(lang), []);
 
     return (
