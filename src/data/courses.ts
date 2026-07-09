@@ -29,7 +29,7 @@ export const COURSES: Course[] = [
         id: "familiar",
         title: { en: "Words You Already Know", ja: "身近な言葉" },
         description: {
-            en: "Everyday words hiding surprising stories — start here.",
+            en: "Everyday words with a surprising story hiding inside them.",
             ja: "毎日使う言葉に隠れた、意外な物語から始めましょう。",
         },
         level: "beginner",
@@ -136,7 +136,7 @@ export const COURSES: Course[] = [
         id: "eiken-2",
         title: { en: "Words That Come Apart", ja: "分かれる単語" },
         description: {
-            en: "High-school words built from a handful of endlessly reused Latin parts.",
+            en: "High-school words built from a handful of Latin parts you'll meet again and again.",
             ja: "高校レベルの単語も、何度も使い回せるラテン語の部品でできています。",
         },
         level: "intermediate",
@@ -180,7 +180,7 @@ export const COURSES: Course[] = [
         id: "latin-roots",
         title: { en: "Latin Roots", ja: "ラテン語の語根" },
         description: {
-            en: "Fourteen root families that unlock thousands of harder words.",
+            en: "Fourteen root families behind thousands of harder words.",
             ja: "何千もの難単語を解く鍵になる、14の語根ファミリー。",
         },
         level: "intermediate",
@@ -282,7 +282,7 @@ export const COURSES: Course[] = [
         id: "eiken-pre1",
         title: { en: "Reading the Seams", ja: "境目を読む" },
         description: {
-            en: "Advanced words fall apart neatly once the recurring parts click.",
+            en: "Advanced words fall apart once you spot the parts that keep recurring.",
             ja: "難しい語も、繰り返す部品が見えれば自然にほどけます。",
         },
         level: "advanced",

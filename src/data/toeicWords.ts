@@ -8,7 +8,7 @@ export const toeicWords: Word[] = [
         word: "Transport",
         meaning: { en: "To carry goods or people from place to place.", ja: "輸送する。" },
         history: {
-            en: "'trans' (across) + 'port' (carry). From transportare — literally 'to carry across'.",
+            en: "'trans' (across) + 'port' (carry). From transportare, 'to carry across'.",
             ja: "'trans'（横切って）+ 'port'（運ぶ）。transportare より。文字通り「横切って運ぶ」。",
         },
         blocks: [
@@ -134,7 +134,7 @@ export const toeicWords: Word[] = [
         word: "Refund",
         meaning: { en: "To pay money back.", ja: "払い戻す。" },
         history: {
-            en: "'re-' (back) + 'fund' (pour). From refundere — literally 'to pour the money back'.",
+            en: "'re-' (back) + 'fund' (pour). From refundere, 'to pour the money back'.",
             ja: "'re-'（戻して）+ 'fund'（注ぐ）。refundere より。文字通り「お金を注ぎ戻す」。",
         },
         blocks: [

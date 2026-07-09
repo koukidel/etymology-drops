@@ -9,7 +9,7 @@ export const familiarWordsExtra: Word[] = [
         word: "Disaster",
         meaning: { en: "A sudden great misfortune.", ja: "突然の大きな災難、災害。" },
         history: {
-            en: "'dis-' (bad) + 'aster' (star). Literally 'ill-starred' — a calamity once blamed on an unlucky position of the planets.",
+            en: "'dis-' (bad) + 'aster' (star), meaning 'ill-starred': a calamity once blamed on an unlucky position of the planets.",
             ja: "'dis-'（悪い）+ 'aster'（星）。文字通り「不吉な星回り」。災難は惑星の悪い配置のせいとされました。",
         },
         blocks: [
@@ -36,7 +36,7 @@ export const familiarWordsExtra: Word[] = [
         ],
         icon: "MessageSquareOff",
         tip: {
-            en: "The root SARC (flesh) also appears in sarcophagus — literally a 'flesh-eating' stone coffin.",
+            en: "The root SARC (flesh) also appears in sarcophagus, a 'flesh-eating' stone coffin.",
             ja: "語根 SARC（肉）は sarcophagus（石棺）にも。文字通り「肉を食べる」石の棺です。",
         },
     },
@@ -81,7 +81,7 @@ export const familiarWordsExtra: Word[] = [
         word: "Tragedy",
         meaning: { en: "A very sad event; a serious drama.", ja: "悲劇。" },
         history: {
-            en: "From Greek 'tragodia', apparently 'goat song' — 'trag' (goat) + 'oide' (song). The exact reason is lost, but the goat is really there.",
+            en: "From Greek 'tragodia', apparently 'goat song' — 'trag' (goat) + 'oide' (song). The exact reason is lost, but the goat is there.",
             ja: "ギリシャ語 'tragodia'、どうやら「ヤギの歌」。'trag'（ヤギ）+ 'oide'（歌）。理由は諸説ありますが、ヤギは確かにそこにいます。",
         },
         blocks: [
@@ -225,7 +225,7 @@ export const familiarWordsExtra: Word[] = [
         word: "Villain",
         meaning: { en: "A wicked character.", ja: "悪役、悪党。" },
         history: {
-            en: "From Latin 'villa' (farm) — a 'villanus' was simply a farmhand. Class prejudice slowly twisted 'peasant' into 'scoundrel'.",
+            en: "From Latin 'villa' (farm) — a 'villanus' was a farmhand. Class prejudice slowly twisted 'peasant' into 'scoundrel'.",
             ja: "ラテン語 'villa'（農場）から。'villanus' はただの農夫でした。身分への偏見が「農民」を少しずつ「悪党」に変えました。",
         },
         blocks: [
