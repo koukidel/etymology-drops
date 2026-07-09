@@ -4,11 +4,10 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import { Word } from "@/data/types";
 import { motion, AnimatePresence } from "framer-motion";
-import { Check } from "lucide-react";
+import { Check, ArrowLeft } from "lucide-react";
 
 import { PrimingView } from "./views/PrimingView";
 import { SlicerView } from "./views/SlicerView";
-import { MatrixView } from "./views/MatrixView";
 import { ProficiencyView } from "./views/ProficiencyView";
 
 import { useGameStore } from "@/store/useGameStore";
@@ -65,7 +64,7 @@ export function LessonContainer({ word }: Props) {
     }, [word, language]);
 
     const handleNext = () => {
-        if (viewIndex < 3) {
+        if (viewIndex < 2) {
             setViewIndex(prev => prev + 1);
             return;
         }
@@ -84,14 +83,14 @@ export function LessonContainer({ word }: Props) {
                 setCourseDone(true);
             }
         }
-        setViewIndex(4);
+        setViewIndex(3);
     };
 
-    // Learning order: decompose → reconstruct → predict → story reveal.
-    const STEPS = [t('lesson.steps.practice'), t('lesson.steps.synthesis'), t('lesson.steps.mastery'), t('lesson.steps.priming')];
+    // Learning order: decompose → predict meaning → story reveal.
+    const STEPS = [t('lesson.steps.practice'), t('lesson.steps.mastery'), t('lesson.steps.priming')];
 
     // Completion
-    if (viewIndex === 4) {
+    if (viewIndex === 3) {
         return (
             <div className="min-h-[60vh] flex flex-col items-center justify-center text-center p-8 max-w-xl mx-auto">
                 <motion.div
@@ -148,21 +147,44 @@ export function LessonContainer({ word }: Props) {
 
     return (
         <div className="w-full h-full flex flex-col items-center justify-center px-4 py-8">
-            {/* Progress */}
+            {/* Progress — visited steps are tappable to go back */}
             <div className="flex items-center justify-between px-2 mb-8 w-full max-w-2xl">
-                {STEPS.map((step, i) => (
-                    <div key={i} className="flex flex-col items-center relative z-10">
-                        <div className={`
-                            w-8 h-8 rounded-full flex items-center justify-center text-sm transition-colors duration-500
-                            ${i <= viewIndex ? "bg-foreground text-background" : "bg-muted text-muted-foreground"}
-                        `}>
-                            {i < viewIndex ? <Check size={14} /> : i + 1}
-                        </div>
-                        <span className={`text-xs mt-2 transition-opacity ${i === viewIndex ? "text-foreground" : "text-muted-foreground"}`}>
-                            {step}
-                        </span>
-                    </div>
-                ))}
+                {STEPS.map((step, i) => {
+                    const visited = i < viewIndex;
+                    return (
+                        <button
+                            key={i}
+                            type="button"
+                            onClick={() => visited && setViewIndex(i)}
+                            disabled={!visited}
+                            aria-label={step}
+                            className={`flex flex-col items-center relative z-10 ${visited ? "cursor-pointer" : "cursor-default"}`}
+                        >
+                            <div className={`
+                                w-8 h-8 rounded-full flex items-center justify-center text-sm transition-colors duration-500
+                                ${i <= viewIndex ? "bg-foreground text-background" : "bg-muted text-muted-foreground"}
+                            `}>
+                                {i < viewIndex ? <Check size={14} /> : i + 1}
+                            </div>
+                            <span className={`text-xs mt-2 transition-opacity ${i === viewIndex ? "text-foreground" : "text-muted-foreground"}`}>
+                                {step}
+                            </span>
+                        </button>
+                    );
+                })}
+            </div>
+
+            {/* Back to the previous stage */}
+            <div className="w-full max-w-2xl mb-2 h-6">
+                {viewIndex > 0 && (
+                    <button
+                        type="button"
+                        onClick={() => setViewIndex(prev => Math.max(0, prev - 1))}
+                        className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
+                    >
+                        <ArrowLeft size={14} /> {t('lesson.back')}
+                    </button>
+                )}
             </div>
 
             <div className="w-full max-w-4xl flex-1 flex items-center justify-center">
@@ -175,9 +197,8 @@ export function LessonContainer({ word }: Props) {
                         className="w-full h-full flex flex-col justify-center"
                     >
                         {viewIndex === 0 && <SlicerView word={word} onNext={handleNext} />}
-                        {viewIndex === 1 && <MatrixView word={word} onNext={handleNext} />}
-                        {viewIndex === 2 && <ProficiencyView word={word} onNext={handleNext} />}
-                        {viewIndex === 3 && <PrimingView word={word} onNext={handleNext} />}
+                        {viewIndex === 1 && <ProficiencyView word={word} onNext={handleNext} />}
+                        {viewIndex === 2 && <PrimingView word={word} onNext={handleNext} />}
                     </motion.div>
                 </AnimatePresence>
             </div>

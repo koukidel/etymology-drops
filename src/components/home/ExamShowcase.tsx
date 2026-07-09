@@ -8,7 +8,7 @@ import { useMounted } from "@/hooks/useMounted";
 
 // A "browse by exam goal" showcase: rounded-square tiles for the exam-targeted
 // courses (英検・TOEIC), separate from the by-level bars above.
-export function ExamShowcase() {
+export function ExamShowcase({ locked = false }: { locked?: boolean }) {
     const { masteredWords } = useGameStore();
     const { language } = useTranslation();
     const mounted = useMounted();
@@ -33,7 +33,9 @@ export function ExamShowcase() {
                         <Link
                             key={course.id}
                             href={`/course/${course.id}`}
-                            className="group aspect-square flex flex-col justify-between rounded-2xl p-4 transition-transform hover:-translate-y-0.5"
+                            aria-disabled={locked}
+                            tabIndex={locked ? -1 : undefined}
+                            className={`group aspect-square flex flex-col justify-between rounded-2xl p-4 transition-transform ${locked ? "pointer-events-none opacity-50" : "hover:-translate-y-0.5"}`}
                             style={{ backgroundColor: "#3c4a34", boxShadow: "inset 0 0 0 1px #cba24c33" }}
                         >
                             <div>

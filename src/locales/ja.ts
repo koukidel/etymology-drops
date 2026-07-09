@@ -5,6 +5,18 @@ export const ja = {
     "nav.dictionary": "Dictionary",
     "nav.progress": "Progress",
     "nav.speedrun": "Time Attack",
+    "nav.practice": "Practice",
+
+    "practice.title": "練習場",
+    "practice.subtitle": "分解を鍛えるドリル。組み立ての練習も、まもなく。",
+    "practice.locked": "まず Lesson 0 を終えましょう",
+    "practice.timeattack.title": "Time Attack",
+    "practice.timeattack.desc": "制限時間内に、できるだけ多くの言葉を分解しよう。",
+    "practice.study.title": "分解して覚える",
+    "practice.study.desc": "言葉を分解して、その意味を読む。時間制限なし。",
+    "practice.study.reveal": "意味を見る",
+    "practice.study.next": "次の言葉へ",
+    "practice.study.finish": "やめる",
 
     "home.courses": "Path",
 
@@ -38,6 +50,7 @@ export const ja = {
     "lesson.steps.practice": "分解",
     "lesson.steps.synthesis": "再構築",
     "lesson.steps.mastery": "確認",
+    "lesson.back": "戻る",
 
     "lesson.priming.origin_story": "言葉の物語",
     "lesson.priming.i_understand": "覚えた",
@@ -71,6 +84,8 @@ export const ja = {
     "codex.related_words": "この部品を使う言葉",
 
     "speedrun.eyebrow": "分解ドリル",
+    "speedrun.time_limit": "制限時間",
+    "speedrun.seconds": "秒",
     "speedrun.title": "Time Attack",
     "speedrun.subtitle": "できるだけ多くの言葉を、部品に分解しよう。クイズなし、境目だけ。",
     "speedrun.start": "はじめる",
@@ -88,6 +103,7 @@ export const ja = {
     "home.lesson0.title": "Lesson 0 ・ なぜ、朝食？",
     "home.lesson0.desc": "このアプリの土台になっている、5分の気づき。",
     "home.lesson0.done": "修了",
+    "home.firstrun.hint": "まずはここから",
 
     "intake.goal": "英語を学ぶ目的は？",
     "intake.goal.exam": "試験のため",

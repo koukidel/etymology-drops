@@ -17,7 +17,7 @@ const LEVEL_STYLE: Record<CourseLevel, { text: string; bar: string }> = {
 
 // Full-width, stacked level sections: a level "bar" header, then that level's
 // courses as full-width rows (no bento grid).
-export function CourseGrid() {
+export function CourseGrid({ locked = false }: { locked?: boolean }) {
     const { language } = useTranslation();
     const localized = (s: string | { en: string; ja: string }) =>
         typeof s === "string" ? s : s[language];
@@ -38,7 +38,7 @@ export function CourseGrid() {
                         </div>
                         <div className="space-y-3">
                             {courses.map(course => (
-                                <CourseCard key={course.id} course={course} />
+                                <CourseCard key={course.id} course={course} locked={locked} />
                             ))}
                         </div>
                     </section>

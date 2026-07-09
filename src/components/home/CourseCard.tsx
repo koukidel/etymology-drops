@@ -9,9 +9,10 @@ import { useMounted } from "@/hooks/useMounted";
 interface Props {
     course: Course;
     className?: string;
+    locked?: boolean;
 }
 
-export function CourseCard({ course, className = "" }: Props) {
+export function CourseCard({ course, className = "", locked = false }: Props) {
     const { language } = useTranslation();
     const { masteredWords } = useGameStore();
     const mounted = useMounted();
@@ -26,7 +27,9 @@ export function CourseCard({ course, className = "" }: Props) {
     return (
         <Link
             href={`/course/${course.id}`}
-            className={`group flex flex-col justify-between rounded-xl p-6 transition-transform hover:-translate-y-0.5 ${className}`}
+            aria-disabled={locked}
+            tabIndex={locked ? -1 : undefined}
+            className={`group flex flex-col justify-between rounded-xl p-6 transition-transform ${locked ? "pointer-events-none opacity-50" : "hover:-translate-y-0.5"} ${className}`}
             style={{ backgroundColor: "#3c4a34", boxShadow: "inset 0 0 0 1px #cba24c33" }}
         >
             <div>
