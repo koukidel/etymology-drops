@@ -17,6 +17,14 @@ export const ja = {
     "practice.study.reveal": "意味を見る",
     "practice.study.next": "次の言葉へ",
     "practice.study.finish": "やめる",
+    "practice.build.title": "言葉を組み立てる",
+    "practice.build.desc": "部品を自由に組み合わせて、どんな単語ができるか確かめよう。",
+    "practice.build.instruction": "下の枠に部品をドラッグ（またはタップ）して、できた単語を判定しよう。",
+    "practice.build.drop_here": "ここに部品を入れて単語を作ろう",
+    "practice.build.judge": "判定する",
+    "practice.build.clear": "クリア",
+    "practice.build.loading": "読み込み中…",
+    "practice.build.remove": "取り除く",
 
     "home.courses": "Path",
 
