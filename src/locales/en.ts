@@ -17,6 +17,14 @@ export const en = {
     "practice.study.reveal": "Show the meaning",
     "practice.study.next": "Next word",
     "practice.study.finish": "Finish",
+    "practice.build.title": "Build a Word",
+    "practice.build.desc": "Combine parts freely and see what kind of word you made.",
+    "practice.build.instruction": "Drag parts into the frame below (or tap them), then judge the word you built.",
+    "practice.build.drop_here": "Drop parts here to build a word",
+    "practice.build.judge": "Judge it",
+    "practice.build.clear": "Clear",
+    "practice.build.loading": "Loading…",
+    "practice.build.remove": "Remove",
 
     "home.courses": "Path",
 
