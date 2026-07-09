@@ -11,7 +11,7 @@ export const familiarWords: Word[] = [
             ja: "一日の最初の食事。",
         },
         history: {
-            en: "'Break' + 'fast' (a period without food). Sleep is the longest fast of your day — the morning meal literally breaks it.",
+            en: "'Break' + 'fast' (a period without food). Sleep is the longest fast of your day, and the morning meal breaks it.",
             ja: "'break'（破る）+ 'fast'（断食）。睡眠は一日で最も長い断食であり、朝食はその断食を破る食事です。",
         },
         blocks: [
@@ -116,7 +116,7 @@ export const familiarWords: Word[] = [
             ja: "共に時間を過ごす人、道連れ。",
         },
         history: {
-            en: "'Com-' (with) + 'panis' (bread): literally, someone you share your bread with.",
+            en: "'Com-' (with) + 'panis' (bread): someone you share your bread with.",
             ja: "'com-'（共に）+ 'panis'（パン）。「パンを分かち合う人」を意味します。",
         },
         blocks: [
@@ -180,7 +180,7 @@ export const familiarWords: Word[] = [
             ja: "労働の対価として定期的に受け取るお金、給料。",
         },
         history: {
-            en: "From Latin 'salarium', related to 'sal' (salt) — in Rome it named a soldier's allowance. The tale that soldiers were literally paid in salt is a legend, but the salty root is real: to be 'worth your salt' keeps it alive.",
+            en: "From Latin 'salarium', related to 'sal' (salt) — in Rome it named a soldier's allowance. The tale that soldiers were paid in salt is a legend, but the salty root is real: to be 'worth your salt' keeps it alive.",
             ja: "ラテン語の 'salarium' から。'sal'（塩）に関係し、ローマ兵の手当を指しました。「兵士が塩で給料を受け取った」という話は諸説ありますが、塩の語根は本物。'worth your salt'（給料に値する）という表現に今も生きています。",
         },
         blocks: [

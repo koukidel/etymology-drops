@@ -65,7 +65,7 @@ export const toeic800Words: Word[] = [
     w("discrepancy", "Discrepancy", ["A difference or inconsistency.", "不一致。"],
         ["'dis' (apart) + 'crep' (rattle, sound) + '-ancy'. From discrepare 'to sound differently'.", "'dis'（別々に）+ 'crep'（音を立てる）+ '-ancy'。discrepare「違う音を出す」より。"],
         [P("dis", "Dis", "Apart", "別々に"), R("crep", "Crep", "Rattle, sound", "音を立てる"), S("ancy", "Ancy", "State of", "〜の状態")],
-        "Unlink", ["Literally 'sounding apart' — things that don't ring alike are in discrepancy.", "文字通り「音がずれる」。響きが合わないもの＝不一致。"]),
+        "Unlink", ["'Sounding apart': things that don't ring alike are in discrepancy.", "文字通り「音がずれる」。響きが合わないもの＝不一致。"]),
     w("allocation", "Allocation", ["The assigning of resources.", "割り当て。"],
         ["'al' (to) + 'loc' (place) + '-ation'. From allocare 'to assign, place to'.", "'al'（〜に）+ 'loc'（場所）+ '-ation'。allocare「割り当てる」より。"],
         [P("al", "Al", "To (ad-)", "〜に"), R("loc", "Loc", "Place", "場所"), S("ation", "Ation", "Act of", "〜すること")],

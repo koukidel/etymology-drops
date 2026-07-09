@@ -107,7 +107,7 @@ export const eikenWords: Word[] = [
         word: "Retrospective",
         meaning: { en: "Looking back on the past.", ja: "回顧的な、過去を振り返る。" },
         history: {
-            en: "'retro' (back) + 'spect' (look) + '-ive'. Literally 'looking back' — from retro- + specere 'to look'.",
+            en: "'retro' (back) + 'spect' (look) + '-ive'. 'Looking back', from retro- + specere 'to look'.",
             ja: "'retro'（後ろへ）+ 'spect'（見る）+ '-ive'。文字通り「振り返って見る」。retro- + specere「見る」。",
         },
         blocks: [
@@ -186,7 +186,7 @@ export const eikenWords: Word[] = [
         word: "Benevolent",
         meaning: { en: "Kind and well-meaning.", ja: "慈悲深い、善意の。" },
         history: {
-            en: "'bene' (well) + 'vol' (wish) + '-ent'. From benevolentem 'wishing well' — literally 'wishing good'.",
+            en: "'bene' (well) + 'vol' (wish) + '-ent'. From benevolentem, 'wishing well' or 'wishing good'.",
             ja: "'bene'（よく）+ 'vol'（願う）+ '-ent'。benevolentem「よく願う・親切な」に由来。文字通り「善を願う」。",
         },
         blocks: [
