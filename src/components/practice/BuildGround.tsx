@@ -38,6 +38,28 @@ const CATEGORY_COLOR: Record<Category, string> = {
     4: "#9c5a4a", // not a word — muted red
 };
 
+// Scatter the morphemes so they float freely rather than sit in tidy rows.
+// Positions are deterministic (Math.sin hash, not random) so server and client
+// agree and the layout is stable across renders.
+const COLS = 6;
+const ROW_H = 68;
+const hash = (n: number) => { const x = Math.sin(n * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); };
+const POOL_POS = POOL.map((_, i) => {
+    const col = i % COLS;
+    const row = Math.floor(i / COLS);
+    const left = Math.min(84, Math.max(1, (col / COLS) * 100 + 2 + (hash(i) * 2 - 1) * 4));
+    const top = 14 + row * ROW_H + (hash(i + 99) * 2 - 1) * 16;
+    return {
+        left,
+        top,
+        dur: 3.5 + hash(i + 7) * 3,      // 3.5–6.5s drift
+        dx: (hash(i + 3) * 2 - 1) * 7,   // ±7px
+        dy: (hash(i + 5) * 2 - 1) * 8,   // ±8px
+        delay: hash(i + 11) * 2,
+    };
+});
+const POOL_HEIGHT = 14 + Math.ceil(POOL.length / COLS) * ROW_H + 30;
+
 function useLexicon(): Lexicon | null {
     const [lex, setLex] = useState<Lexicon | null>(null);
     useEffect(() => {
@@ -93,36 +115,36 @@ export function BuildGround() {
             </div>
             <p className="text-sm text-muted-foreground mb-8">{t("practice.build.instruction")}</p>
 
-            {/* Bubble pool */}
-            <div className="relative rounded-2xl border border-border bg-muted/40 p-5 mb-6 min-h-[220px]">
-                <div className="flex flex-wrap gap-2.5">
-                    {POOL.map((b, i) => {
-                        const s = TYPE_STYLE[b.type];
-                        return (
-                            <motion.div
-                                key={b.id}
-                                drag
-                                dragSnapToOrigin
-                                dragElastic={0.25}
-                                whileDrag={{ scale: 1.12, zIndex: 50 }}
-                                onDragEnd={onDrop(b)}
-                                className="cursor-grab active:cursor-grabbing touch-none"
+            {/* Bubble pool — morphemes floating freely */}
+            <div className="relative rounded-2xl border border-border bg-muted/40 mb-6" style={{ height: POOL_HEIGHT }}>
+                {POOL.map((b, i) => {
+                    const s = TYPE_STYLE[b.type];
+                    const pos = POOL_POS[i];
+                    return (
+                        <motion.div
+                            key={b.id}
+                            drag
+                            dragSnapToOrigin
+                            dragElastic={0.25}
+                            whileDrag={{ scale: 1.12, zIndex: 50 }}
+                            onDragEnd={onDrop(b)}
+                            className="absolute cursor-grab active:cursor-grabbing touch-none"
+                            style={{ left: `${pos.left}%`, top: pos.top }}
+                        >
+                            <motion.button
+                                type="button"
+                                onClick={() => add(b)}
+                                animate={reduce ? undefined : { x: [0, pos.dx, 0], y: [0, pos.dy, 0] }}
+                                transition={reduce ? undefined : { duration: pos.dur, delay: pos.delay, repeat: Infinity, ease: "easeInOut" }}
+                                className="rounded-full px-4 py-2 font-serif text-lg shadow-sm whitespace-nowrap"
+                                style={{ backgroundColor: s.bg, color: s.fg }}
+                                title={loc(b.meaning)}
                             >
-                                <motion.button
-                                    type="button"
-                                    onClick={() => add(b)}
-                                    animate={reduce ? undefined : { y: [0, -3, 0] }}
-                                    transition={reduce ? undefined : { duration: 3 + (i % 5) * 0.4, repeat: Infinity, ease: "easeInOut" }}
-                                    className="rounded-full px-4 py-2 font-serif text-lg shadow-sm"
-                                    style={{ backgroundColor: s.bg, color: s.fg }}
-                                    title={loc(b.meaning)}
-                                >
-                                    {b.label.replace(/-/g, "")}
-                                </motion.button>
-                            </motion.div>
-                        );
-                    })}
-                </div>
+                                {b.label.replace(/-/g, "")}
+                            </motion.button>
+                        </motion.div>
+                    );
+                })}
             </div>
 
             {/* Assembly area (drop zone) */}
