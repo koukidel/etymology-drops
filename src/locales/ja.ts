@@ -1,5 +1,5 @@
 export const ja = {
-    "app.title": "語源の雫",
+    "app.title": "源 Minamoto",
 
     "nav.path": "Path",
     "nav.dictionary": "Dictionary",
