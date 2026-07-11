@@ -26,6 +26,10 @@ export const en = {
     "practice.build.loading": "Loading…",
     "practice.build.remove": "Remove",
     "practice.build.close": "Close",
+    "practice.build.reach": "{parts} parts unlocked · ~{words} words within reach",
+    "practice.build.locked_title": "Not enough parts yet",
+    "practice.build.locked_desc": "Master lessons to unlock their parts — then come back and build with them here.",
+    "practice.build.locked_cta": "Go to lessons",
 
     "home.courses": "Path",
 

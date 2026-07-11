@@ -7,23 +7,8 @@ import { X } from "lucide-react";
 import { allWords } from "@/data/words";
 import { WordBlock } from "@/data/types";
 import { classifyWord, Lexicon, Classification, CATEGORY_LABEL, Category } from "@/lib/classify";
+import { useGameStore } from "@/store/useGameStore";
 import { useTranslation } from "@/hooks/useTranslation";
-
-// One representative block per id, drawn from the real word data.
-const BLOCK_BY_ID: Map<string, WordBlock> = (() => {
-    const m = new Map<string, WordBlock>();
-    for (const w of allWords) for (const b of w.blocks) if (!m.has(b.id)) m.set(b.id, b);
-    return m;
-})();
-
-// A curated, playable pool of morphemes (productive + recognizable).
-const POOL_IDS = [
-    "un", "re", "de", "pre", "pro", "in", "ex", "dis", "sub", "com", "trans", "inter",
-    "port", "form", "ject", "spect", "duct", "tract", "scribe", "struct", "vent", "cept",
-    "pose", "dict", "mit", "play", "drink", "break", "happy", "view", "move", "part",
-    "able", "er", "ion", "ive", "ful", "ment", "ous", "al", "ate", "ary",
-];
-const POOL: WordBlock[] = POOL_IDS.map(id => BLOCK_BY_ID.get(id)).filter((b): b is WordBlock => Boolean(b));
 
 const TYPE_STYLE: Record<WordBlock["type"], { bg: string; fg: string }> = {
     prefix: { bg: "#4a5a3e", fg: "#e8e0cc" },
@@ -38,27 +23,48 @@ const CATEGORY_COLOR: Record<Category, string> = {
     4: "#9c5a4a", // not a word — muted red
 };
 
-// Scatter the morphemes so they float freely across the whole area rather than
-// sit in tidy rows. Positions are percentage-based (so they fill whatever space
-// the pool has) and deterministic (Math.sin hash, not random) so server and
-// client agree and the layout is stable across renders.
-const COLS = 5;
-const ROWS = Math.ceil(POOL.length / COLS);
+// Scatter positions filling the whole pool area — percentage-based (so they
+// fill whatever space is available) and deterministic (Math.sin hash, not
+// random) so server and client agree and the layout is stable across renders.
 const hash = (n: number) => { const x = Math.sin(n * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); };
-const POOL_POS = POOL.map((_, i) => {
-    const col = i % COLS;
-    const row = Math.floor(i / COLS);
-    const left = Math.min(90, Math.max(4, ((col + 0.5) / COLS) * 100 + (hash(i) * 2 - 1) * 7));
-    const top = Math.min(94, Math.max(3, ((row + 0.5) / ROWS) * 100 + (hash(i + 99) * 2 - 1) * 5));
-    return {
-        left,
-        top,
-        dur: 3.5 + hash(i + 7) * 3,      // 3.5–6.5s drift
-        dx: (hash(i + 3) * 2 - 1) * 7,   // ±7px
-        dy: (hash(i + 5) * 2 - 1) * 8,   // ±8px
-        delay: hash(i + 11) * 2,
-    };
-});
+function scatter(count: number) {
+    const cols = count <= 6 ? 3 : count <= 15 ? 4 : 5;
+    const rows = Math.max(1, Math.ceil(count / cols));
+    return Array.from({ length: count }, (_, i) => {
+        const col = i % cols;
+        const row = Math.floor(i / cols);
+        return {
+            left: Math.min(90, Math.max(4, ((col + 0.5) / cols) * 100 + (hash(i) * 2 - 1) * 7)),
+            top: Math.min(94, Math.max(3, ((row + 0.5) / rows) * 100 + (hash(i + 99) * 2 - 1) * 5)),
+            dur: 3.5 + hash(i + 7) * 3,
+            dx: (hash(i + 3) * 2 - 1) * 7,
+            dy: (hash(i + 5) * 2 - 1) * 8,
+            delay: hash(i + 11) * 2,
+        };
+    });
+}
+
+// The parts a learner has unlocked = every block from the lesson words they
+// have mastered. The build ground only offers these, so it widens as the
+// learner progresses ("習ったものだけを組み立てる").
+function ownedParts(masteredWords: string[]): WordBlock[] {
+    const m = new Map<string, WordBlock>();
+    for (const id of masteredWords) {
+        const w = allWords.find(x => x.id === id);
+        if (!w) continue;
+        for (const b of w.blocks) if (!m.has(b.id)) m.set(b.id, b);
+    }
+    // roots first (they carry meaning), then affixes — reads better in the field.
+    return [...m.values()].sort((a, b) => (a.type === "root" ? 0 : 1) - (b.type === "root" ? 0 : 1));
+}
+
+// "Words within reach": how many real lesson words can be fully built from the
+// parts the learner owns — the generative multiplier made visible.
+function wordsWithinReach(ownedIds: Set<string>): number {
+    let n = 0;
+    for (const w of allWords) if (w.blocks.every(b => ownedIds.has(b.id))) n++;
+    return n;
+}
 
 function useLexicon(): Lexicon | null {
     const [lex, setLex] = useState<Lexicon | null>(null);
@@ -81,11 +87,18 @@ export function BuildGround() {
     const { t, language } = useTranslation();
     const reduce = useReducedMotion();
     const lex = useLexicon();
+    const { masteredWords } = useGameStore();
     const dropRef = useRef<HTMLDivElement>(null);
     const [assembly, setAssembly] = useState<WordBlock[]>([]);
     const [result, setResult] = useState<Classification | null>(null);
 
     const loc = (s: string | { en: string; ja: string }) => (typeof s === "string" ? s : s[language]);
+
+    // Only the parts the learner has unlocked, and how many words they reach.
+    const pool = useMemo(() => ownedParts(masteredWords), [masteredWords]);
+    const positions = useMemo(() => scatter(pool.length), [pool.length]);
+    const reach = useMemo(() => wordsWithinReach(new Set(pool.map(b => b.id))), [pool]);
+    const ready = pool.length >= 2;
 
     const add = (b: WordBlock) => { setAssembly(a => [...a, b]); setResult(null); };
     const removeAt = (i: number) => { setAssembly(a => a.filter((_, j) => j !== i)); setResult(null); };
@@ -108,17 +121,32 @@ export function BuildGround() {
     return (
         <div className="mx-auto w-full max-w-3xl px-4 flex flex-col" style={{ height: "calc(100dvh - 4rem)" }}>
             <div className="flex items-baseline justify-between py-3 shrink-0">
-                <h1 className="font-serif text-2xl text-foreground">{t("practice.build.title")}</h1>
+                <div>
+                    <h1 className="font-serif text-2xl text-foreground">{t("practice.build.title")}</h1>
+                    <p className="text-xs text-muted-foreground mt-0.5">
+                        {t("practice.build.reach").replace("{parts}", String(pool.length)).replace("{words}", String(reach))}
+                    </p>
+                </div>
                 <Link href="/practice" className="text-sm text-muted-foreground hover:text-accent underline underline-offset-4">
                     {t("practice.study.finish")}
                 </Link>
             </div>
 
-            {/* Bubble pool — morphemes floating across nearly the whole screen */}
+            {!ready ? (
+                <div className="flex-1 min-h-0 rounded-2xl border border-dashed border-border bg-muted/30 flex flex-col items-center justify-center text-center px-8 gap-3">
+                    <p className="font-serif text-xl text-foreground">{t("practice.build.locked_title")}</p>
+                    <p className="text-sm text-muted-foreground max-w-xs">{t("practice.build.locked_desc")}</p>
+                    <Link href="/" className="mt-2 px-6 py-2.5 bg-foreground text-background rounded-full hover:opacity-90 transition-opacity">
+                        {t("practice.build.locked_cta")}
+                    </Link>
+                </div>
+            ) : (
+            <>
+            {/* Bubble pool — the learner's unlocked morphemes, floating freely */}
             <div className="relative flex-1 min-h-0 rounded-2xl border border-border bg-muted/40">
-                {POOL.map((b, i) => {
+                {pool.map((b, i) => {
                     const s = TYPE_STYLE[b.type];
-                    const pos = POOL_POS[i];
+                    const pos = positions[i];
                     return (
                         <motion.div
                             key={b.id}
@@ -189,6 +217,8 @@ export function BuildGround() {
                     </button>
                 </div>
             </div>
+            </>
+            )}
 
             {/* Verdict — popup over the screen */}
             {result && (

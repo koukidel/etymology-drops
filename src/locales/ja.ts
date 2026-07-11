@@ -26,6 +26,10 @@ export const ja = {
     "practice.build.loading": "読み込み中…",
     "practice.build.remove": "取り除く",
     "practice.build.close": "閉じる",
+    "practice.build.reach": "{parts}個の部品 ・ 約{words}語が射程内",
+    "practice.build.locked_title": "まだ部品が足りません",
+    "practice.build.locked_desc": "レッスンを進めて部品を集めると、ここで組み立てられるようになります。",
+    "practice.build.locked_cta": "レッスンへ",
 
     "home.courses": "Path",
 
