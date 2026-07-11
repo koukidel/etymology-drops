@@ -1,5 +1,5 @@
 export const en = {
-    "app.title": "Etymology Drops",
+    "app.title": "源 Minamoto",
 
     "nav.path": "Path",
     "nav.dictionary": "Dictionary",
