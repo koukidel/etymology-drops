@@ -25,6 +25,7 @@ export const ja = {
     "practice.build.clear": "クリア",
     "practice.build.loading": "読み込み中…",
     "practice.build.remove": "取り除く",
+    "practice.build.close": "閉じる",
 
     "home.courses": "Path",
 
@@ -95,7 +96,7 @@ export const ja = {
     "speedrun.time_limit": "制限時間",
     "speedrun.seconds": "秒",
     "speedrun.title": "Time Attack",
-    "speedrun.subtitle": "できるだけ多くの言葉を、部品に分解しよう。クイズなし、境目だけ。",
+    "speedrun.subtitle": "できるだけ多くの言葉を、部品に分解しよう。",
     "speedrun.start": "はじめる",
     "speedrun.next": "次へ",
     "speedrun.finish": "やめる",

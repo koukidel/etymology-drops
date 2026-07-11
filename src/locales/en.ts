@@ -25,6 +25,7 @@ export const en = {
     "practice.build.clear": "Clear",
     "practice.build.loading": "Loading…",
     "practice.build.remove": "Remove",
+    "practice.build.close": "Close",
 
     "home.courses": "Path",
 
@@ -95,7 +96,7 @@ export const en = {
     "speedrun.time_limit": "Time limit",
     "speedrun.seconds": "s",
     "speedrun.title": "Time Attack",
-    "speedrun.subtitle": "Slice as many words into their parts as you can. No quizzes, just seams.",
+    "speedrun.subtitle": "Slice as many words into their parts as you can.",
     "speedrun.start": "Start",
     "speedrun.next": "Next",
     "speedrun.finish": "Finish",
