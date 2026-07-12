@@ -25,12 +25,14 @@ interface GameState {
     hasCompletedIntake: boolean;   // finished the first-run intake (goal/commitment/level)
     profile: OnboardingProfile | null;
     hasSeenOnboarding: boolean;    // has played Lesson 0 (the 鳴→breakfast walkthrough)
+    hasSeenTutorial: boolean;      // has taken the guided tour of the app's sections
 
     unlockWord: (wordId: string) => void;
     masterWord: (wordId: string) => void;
     recordLessonComplete: () => void;
     completeIntake: (profile: OnboardingProfile) => void;
     completeOnboarding: () => void;
+    completeTutorial: () => void;
     resetProgress: () => void;
 }
 
@@ -58,6 +60,7 @@ export const useGameStore = create<GameState>()(
             hasCompletedIntake: false,
             profile: null,
             hasSeenOnboarding: false,
+            hasSeenTutorial: false,
 
             unlockWord: (wordId) => set((state) => {
                 if (!state.unlockedWords.includes(wordId)) {
@@ -94,6 +97,8 @@ export const useGameStore = create<GameState>()(
 
             completeOnboarding: () => set({ hasSeenOnboarding: true }),
 
+            completeTutorial: () => set({ hasSeenTutorial: true }),
+
             resetProgress: () => set({
                 unlockedWords: [],
                 masteredWords: [],
@@ -104,7 +109,7 @@ export const useGameStore = create<GameState>()(
         }),
         {
             name: 'etymology-quest-storage',
-            version: 4,
+            version: 5,
             migrate: (persisted, version) => {
                 const old = (persisted ?? {}) as Record<string, unknown>;
 
@@ -169,7 +174,10 @@ export const useGameStore = create<GameState>()(
                         ? old.hasCompletedIntake
                         : state.hasSeenOnboarding,
                 };
-                return withIntake;
+
+                // v5: the guided section tour. Everyone gets it offered once
+                // (dismissible band on the home), so default false unless set.
+                return { ...withIntake, hasSeenTutorial: old.hasSeenTutorial === true };
             },
         }
     )
