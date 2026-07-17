@@ -7,6 +7,7 @@ import { X } from "lucide-react";
 import { allWords } from "@/data/words";
 import { WordBlock } from "@/data/types";
 import { classifyWord, Lexicon, Classification, CATEGORY_LABEL, Category } from "@/lib/classify";
+import { findNextLesson } from "@/lib/nextLesson";
 import { useGameStore } from "@/store/useGameStore";
 import { useTranslation } from "@/hooks/useTranslation";
 
@@ -87,7 +88,7 @@ export function BuildGround() {
     const { t, language } = useTranslation();
     const reduce = useReducedMotion();
     const lex = useLexicon();
-    const { masteredWords } = useGameStore();
+    const { masteredWords, masteryLog } = useGameStore();
     const dropRef = useRef<HTMLDivElement>(null);
     const [assembly, setAssembly] = useState<WordBlock[]>([]);
     const [result, setResult] = useState<Classification | null>(null);
@@ -99,6 +100,16 @@ export function BuildGround() {
     const positions = useMemo(() => scatter(pool.length), [pool.length]);
     const reach = useMemo(() => wordsWithinReach(new Set(pool.map(b => b.id))), [pool]);
     const ready = pool.length >= 2;
+
+    // While locked: preview the parts the next lesson would unlock, so the
+    // learn → build loop is concrete, and link straight to that lesson.
+    const upNext = useMemo(() => {
+        if (ready) return null;
+        const next = findNextLesson(masteryLog, masteredWords);
+        if (!next) return null;
+        const word = allWords.find(w => w.id === next.lesson.id);
+        return word ? { lessonId: next.lesson.id, blocks: word.blocks } : null;
+    }, [ready, masteryLog, masteredWords]);
 
     const add = (b: WordBlock) => { setAssembly(a => [...a, b]); setResult(null); };
     const removeAt = (i: number) => { setAssembly(a => a.filter((_, j) => j !== i)); setResult(null); };
@@ -136,7 +147,31 @@ export function BuildGround() {
                 <div className="flex-1 min-h-0 rounded-2xl border border-dashed border-border bg-muted/30 flex flex-col items-center justify-center text-center px-8 gap-3">
                     <p className="font-serif text-xl text-foreground">{t("practice.build.locked_title")}</p>
                     <p className="text-sm text-muted-foreground max-w-xs">{t("practice.build.locked_desc")}</p>
-                    <Link href="/" className="mt-2 px-6 py-2.5 bg-foreground text-background rounded-full hover:opacity-90 transition-opacity">
+                    {upNext && (
+                        <div className="mt-2">
+                            <p className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground mb-2.5">
+                                {t("practice.build.next_parts")}
+                            </p>
+                            <div className="flex flex-wrap justify-center gap-2 opacity-80">
+                                {upNext.blocks.map(b => {
+                                    const s = TYPE_STYLE[b.type];
+                                    return (
+                                        <span
+                                            key={b.id}
+                                            className="rounded-full px-3.5 py-1.5 font-serif text-base"
+                                            style={{ backgroundColor: s.bg, color: s.fg }}
+                                        >
+                                            {b.label.replace(/-/g, "")}
+                                        </span>
+                                    );
+                                })}
+                            </div>
+                        </div>
+                    )}
+                    <Link
+                        href={upNext ? `/lesson/${upNext.lessonId}` : "/"}
+                        className="mt-3 px-6 py-2.5 bg-foreground text-background rounded-full hover:opacity-90 transition-opacity active:scale-[0.98]"
+                    >
                         {t("practice.build.locked_cta")}
                     </Link>
                 </div>

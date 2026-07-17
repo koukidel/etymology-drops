@@ -11,8 +11,8 @@ import { useGameStore } from "@/store/useGameStore";
 import { Intake } from "@/components/onboarding/Intake";
 import { useMounted } from "@/hooks/useMounted";
 import { useTranslation } from "@/hooks/useTranslation";
-import { COURSES, findCourseByLesson } from "@/data/courses";
 import { allWords } from "@/data/words";
+import { findNextLesson } from "@/lib/nextLesson";
 
 // Pulsing halo that animates OPACITY of a pre-shadowed layer (compositor
 // friendly) instead of animating box-shadow itself (paint-heavy on mobile).
@@ -69,23 +69,7 @@ function ContinueCard() {
   const { t, language } = useTranslation();
   const { masteryLog, masteredWords } = useGameStore();
 
-  const target = useMemo(() => {
-    const nextIn = (courseId?: string) => {
-      const courses = courseId ? COURSES.filter(c => c.id === courseId) : COURSES;
-      for (const course of courses) {
-        const next = course.lessons.find(l => !masteredWords.includes(l.id));
-        if (next) return { course, lesson: next };
-      }
-      return null;
-    };
-    for (let i = masteryLog.length - 1; i >= 0; i--) {
-      const course = findCourseByLesson(masteryLog[i].id);
-      if (!course) continue;
-      const hit = nextIn(course.id);
-      if (hit) return hit;
-    }
-    return nextIn();
-  }, [masteryLog, masteredWords]);
+  const target = useMemo(() => findNextLesson(masteryLog, masteredWords), [masteryLog, masteredWords]);
 
   if (!target) return null;
   const word = allWords.find(w => w.id === target.lesson.id);

@@ -100,17 +100,35 @@ export default function ProfilePage() {
                         </section>
                     )}
 
-                    <button
-                        onClick={() => {
-                            if (confirm(ja ? '本当にすべての進捗をリセットしますか？この操作は取り消せません。' : 'Reset all progress? This cannot be undone.')) {
-                                resetProgress();
-                                window.location.reload();
-                            }
-                        }}
-                        className="text-sm text-muted-foreground hover:text-accent transition-colors underline underline-offset-4"
-                    >
-                        {ja ? '進捗をリセット' : 'Reset progress'}
-                    </button>
+                    <div className="flex items-center gap-6">
+                        <button
+                            onClick={() => {
+                                if (confirm(ja ? '本当にすべての進捗をリセットしますか？この操作は取り消せません。' : 'Reset all progress? This cannot be undone.')) {
+                                    resetProgress();
+                                    window.location.reload();
+                                }
+                            }}
+                            className="text-sm text-muted-foreground hover:text-accent transition-colors underline underline-offset-4"
+                        >
+                            {ja ? '進捗をリセット' : 'Reset progress'}
+                        </button>
+
+                        {/* DEV ONLY — remove before sharing. Wipes everything including
+                            the intake/tutorial/Lesson-0 flags so the whole first-run
+                            funnel can be replayed from scratch. */}
+                        <button
+                            onClick={() => {
+                                if (confirm(ja ? '【開発用】オンボーディングを含む全データを消去して最初からやり直しますか？' : '[DEV] Wipe everything (incl. onboarding) and start over?')) {
+                                    localStorage.removeItem('etymology-quest-storage');
+                                    localStorage.removeItem('minamoto_unlock_toast');
+                                    window.location.href = '/';
+                                }
+                            }}
+                            className="text-sm text-muted-foreground/60 hover:text-accent transition-colors underline underline-offset-4"
+                        >
+                            {ja ? '完全リセット（開発用）' : 'Full reset (dev)'}
+                        </button>
+                    </div>
                 </div>
             </main>
         </div>
