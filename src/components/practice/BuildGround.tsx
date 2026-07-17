@@ -11,16 +11,16 @@ import { useGameStore } from "@/store/useGameStore";
 import { useTranslation } from "@/hooks/useTranslation";
 
 const TYPE_STYLE: Record<WordBlock["type"], { bg: string; fg: string }> = {
-    prefix: { bg: "#4a5a3e", fg: "#e8e0cc" },
-    root: { bg: "#d4a94a", fg: "#33301f" },
-    suffix: { bg: "#3c4a34", fg: "#c6c1a4" },
+    prefix: { bg: "#3c5340", fg: "#efe7d1" }, // mid pine
+    root: { bg: "#e3b44f", fg: "#2a2413" },   // brass (the accent)
+    suffix: { bg: "#21362a", fg: "#c2c6ac" }, // deep pine
 };
 
 const CATEGORY_COLOR: Record<Category, string> = {
-    1: "#4c7a3f", // real & common — green
-    2: "#c8963a", // plausible coinage — gold
-    3: "#5f7d90", // real & rare — indigo
-    4: "#9c5a4a", // not a word — muted red
+    1: "#3e6b47", // real & common — pine green
+    2: "#c79433", // plausible coinage — brass
+    3: "#4e6e5c", // real & rare — muted pine-teal
+    4: "#a0522f", // not a word — terracotta
 };
 
 // Scatter positions filling the whole pool area — percentage-based (so they

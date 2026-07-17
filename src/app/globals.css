@@ -8,36 +8,48 @@
 }
 
 @theme {
-  /* Light ground, green + gold ornament (Morris-poster logic): a near-white
-     cream page, deep green-ink text, forest-green primary accent, and gold
-     for ornamental touches (level bars, exam labels). */
-  --color-background: #f7f3e9;
-  --color-foreground: #242a20;
+  /* One committed aesthetic: deep PINE green as the dominant, BRASS as the one
+     sharp accent, on a warm IVORY ground with ink-green text. Two hues on
+     paper — no timid, evenly-distributed mix. */
+  --color-background: #f2ebda;
+  --color-foreground: #1e2a20;
 
-  --color-muted: #ece6d5;
-  --color-muted-foreground: #6e735a;
+  --color-muted: #e7ddc7;
+  --color-muted-foreground: #6a7059;
 
-  --color-card: #fffdf6;
-  --color-card-foreground: #242a20;
+  --color-card: #fbf5e7;
+  --color-card-foreground: #1e2a20;
 
-  --color-border: #ded7c0;
-  --color-input: #ded7c0;
+  --color-border: #d9cfb6;
+  --color-input: #d9cfb6;
 
-  --color-accent: #46603b;
-  --color-accent-foreground: #fbf7ec;
+  /* primary accent = deep pine (links, arrows, rings on light surfaces) */
+  --color-accent: #2f5a3c;
+  --color-accent-foreground: #fbf5e7;
+  --color-ring: #2f5a3c;
 
-  --color-ring: #46603b;
-
-  /* ornament secondaries: green + gold */
-  --color-sage: #6e8a4a;
-  --color-ochre: #a6842b;
-  --color-indigo: #5f7d90;
+  /* level-bar tints, kept inside the pine↔brass family (no stray blue) */
+  --color-sage: #5c7a3e;   /* 初級 — leaf green */
+  --color-ochre: #b6862a;  /* 中級 — brass */
+  --color-indigo: #35624a; /* 上級 — deep pine */
 
   --radius-lg: 0.75rem;
   --radius-md: 0.5rem;
   --radius-sm: 0.25rem;
   --radius-xl: 1rem;
   --radius-2xl: 1.5rem;
+}
+
+/* Plate = the filled green boxes (course/exam/utility cards). Centralized so
+   the whole set retunes from one place; gradients add depth over flat fills. */
+:root {
+  --plate: linear-gradient(158deg, #27462f 0%, #1b3024 100%);
+  --plate-fg: #f2e9d3;      /* titles — warm cream */
+  --plate-body: #b4baa0;    /* body copy on a plate */
+  --plate-dim: #949b80;     /* tertiary (progress counts) */
+  --plate-gold: #e3b44f;    /* the sharp brass accent */
+  --plate-ring: inset 0 0 0 1px rgba(227, 180, 79, 0.20);
+  --plate-gold-ring: inset 0 0 0 1px rgba(227, 180, 79, 0.42);
 }
 
 @layer utilities {
@@ -47,7 +59,8 @@
 }
 
 body {
-  background-color: var(--color-background);
+  /* subtle warmth gradient for depth instead of a flat wash */
+  background: linear-gradient(178deg, #f5eede 0%, #ebe2ce 100%) fixed;
   color: var(--color-foreground);
   font-family: var(--font-sans);
 }

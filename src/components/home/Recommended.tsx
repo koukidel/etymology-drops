@@ -57,12 +57,12 @@ export function Recommended() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {picks.map(p => (
-                    <Link key={p.lessonId} href={`/lesson/${p.lessonId}`} className="group flex items-center gap-3 rounded-xl px-4 py-3 transition-transform hover:-translate-y-0.5" style={{ backgroundColor: "#3c4a34", boxShadow: "inset 0 0 0 1px #cba24c33" }}>
+                    <Link key={p.lessonId} href={`/lesson/${p.lessonId}`} className="group flex items-center gap-3 rounded-xl px-4 py-3 transition-transform hover:-translate-y-0.5" style={{ background: "var(--plate)", boxShadow: "var(--plate-ring)" }}>
                         <span className="min-w-0">
-                            <span className="block font-serif text-lg truncate" style={{ color: "#e8e0cc" }}>{p.lessonTitle}</span>
-                            <span className="block text-xs truncate" style={{ color: "#b9b59a" }}>{p.courseTitle}</span>
+                            <span className="block font-serif text-lg truncate" style={{ color: "var(--plate-fg)" }}>{p.lessonTitle}</span>
+                            <span className="block text-xs truncate" style={{ color: "var(--plate-body)" }}>{p.courseTitle}</span>
                         </span>
-                        <span className="ml-auto" style={{ color: "#d4a94a" }}>→</span>
+                        <span className="ml-auto" style={{ color: "var(--plate-gold)" }}>→</span>
                     </Link>
                 ))}
             </div>
