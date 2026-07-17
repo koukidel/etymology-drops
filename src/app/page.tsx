@@ -21,16 +21,16 @@ function TimeAttackCard({ disabled = false }: { disabled?: boolean }) {
       aria-disabled={disabled}
       tabIndex={disabled ? -1 : undefined}
       className={`group flex items-center gap-4 rounded-xl px-5 py-4 transition-transform ${disabled ? "pointer-events-none opacity-50" : "hover:-translate-y-0.5"}`}
-      style={{ backgroundColor: "#3c4a34", boxShadow: "inset 0 0 0 1px #cba24c33" }}
+      style={{ background: "var(--plate)", boxShadow: "var(--plate-ring)" }}
     >
-      <span className="shrink-0 grid place-items-center w-10 h-10 rounded-full" style={{ color: "#d4a94a", boxShadow: "inset 0 0 0 1px #d4a94a66" }}>
+      <span className="shrink-0 grid place-items-center w-10 h-10 rounded-full" style={{ color: "var(--plate-gold)", boxShadow: "var(--plate-gold-ring)" }}>
         <Zap size={18} />
       </span>
       <span className="min-w-0">
-        <span className="block font-serif text-lg" style={{ color: "#e8e0cc" }}>{t('home.speedrun.title')}</span>
-        <span className="block text-sm truncate" style={{ color: "#b9b59a" }}>{t('home.speedrun.desc')}</span>
+        <span className="block font-serif text-lg" style={{ color: "var(--plate-fg)" }}>{t('home.speedrun.title')}</span>
+        <span className="block text-sm truncate" style={{ color: "var(--plate-body)" }}>{t('home.speedrun.desc')}</span>
       </span>
-      <span className="ml-auto" style={{ color: "#d4a94a" }}>→</span>
+      <span className="ml-auto" style={{ color: "var(--plate-gold)" }}>→</span>
     </Link>
   );
 }
@@ -45,23 +45,23 @@ function Lesson0Band({ glow = false, done = false }: { glow?: boolean; done?: bo
     <Link
       href="/guide"
       className="group flex items-center gap-4 rounded-xl px-5 py-4 transition-transform hover:-translate-y-0.5"
-      style={{ backgroundColor: "#3c4a34", boxShadow: "inset 0 0 0 1px #cba24c33" }}
+      style={{ background: "var(--plate)", boxShadow: "var(--plate-ring)" }}
     >
-      <span className="shrink-0 grid place-items-center w-10 h-10 rounded-full" style={{ color: "#d4a94a", boxShadow: "inset 0 0 0 1px #d4a94a66" }}>
+      <span className="shrink-0 grid place-items-center w-10 h-10 rounded-full" style={{ color: "var(--plate-gold)", boxShadow: "var(--plate-gold-ring)" }}>
         <BookOpen size={18} />
       </span>
       <span className="min-w-0">
         <span className="flex items-center gap-2">
-          <span className="font-serif text-lg" style={{ color: "#e8e0cc" }}>{t('home.lesson0.title')}</span>
+          <span className="font-serif text-lg" style={{ color: "var(--plate-fg)" }}>{t('home.lesson0.title')}</span>
           {done && (
-            <span className="inline-flex items-center gap-1 text-[11px]" style={{ color: "#a9ac8e" }}>
+            <span className="inline-flex items-center gap-1 text-[11px]" style={{ color: "var(--plate-dim)" }}>
               <Check size={12} /> {t('home.lesson0.done')}
             </span>
           )}
         </span>
-        <span className="block text-sm truncate" style={{ color: "#b9b59a" }}>{t('home.lesson0.desc')}</span>
+        <span className="block text-sm truncate" style={{ color: "var(--plate-body)" }}>{t('home.lesson0.desc')}</span>
       </span>
-      <span className="ml-auto" style={{ color: "#d4a94a" }}>→</span>
+      <span className="ml-auto" style={{ color: "var(--plate-gold)" }}>→</span>
     </Link>
   );
 
@@ -73,13 +73,13 @@ function Lesson0Band({ glow = false, done = false }: { glow?: boolean; done?: bo
       className="rounded-xl"
       animate={reduce ? undefined : {
         boxShadow: [
-          "0 0 0 0 rgba(203,162,76,0.0)",
-          "0 0 26px 5px rgba(203,162,76,0.5)",
-          "0 0 0 0 rgba(203,162,76,0.0)",
+          "0 0 0 0 rgba(227,180,79,0.0)",
+          "0 0 26px 5px rgba(227,180,79,0.5)",
+          "0 0 0 0 rgba(227,180,79,0.0)",
         ],
       }}
       transition={reduce ? undefined : { duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
-      style={reduce ? { boxShadow: "0 0 18px 3px rgba(203,162,76,0.45)" } : undefined}
+      style={reduce ? { boxShadow: "0 0 18px 3px rgba(227,180,79,0.45)" } : undefined}
     >
       {card}
     </motion.div>
@@ -95,23 +95,23 @@ function TutorialBand({ glow = false, done = false }: { glow?: boolean; done?: b
     <Link
       href="/tutorial"
       className="group flex items-center gap-4 rounded-xl px-5 py-4 transition-transform hover:-translate-y-0.5"
-      style={{ backgroundColor: "#3c4a34", boxShadow: "inset 0 0 0 1px #cba24c33" }}
+      style={{ background: "var(--plate)", boxShadow: "var(--plate-ring)" }}
     >
-      <span className="shrink-0 grid place-items-center w-10 h-10 rounded-full" style={{ color: "#d4a94a", boxShadow: "inset 0 0 0 1px #d4a94a66" }}>
+      <span className="shrink-0 grid place-items-center w-10 h-10 rounded-full" style={{ color: "var(--plate-gold)", boxShadow: "var(--plate-gold-ring)" }}>
         <Compass size={18} />
       </span>
       <span className="min-w-0">
         <span className="flex items-center gap-2">
-          <span className="font-serif text-lg" style={{ color: "#e8e0cc" }}>{t('home.tutorial.title')}</span>
+          <span className="font-serif text-lg" style={{ color: "var(--plate-fg)" }}>{t('home.tutorial.title')}</span>
           {done && (
-            <span className="inline-flex items-center gap-1 text-[11px]" style={{ color: "#a9ac8e" }}>
+            <span className="inline-flex items-center gap-1 text-[11px]" style={{ color: "var(--plate-dim)" }}>
               <Check size={12} /> {t('home.tutorial.done')}
             </span>
           )}
         </span>
-        <span className="block text-sm truncate" style={{ color: "#b9b59a" }}>{t('home.tutorial.desc')}</span>
+        <span className="block text-sm truncate" style={{ color: "var(--plate-body)" }}>{t('home.tutorial.desc')}</span>
       </span>
-      <span className="ml-auto" style={{ color: "#d4a94a" }}>→</span>
+      <span className="ml-auto" style={{ color: "var(--plate-gold)" }}>→</span>
     </Link>
   );
 
@@ -122,13 +122,13 @@ function TutorialBand({ glow = false, done = false }: { glow?: boolean; done?: b
       className="rounded-xl"
       animate={reduce ? undefined : {
         boxShadow: [
-          "0 0 0 0 rgba(203,162,76,0.0)",
-          "0 0 26px 5px rgba(203,162,76,0.5)",
-          "0 0 0 0 rgba(203,162,76,0.0)",
+          "0 0 0 0 rgba(227,180,79,0.0)",
+          "0 0 26px 5px rgba(227,180,79,0.5)",
+          "0 0 0 0 rgba(227,180,79,0.0)",
         ],
       }}
       transition={reduce ? undefined : { duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
-      style={reduce ? { boxShadow: "0 0 18px 3px rgba(203,162,76,0.45)" } : undefined}
+      style={reduce ? { boxShadow: "0 0 18px 3px rgba(227,180,79,0.45)" } : undefined}
     >
       {card}
     </motion.div>

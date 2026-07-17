@@ -32,16 +32,16 @@ export default function PracticePage() {
                                 key={m.href}
                                 href={m.href}
                                 className="group flex items-center gap-4 rounded-xl px-5 py-5 transition-transform hover:-translate-y-0.5"
-                                style={{ backgroundColor: "#3c4a34", boxShadow: "inset 0 0 0 1px #cba24c33" }}
+                                style={{ background: "var(--plate)", boxShadow: "var(--plate-ring)" }}
                             >
-                                <span className="shrink-0 grid place-items-center w-11 h-11 rounded-full" style={{ color: "#d4a94a", boxShadow: "inset 0 0 0 1px #d4a94a66" }}>
+                                <span className="shrink-0 grid place-items-center w-11 h-11 rounded-full" style={{ color: "var(--plate-gold)", boxShadow: "var(--plate-gold-ring)" }}>
                                     <Icon size={20} />
                                 </span>
                                 <span className="min-w-0">
-                                    <span className="block font-serif text-xl" style={{ color: "#e8e0cc" }}>{m.title}</span>
-                                    <span className="block text-sm truncate" style={{ color: "#b9b59a" }}>{m.desc}</span>
+                                    <span className="block font-serif text-xl" style={{ color: "var(--plate-fg)" }}>{m.title}</span>
+                                    <span className="block text-sm truncate" style={{ color: "var(--plate-body)" }}>{m.desc}</span>
                                 </span>
-                                <span className="ml-auto" style={{ color: "#d4a94a" }}>→</span>
+                                <span className="ml-auto" style={{ color: "var(--plate-gold)" }}>→</span>
                             </Link>
                         );
                     })}

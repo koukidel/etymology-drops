@@ -36,17 +36,17 @@ export function ExamShowcase({ locked = false }: { locked?: boolean }) {
                             aria-disabled={locked}
                             tabIndex={locked ? -1 : undefined}
                             className={`group aspect-square flex flex-col justify-between rounded-2xl p-4 transition-transform ${locked ? "pointer-events-none opacity-50" : "hover:-translate-y-0.5"}`}
-                            style={{ backgroundColor: "#3c4a34", boxShadow: "inset 0 0 0 1px #cba24c33" }}
+                            style={{ background: "var(--plate)", boxShadow: "var(--plate-ring)" }}
                         >
                             <div>
-                                <span className="block font-serif text-xl leading-snug" style={{ color: "#d4a94a" }}>
+                                <span className="block font-serif text-xl leading-snug" style={{ color: "var(--plate-gold)" }}>
                                     {localized(course.exam!)}
                                 </span>
-                                <span className="block text-sm mt-0.5" style={{ color: "#c6c1a4" }}>
+                                <span className="block text-sm mt-0.5" style={{ color: "var(--plate-body)" }}>
                                     {ja ? "対策単語" : "vocabulary"}
                                 </span>
                             </div>
-                            <span className="text-xs tabular-nums" style={{ color: "#a9ac8e" }}>
+                            <span className="text-xs tabular-nums" style={{ color: "var(--plate-dim)" }}>
                                 {done} / {total}
                             </span>
                         </Link>
