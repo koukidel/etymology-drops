@@ -123,7 +123,7 @@ export function TutorialTour() {
 
     const isLast = step === STEP_COUNT - 1;
     // The two interactive steps gate Next on completion.
-    const nextBlocked = step === 3 && !miniSolved;
+    const nextBlocked = step === 2 && !miniSolved;
 
     return (
         <div className="min-h-[100dvh] flex flex-col max-w-xl mx-auto px-6 py-8 relative">
@@ -163,19 +163,6 @@ export function TutorialTour() {
                         )}
 
                         {step === 1 && (
-                            <Panel icon={<BookOpen size={26} />}>
-                                <H>{t("tutorial.dict.title")}</H>
-                                <P>{t("tutorial.dict.body")}</P>
-                                <Link
-                                    href="/dictionary"
-                                    className="inline-flex items-center gap-1.5 mt-5 text-sm text-accent hover:opacity-80 underline underline-offset-4"
-                                >
-                                    {t("tutorial.dict.cta")}
-                                </Link>
-                            </Panel>
-                        )}
-
-                        {step === 2 && (
                             <div>
                                 <div className="flex items-center justify-center gap-2 text-accent mb-3">
                                     <Zap size={22} />
@@ -194,7 +181,7 @@ export function TutorialTour() {
                             </div>
                         )}
 
-                        {step === 3 && (
+                        {step === 2 && (
                             <div>
                                 <div className="flex items-center justify-center gap-2 text-accent mb-3">
                                     <Blocks size={22} />
@@ -207,10 +194,23 @@ export function TutorialTour() {
                             </div>
                         )}
 
-                        {step === 4 && (
+                        {step === 3 && (
                             <Panel icon={<Blocks size={26} />}>
                                 <H>{t("tutorial.mechanism.title")}</H>
                                 <P>{t("tutorial.mechanism.body")}</P>
+                            </Panel>
+                        )}
+
+                        {step === 4 && (
+                            <Panel icon={<BookOpen size={26} />}>
+                                <H>{t("tutorial.dict.title")}</H>
+                                <P>{t("tutorial.dict.body")}</P>
+                                <Link
+                                    href="/dictionary"
+                                    className="inline-flex items-center gap-1.5 mt-5 text-sm text-accent hover:opacity-80 underline underline-offset-4"
+                                >
+                                    {t("tutorial.dict.cta")}
+                                </Link>
                             </Panel>
                         )}
 
@@ -233,7 +233,7 @@ export function TutorialTour() {
                 >
                     <ArrowLeft size={14} /> {t("tutorial.back")}
                 </button>
-                {step !== 2 && (
+                {step !== 1 && (
                     isLast ? (
                         <button onClick={finish} className="px-8 py-2.5 bg-foreground text-background rounded-full hover:opacity-90 transition-opacity active:scale-[0.98]">
                             {t("tutorial.finish")}
