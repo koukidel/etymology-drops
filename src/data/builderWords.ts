@@ -54,7 +54,7 @@ export const builderWords: Word[] = [
         },
         history: {
             en: "'play' + '-ful' (full of). Hopeful, careful, colorful — the suffix pours a quality into a word until it is full of it.",
-            ja: "'play'（遊ぶ）+ '-ful'（〜に満ちた）。hopeful、careful、colorful ——この接尾辞は、言葉に性質を注ぎ込み、満たしてくれます。",
+            ja: "'play'（遊ぶ）+ '-ful'（〜に満ちた）。hopeful、careful、colorful。この接尾辞は、言葉に性質を注ぎ込み、満たしてくれます。",
         },
         blocks: [
             { id: "play", label: "Play", meaning: { en: "To play", ja: "遊ぶ" }, type: "root" },
@@ -75,7 +75,7 @@ export const builderWords: Word[] = [
         },
         history: {
             en: "'play' + '-er' (a person who). Teacher, singer, runner, baker — English names people by what they do, with one small suffix.",
-            ja: "'play'（遊ぶ）+ '-er'（〜する人）。teacher、singer、runner、baker ——英語は小さな接尾辞ひとつで、行動から人を名づけます。",
+            ja: "'play'（遊ぶ）+ '-er'（〜する人）。teacher、singer、runner、baker。英語は小さな接尾辞ひとつで、行動から人を名づけます。",
         },
         blocks: [
             { id: "play", label: "Play", meaning: { en: "To play", ja: "遊ぶ" }, type: "root" },

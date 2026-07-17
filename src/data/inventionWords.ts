@@ -42,7 +42,7 @@ export const inventionWords: Word[] = [
         icon: "Camera",
         tip: {
             en: "PHOTO (light) also powers photosynthesis — plants 'putting together with light' — and photon, a particle of light itself.",
-            ja: "PHOTO（光）は photosynthesis（光合成 ——植物が光で作り上げること）や、光の粒子そのものである photon にも使われています。",
+            ja: "PHOTO（光）は photosynthesis（光合成＝植物が光で作り上げること）や、光の粒子そのものである photon にも使われています。",
         },
     },
     {
@@ -75,7 +75,7 @@ export const inventionWords: Word[] = [
         },
         history: {
             en: "Greek 'micro' (small) + 'scope' (to look): a small-looker. Its twin, the telescope, is a far-looker — same SCOPE, different direction.",
-            ja: "ギリシャ語の 'micro'（小さい）+ 'scope'（見る）。「小さいものを見るもの」。双子の telescope は「遠くを見るもの」——同じ SCOPE、違う方向。",
+            ja: "ギリシャ語の 'micro'（小さい）+ 'scope'（見る）。「小さいものを見るもの」。双子の telescope は「遠くを見るもの」。同じ SCOPE、違う方向。",
         },
         blocks: [
             { id: "micro", label: "Micro", meaning: { en: "Small", ja: "小さい" }, type: "prefix" },
@@ -105,7 +105,7 @@ export const inventionWords: Word[] = [
         icon: "Bike",
         tip: {
             en: "BI (two) rides everywhere: bilingual (two languages), binoculars (two eyes), bimonthly (every two months). And a unicycle? One wheel.",
-            ja: "BI（2つ）はあちこちに現れます。bilingual（2言語）、binoculars（双眼鏡）、bimonthly（隔月）。では unicycle は？ ——車輪1つの一輪車です。",
+            ja: "BI（2つ）はあちこちに現れます。bilingual（2言語）、binoculars（双眼鏡）、bimonthly（隔月）。では unicycle は？ 車輪1つの一輪車です。",
         },
     },
     {
@@ -117,7 +117,7 @@ export const inventionWords: Word[] = [
         },
         history: {
             en: "Latin 'sub' (under) + English 'way': the road under the road. Half Latin, half plain English — words get built from whatever parts are at hand.",
-            ja: "ラテン語の 'sub'（下）+ 英語の 'way'（道）。「道の下の道」。半分ラテン語、半分英語 ——言葉は手近な部品から組み立てられるのです。",
+            ja: "ラテン語の 'sub'（下）+ 英語の 'way'（道）。「道の下の道」。半分ラテン語、半分英語。言葉は手近な部品から組み立てられるのです。",
         },
         blocks: [
             { id: "sub", label: "Sub", meaning: { en: "Under", ja: "下" }, type: "prefix" },

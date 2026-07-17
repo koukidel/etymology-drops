@@ -132,7 +132,7 @@ export const expandedWords: Word[] = [
         icon: "Box",
         tip: {
             en: "TAIN (Latin tenere, 'to hold') also holds maintain, obtain, retain, sustain, entertain. Its master word is detain — 'to hold down'.",
-            ja: "TAIN（ラテン語 tenere「保つ」）は maintain、obtain、retain、sustain、entertain も抱えています。マスターワードは detain ——「押さえて留める（拘留する）」。",
+            ja: "TAIN（ラテン語 tenere「保つ」）は maintain、obtain、retain、sustain、entertain も抱えています。マスターワードは detain。「押さえて留める（拘留する）」。",
         },
     },
     {
@@ -162,7 +162,7 @@ export const expandedWords: Word[] = [
         icon: "CornerDownRight",
         tip: {
             en: "MIT (Latin mittere, 'to send') sends transmit, permit, admit, emit — and mission, 'a sending'. Master word: intermittent, 'sending between' — stopping and starting.",
-            ja: "MIT（ラテン語 mittere「送る」）は transmit、permit、admit、emit、そして mission（送ること）を送り出します。マスターワードは intermittent ——「間に送る」＝断続的な。",
+            ja: "MIT（ラテン語 mittere「送る」）は transmit、permit、admit、emit、そして mission（送ること）を送り出します。マスターワードは intermittent。「間に送る」＝断続的な。",
         },
     },
     {
@@ -230,7 +230,7 @@ export const expandedWords: Word[] = [
         icon: "HelpingHand",
         tip: {
             en: "SIST (Latin sistere, 'to stand') stands in persist, resist, exist, consist. Master word: insist — 'to stand upon' your point.",
-            ja: "SIST（ラテン語 sistere「立つ」）は persist、resist、exist、consist に立っています。マスターワードは insist ——自分の主張の「上に立つ」。",
+            ja: "SIST（ラテン語 sistere「立つ」）は persist、resist、exist、consist に立っています。マスターワードは insist。自分の主張の「上に立つ」。",
         },
     },
 
@@ -252,7 +252,7 @@ export const expandedWords: Word[] = [
         icon: "Pen",
         tip: {
             en: "GRAPH (Greek graphein, 'to write') writes telegraph, biography, paragraph, graphite — you met it in photograph. Master word: monograph, 'a single writing'.",
-            ja: "GRAPH（ギリシャ語 graphein「書く」）は telegraph、biography、paragraph、graphite を書きます —— photograph でも出会いましたね。マスターワードは monograph（単一の書き物＝専門論文）。",
+            ja: "GRAPH（ギリシャ語 graphein「書く」）は telegraph、biography、paragraph、graphite を書きます。photograph でも出会いましたね。マスターワードは monograph（単一の書き物＝専門論文）。",
         },
     },
     {
@@ -290,7 +290,7 @@ export const expandedWords: Word[] = [
         icon: "Brain",
         tip: {
             en: "LOG (Greek logos, 'word, reason') speaks in dialogue, apology, biology — every -logy is 'the study of'. Master word: epilogue, the words 'upon' the end.",
-            ja: "LOG（ギリシャ語 logos「言葉・理性」）は dialogue、apology、biology に語っています —— あらゆる -logy は「〜学」。マスターワードは epilogue（終わりの「上に」置かれた言葉＝結び）。",
+            ja: "LOG（ギリシャ語 logos「言葉・理性」）は dialogue、apology、biology に語っています。あらゆる -logy は「〜学」。マスターワードは epilogue（終わりの「上に」置かれた言葉＝結び）。",
         },
     },
 
@@ -342,7 +342,7 @@ export const expandedWords: Word[] = [
         icon: "MessageSquare",
         tip: {
             en: "PLY (Latin plicare, 'to fold') folds into multiply, apply, complicate, and plywood. Master word: uncomplicated — 'not folded together'.",
-            ja: "PLY（ラテン語 plicare「折る」）は multiply、apply、complicate、plywood（合板）に折り込まれています。マスターワードは uncomplicated ——「共に折られていない」＝複雑でない。",
+            ja: "PLY（ラテン語 plicare「折る」）は multiply、apply、complicate、plywood（合板）に折り込まれています。マスターワードは uncomplicated。「共に折られていない」＝複雑でない。",
         },
     },
     {
@@ -432,7 +432,7 @@ export const expandedWords: Word[] = [
         icon: "Edit3",
         tip: {
             en: "POSE (Latin ponere, 'to put') places oppose, propose, expose, position. Master word: indisposed — 'not put in order', politely unwell.",
-            ja: "POSE（ラテン語 ponere「置く」）は oppose、propose、expose、position を配置します。マスターワードは indisposed ——「整えて置かれていない」＝体調がすぐれない。",
+            ja: "POSE（ラテン語 ponere「置く」）は oppose、propose、expose、position を配置します。マスターワードは indisposed。「整えて置かれていない」＝体調がすぐれない。",
         },
     },
     {
@@ -462,7 +462,7 @@ export const expandedWords: Word[] = [
         icon: "BookKey",
         tip: {
             en: "FIC (Latin facere, 'to make') makes factory, efficient, magnificent, sufficient. Master word: oversufficient — three parts stacked on one root.",
-            ja: "FIC（ラテン語 facere「作る」）は factory、efficient、magnificent、sufficient を作ります。マスターワードは oversufficient ——ひとつの語根に部品が三つ重なった言葉です。",
+            ja: "FIC（ラテン語 facere「作る」）は factory、efficient、magnificent、sufficient を作ります。マスターワードは oversufficient。ひとつの語根に部品が三つ重なった言葉です。",
         },
     },
     {
@@ -492,7 +492,7 @@ export const expandedWords: Word[] = [
         icon: "Bell",
         tip: {
             en: "SCRIBE (Latin scribere, 'to write') writes describe, prescribe, script, manuscript. Master word: mistranscribe — the last of Brown's 14. Finish this lesson and you have met every part he estimated appears in 100,000+ dictionary words.",
-            ja: "SCRIBE（ラテン語 scribere「書く」）は describe、prescribe、script、manuscript を書きます。マスターワードは mistranscribe ——ブラウンの14語の最後のひとつ。このレッスンを終えれば、10万語以上に現れると推定された部品のすべてに出会ったことになります。",
+            ja: "SCRIBE（ラテン語 scribere「書く」）は describe、prescribe、script、manuscript を書きます。マスターワードは mistranscribe。ブラウンの14語の最後のひとつ。このレッスンを終えれば、10万語以上に現れると推定された部品のすべてに出会ったことになります。",
         },
     }
 ];
