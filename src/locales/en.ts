@@ -29,7 +29,8 @@ export const en = {
     "practice.build.reach": "{parts} parts unlocked · ~{words} words within reach",
     "practice.build.locked_title": "Not enough parts yet",
     "practice.build.locked_desc": "Master lessons to unlock their parts — then come back and build with them here.",
-    "practice.build.locked_cta": "Go to lessons",
+    "practice.build.locked_cta": "Go to this lesson",
+    "practice.build.next_parts": "Parts you'll unlock in the next lesson",
 
     "home.courses": "Path",
 

@@ -29,7 +29,8 @@ export const ja = {
     "practice.build.reach": "{parts}個の部品 ・ 約{words}語が射程内",
     "practice.build.locked_title": "まだ部品が足りません",
     "practice.build.locked_desc": "レッスンを進めて部品を集めると、ここで組み立てられるようになります。",
-    "practice.build.locked_cta": "レッスンへ",
+    "practice.build.locked_cta": "このレッスンへ",
+    "practice.build.next_parts": "次のレッスンで手に入る部品",
 
     "home.courses": "Path",
 
