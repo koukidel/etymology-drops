@@ -8,7 +8,7 @@ import { useMounted } from "@/hooks/useMounted";
 
 // A "browse by exam goal" showcase: rounded-square tiles for the exam-targeted
 // courses (英検・TOEIC), separate from the by-level bars above.
-export function ExamShowcase({ locked = false }: { locked?: boolean }) {
+export function ExamShowcase({ locked = false, bare = false }: { locked?: boolean; bare?: boolean }) {
     const { masteredWords } = useGameStore();
     const { language } = useTranslation();
     const mounted = useMounted();
@@ -21,10 +21,12 @@ export function ExamShowcase({ locked = false }: { locked?: boolean }) {
     if (exams.length === 0) return null;
 
     return (
-        <section className="mt-12">
-            <h2 className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-4">
-                {ja ? "資格対策" : "Exam prep"}
-            </h2>
+        <section className={bare ? undefined : "mt-12"}>
+            {!bare && (
+                <h2 className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-4">
+                    {ja ? "資格対策" : "Exam prep"}
+                </h2>
+            )}
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                 {exams.map(course => {
                     const done = mounted ? course.lessons.filter(l => masteredWords.includes(l.id)).length : 0;
@@ -35,7 +37,7 @@ export function ExamShowcase({ locked = false }: { locked?: boolean }) {
                             href={`/course/${course.id}`}
                             aria-disabled={locked}
                             tabIndex={locked ? -1 : undefined}
-                            className={`group aspect-square flex flex-col justify-between rounded-2xl p-4 transition-transform ${locked ? "pointer-events-none opacity-50" : "hover:-translate-y-0.5"}`}
+                            className={`group aspect-square flex flex-col justify-between rounded-2xl p-4 transition-transform duration-150 ${locked ? "pointer-events-none opacity-50" : "hover:-translate-y-0.5 active:scale-[0.98]"}`}
                             style={{ background: "var(--plate)", boxShadow: "var(--plate-ring)" }}
                         >
                             <div>

@@ -25,6 +25,10 @@ export function Recommended() {
 
     const level: LearnerLevel = profile?.selfLevel ?? "beginner";
 
+    // Respect the intake commitment: a light learner gets one clear pick, a
+    // serious one gets a wider spread. (light=1 / steady=3 / serious=5)
+    const cap = profile?.commitment === "light" ? 1 : profile?.commitment === "serious" ? 5 : 3;
+
     // The next lesson to do in each course at the chosen level: first lesson
     // not yet mastered. Skip fully-completed courses.
     const picks: Pick[] = [];
@@ -37,7 +41,7 @@ export function Recommended() {
             lessonTitle: wd ? wd.word : localized(next.title),
             courseTitle: localized(course.title),
         });
-        if (picks.length >= 5) break;
+        if (picks.length >= cap) break;
     }
 
     if (picks.length === 0) return null;
@@ -57,7 +61,7 @@ export function Recommended() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {picks.map(p => (
-                    <Link key={p.lessonId} href={`/lesson/${p.lessonId}`} className="group flex items-center gap-3 rounded-xl px-4 py-3 transition-transform hover:-translate-y-0.5" style={{ background: "var(--plate)", boxShadow: "var(--plate-ring)" }}>
+                    <Link key={p.lessonId} href={`/lesson/${p.lessonId}`} className="group flex items-center gap-3 rounded-xl px-4 py-3 transition-transform duration-150 hover:-translate-y-0.5 active:scale-[0.98]" style={{ background: "var(--plate)", boxShadow: "var(--plate-ring)" }}>
                         <span className="min-w-0">
                             <span className="block font-serif text-lg truncate" style={{ color: "var(--plate-fg)" }}>{p.lessonTitle}</span>
                             <span className="block text-xs truncate" style={{ color: "var(--plate-body)" }}>{p.courseTitle}</span>

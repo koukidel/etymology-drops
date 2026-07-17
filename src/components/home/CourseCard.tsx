@@ -29,7 +29,7 @@ export function CourseCard({ course, className = "", locked = false }: Props) {
             href={`/course/${course.id}`}
             aria-disabled={locked}
             tabIndex={locked ? -1 : undefined}
-            className={`group flex flex-col justify-between rounded-xl p-6 transition-transform ${locked ? "pointer-events-none opacity-50" : "hover:-translate-y-0.5"} ${className}`}
+            className={`group flex flex-col justify-between rounded-xl p-6 transition-transform duration-150 ${locked ? "pointer-events-none opacity-50" : "hover:-translate-y-0.5 active:scale-[0.98]"} ${className}`}
             style={{ background: "var(--plate)", boxShadow: "var(--plate-ring)" }}
         >
             <div>
