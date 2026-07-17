@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { X } from "lucide-react";
 import { useTranslation } from "@/hooks/useTranslation";
 import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
@@ -11,6 +11,15 @@ import { allWords } from "@/data/words";
 interface Props {
     onComplete: () => void;
     onExit?: () => void;
+}
+
+// Narration strings carry **…** markers → rendered as warm serif emphasis.
+function renderEm(text: string): React.ReactNode[] {
+    return text.split(/(\*\*[^*]+\*\*)/g).map((seg, i) =>
+        seg.startsWith("**") && seg.endsWith("**")
+            ? <em key={i} className="not-italic font-serif font-semibold text-accent">{seg.slice(2, -2)}</em>
+            : <span key={i}>{seg}</span>
+    );
 }
 
 type Step =
@@ -27,13 +36,34 @@ type Step =
 
 const ORDER: Step[] = ['ask', 'split-idea', 'split', 'quiz', 'bridge', 'slice', 'assoc1', 'assoc2', 'moral', 'final'];
 
+// Paragraphs reveal one by one so short lines land like beats, not a wall.
 function Narration({ text, cta, onNext }: { text: string; cta: string; onNext: () => void }) {
+    const reduce = useReducedMotion();
+    const paras = text.split("\n\n");
     return (
         <div className="max-w-lg mx-auto text-center">
-            <p className="text-foreground leading-loose whitespace-pre-line text-left sm:text-center mb-12">{text}</p>
-            <button onClick={onNext} className="px-10 py-3 bg-foreground text-background rounded-full hover:opacity-90 transition-opacity">
+            <div className="space-y-6 mb-12">
+                {paras.map((para, i) => (
+                    <motion.p
+                        key={i}
+                        initial={reduce ? false : { opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.15 + i * 0.35, duration: 0.45 }}
+                        className="text-lg text-foreground leading-relaxed"
+                    >
+                        {renderEm(para)}
+                    </motion.p>
+                ))}
+            </div>
+            <motion.button
+                initial={reduce ? false : { opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.3 + paras.length * 0.35 }}
+                onClick={onNext}
+                className="px-10 py-3 bg-foreground text-background rounded-full hover:opacity-90 transition-opacity active:scale-[0.98]"
+            >
                 {cta}
-            </button>
+            </motion.button>
         </div>
     );
 }
@@ -89,7 +119,7 @@ export function GuidedOnboarding({ onComplete, onExit }: Props) {
                     {step === 'ask' && (
                         <div className="max-w-lg mx-auto text-center">
                             <p className="font-serif text-7xl text-foreground mb-10">鳴</p>
-                            <p className="text-foreground leading-loose mb-10 whitespace-pre-line">{t('guide.ask')}</p>
+                            <p className="text-lg text-foreground leading-relaxed mb-10 whitespace-pre-line">{renderEm(t('guide.ask'))}</p>
                             <div className="flex flex-col sm:flex-row gap-3 justify-center">
                                 <button
                                     onClick={() => { setGuessed(true); next(); }}
@@ -137,7 +167,7 @@ export function GuidedOnboarding({ onComplete, onExit }: Props) {
                                     className="font-serif text-6xl text-foreground"
                                 >鳥</motion.span>
                             </div>
-                            <p className="text-foreground leading-loose whitespace-pre-line mb-12">{t('guide.split')}</p>
+                            <p className="text-lg text-foreground leading-relaxed whitespace-pre-line mb-12">{renderEm(t('guide.split'))}</p>
                             <button onClick={next} className="px-10 py-3 bg-foreground text-background rounded-full hover:opacity-90 transition-opacity">
                                 {t('guide.continue')}
                             </button>
@@ -172,7 +202,7 @@ export function GuidedOnboarding({ onComplete, onExit }: Props) {
                             </div>
                             {quizSolved && (
                                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-                                    <p className="text-foreground leading-loose whitespace-pre-line mb-8">{t('guide.quiz.reveal')}</p>
+                                    <p className="text-lg text-foreground leading-relaxed whitespace-pre-line mb-8">{renderEm(t('guide.quiz.reveal'))}</p>
                                     <button onClick={next} className="px-10 py-3 bg-foreground text-background rounded-full hover:opacity-90 transition-opacity">
                                         {t('guide.continue')}
                                     </button>
@@ -185,7 +215,7 @@ export function GuidedOnboarding({ onComplete, onExit }: Props) {
                         <div className="max-w-lg mx-auto text-center">
                             <p className="text-muted-foreground mb-6">{t('guide.bridge.lead')}</p>
                             <p className="font-serif text-6xl text-foreground mb-10">breakfast</p>
-                            <p className="text-foreground leading-loose whitespace-pre-line text-left sm:text-center mb-12">{t('guide.bridge')}</p>
+                            <p className="text-lg text-foreground leading-relaxed whitespace-pre-line text-left sm:text-center mb-12">{renderEm(t('guide.bridge'))}</p>
                             <button onClick={next} className="px-10 py-3 bg-foreground text-background rounded-full hover:opacity-90 transition-opacity">
                                 {t('guide.bridge.cta')}
                             </button>

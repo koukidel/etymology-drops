@@ -15,15 +15,16 @@ export function Header() {
 
     const activeStreak = mounted ? currentStreak(streak, lastActiveDate) : 0;
 
+    // Funnel order: learn → apply → look up → reflect.
     const links = [
         { href: "/", label: t('nav.path') },
-        { href: "/dictionary", label: t('nav.dictionary') },
         { href: "/practice", label: t('nav.practice') },
+        { href: "/dictionary", label: t('nav.dictionary') },
         { href: "/profile", label: t('nav.progress') },
     ];
 
     return (
-        <header className="border-b border-border bg-background/90 backdrop-blur-sm sticky top-0 z-40">
+        <header className="border-b border-border bg-background sticky top-0 z-40">
             <div className="max-w-3xl mx-auto px-6 h-16 flex items-center justify-between">
                 <Link href="/" className="font-serif text-xl text-foreground">
                     {t('app.title')}
@@ -47,7 +48,7 @@ export function Header() {
                     </nav>
 
                     {activeStreak > 0 && (
-                        <span className="text-sm text-muted-foreground hidden sm:inline" title={t('streak.label')}>
+                        <span className="text-sm text-muted-foreground whitespace-nowrap" title={t('streak.label')}>
                             {`Day ${activeStreak}`}
                         </span>
                     )}

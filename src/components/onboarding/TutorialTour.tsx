@@ -4,29 +4,138 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, BookOpen, Zap, Blocks, Sprout, ExternalLink } from "lucide-react";
+import { ArrowLeft, BookOpen, Zap, Blocks, Sprout, X } from "lucide-react";
 import { SlicerModule } from "@/components/lesson/SlicerModule";
 import { allWords } from "@/data/words";
+import { WordBlock } from "@/data/types";
 import { useGameStore } from "@/store/useGameStore";
 import { useTranslation } from "@/hooks/useTranslation";
 
 const DEMO = allWords.find(w => w.id === "telephone")!;
 const STEP_COUNT = 6;
 
+// A tiny, self-contained build exercise for the tour: four fixed parts, two
+// real words to find (unhappy / player). Scripted verdict — no store gating,
+// no lexicon fetch.
+const MINI_PARTS: WordBlock[] = (() => {
+    const out: WordBlock[] = [];
+    for (const id of ["unhappy", "player"]) {
+        const w = allWords.find(x => x.id === id);
+        if (w) for (const b of w.blocks) if (!out.some(o => o.id === b.id)) out.push(b);
+    }
+    return out; // un, happy, play, er
+})();
+const MINI_ANSWERS: Record<string, string> = { unhappy: "unhappy", player: "player" };
+
+function MiniBuild({ onSolved }: { onSolved: () => void }) {
+    const { t, language } = useTranslation();
+    const [picked, setPicked] = useState<WordBlock[]>([]);
+    const [wrong, setWrong] = useState(false);
+    const [solvedWord, setSolvedWord] = useState<string | null>(null);
+
+    const assembled = picked.map(b => b.label.replace(/-/g, "")).join("").toLowerCase();
+    const loc = (s: string | { en: string; ja: string }) => (typeof s === "string" ? s : s[language]);
+
+    const meaningOf = (wordId: string) => {
+        const w = allWords.find(x => x.id === wordId);
+        return w ? loc(w.meaning) : "";
+    };
+
+    const tap = (b: WordBlock) => {
+        if (solvedWord) return;
+        const next = [...picked, b];
+        setPicked(next);
+        const word = next.map(x => x.label.replace(/-/g, "")).join("").toLowerCase();
+        if (MINI_ANSWERS[word]) {
+            setSolvedWord(word);
+            onSolved();
+        } else if (next.length >= 2) {
+            setWrong(true);
+            setTimeout(() => { setWrong(false); setPicked([]); }, 700);
+        }
+    };
+
+    if (solvedWord) {
+        return (
+            <motion.div
+                initial={{ opacity: 0, scale: 0.94 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="rounded-2xl px-6 py-7 text-center"
+                style={{ background: "var(--plate)", boxShadow: "var(--plate-gold-ring)" }}
+            >
+                <p className="text-xs uppercase tracking-[0.2em] mb-1" style={{ color: "var(--plate-gold)" }}>
+                    {t("tutorial.minibuild.real")}
+                </p>
+                <p className="font-serif text-4xl mb-2" style={{ color: "var(--plate-fg)" }}>{solvedWord}</p>
+                <p className="text-sm" style={{ color: "var(--plate-body)" }}>
+                    {meaningOf(solvedWord)}
+                </p>
+            </motion.div>
+        );
+    }
+
+    return (
+        <div>
+            <div className="flex flex-wrap justify-center gap-2.5 mb-5">
+                {MINI_PARTS.map(b => {
+                    const used = picked.some(p => p.id === b.id);
+                    return (
+                        <button
+                            key={b.id}
+                            onClick={() => !used && tap(b)}
+                            disabled={used}
+                            className={`rounded-full px-4 py-2 font-serif text-lg transition-all duration-150 active:scale-[0.95] ${used ? "opacity-30" : ""}`}
+                            style={b.type === "root"
+                                ? { backgroundColor: "#e3b44f", color: "#2a2413" }
+                                : { backgroundColor: "#3c5340", color: "#efe7d1" }}
+                        >
+                            {b.label.replace(/-/g, "")}
+                        </button>
+                    );
+                })}
+            </div>
+            <motion.div
+                animate={wrong ? { x: [0, -6, 6, -4, 4, 0] } : {}}
+                transition={{ duration: 0.4 }}
+                className="min-h-[52px] rounded-xl border-2 border-dashed border-border flex items-center justify-center px-4"
+            >
+                {picked.length === 0 ? (
+                    <span className="text-sm text-muted-foreground">{t("tutorial.minibuild.hint")}</span>
+                ) : (
+                    <span className="font-serif text-2xl text-foreground">{assembled}</span>
+                )}
+            </motion.div>
+        </div>
+    );
+}
+
 export function TutorialTour() {
     const { t } = useTranslation();
     const router = useRouter();
     const { completeTutorial } = useGameStore();
     const [step, setStep] = useState(0);
+    const [miniSolved, setMiniSolved] = useState(false);
 
     const next = () => setStep(s => Math.min(STEP_COUNT - 1, s + 1));
     const back = () => setStep(s => Math.max(0, s - 1));
+    const exit = () => router.push("/");
     const finish = () => { completeTutorial(); router.push("/"); };
 
     const isLast = step === STEP_COUNT - 1;
+    // The two interactive steps gate Next on completion.
+    const nextBlocked = step === 3 && !miniSolved;
 
     return (
-        <div className="min-h-[100dvh] flex flex-col max-w-xl mx-auto px-6 py-8">
+        <div className="min-h-[100dvh] flex flex-col max-w-xl mx-auto px-6 py-8 relative">
+            {/* Always escapable — X leaves without marking the tour done. */}
+            <button
+                onClick={exit}
+                aria-label={t("practice.build.close")}
+                className="absolute top-5 left-5 p-2 text-muted-foreground hover:text-foreground transition-colors"
+            >
+                <X size={20} />
+            </button>
+
             {/* progress dots */}
             <div className="flex items-center justify-center gap-2 mb-8">
                 {Array.from({ length: STEP_COUNT }, (_, i) => (
@@ -57,7 +166,12 @@ export function TutorialTour() {
                             <Panel icon={<BookOpen size={26} />}>
                                 <H>{t("tutorial.dict.title")}</H>
                                 <P>{t("tutorial.dict.body")}</P>
-                                <TryLink href="/dictionary">{t("tutorial.dict.cta")}</TryLink>
+                                <Link
+                                    href="/dictionary"
+                                    className="inline-flex items-center gap-1.5 mt-5 text-sm text-accent hover:opacity-80 underline underline-offset-4"
+                                >
+                                    {t("tutorial.dict.cta")}
+                                </Link>
                             </Panel>
                         )}
 
@@ -81,11 +195,16 @@ export function TutorialTour() {
                         )}
 
                         {step === 3 && (
-                            <Panel icon={<Blocks size={26} />}>
+                            <div>
+                                <div className="flex items-center justify-center gap-2 text-accent mb-3">
+                                    <Blocks size={22} />
+                                </div>
                                 <H>{t("tutorial.build.title")}</H>
                                 <P>{t("tutorial.build.body")}</P>
-                                <TryLink href="/practice/build">{t("tutorial.build.cta")}</TryLink>
-                            </Panel>
+                                <div className="mt-6">
+                                    <MiniBuild onSolved={() => setMiniSolved(true)} />
+                                </div>
+                            </div>
                         )}
 
                         {step === 4 && (
@@ -116,11 +235,15 @@ export function TutorialTour() {
                 </button>
                 {step !== 2 && (
                     isLast ? (
-                        <button onClick={finish} className="px-8 py-2.5 bg-foreground text-background rounded-full hover:opacity-90 transition-opacity">
+                        <button onClick={finish} className="px-8 py-2.5 bg-foreground text-background rounded-full hover:opacity-90 transition-opacity active:scale-[0.98]">
                             {t("tutorial.finish")}
                         </button>
                     ) : (
-                        <button onClick={next} className="px-8 py-2.5 bg-foreground text-background rounded-full hover:opacity-90 transition-opacity">
+                        <button
+                            onClick={next}
+                            disabled={nextBlocked}
+                            className="px-8 py-2.5 bg-foreground text-background rounded-full hover:opacity-90 transition-opacity active:scale-[0.98] disabled:opacity-30"
+                        >
                             {t("tutorial.next")}
                         </button>
                     )
@@ -146,13 +269,4 @@ const H = ({ children }: { children: React.ReactNode }) => (
 );
 const P = ({ children }: { children: React.ReactNode }) => (
     <p className="text-muted-foreground leading-relaxed max-w-md mx-auto whitespace-pre-line">{children}</p>
-);
-const TryLink = ({ href, children }: { href: string; children: React.ReactNode }) => (
-    <Link
-        href={href}
-        target="_blank"
-        className="inline-flex items-center gap-1.5 mt-5 text-sm text-accent hover:opacity-80 underline underline-offset-4"
-    >
-        {children} <ExternalLink size={13} />
-    </Link>
 );

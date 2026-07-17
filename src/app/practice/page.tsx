@@ -31,7 +31,7 @@ export default function PracticePage() {
                             <Link
                                 key={m.href}
                                 href={m.href}
-                                className="group flex items-center gap-4 rounded-xl px-5 py-5 transition-transform hover:-translate-y-0.5"
+                                className="group flex items-center gap-4 rounded-xl px-5 py-5 transition-transform duration-150 hover:-translate-y-0.5 active:scale-[0.98]"
                                 style={{ background: "var(--plate)", boxShadow: "var(--plate-ring)" }}
                             >
                                 <span className="shrink-0 grid place-items-center w-11 h-11 rounded-full" style={{ color: "var(--plate-gold)", boxShadow: "var(--plate-gold-ring)" }}>

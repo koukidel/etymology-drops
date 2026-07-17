@@ -38,7 +38,7 @@ export default function DictionaryPage() {
     }, []);
 
     // Top parts by how many words use them — the highest-leverage ones to learn.
-    const ranked = dictionary.slice(0, 10);
+    const ranked = dictionary.slice(0, 3);
     const maxCount = ranked.length ? ranked[0].count : 1;
 
     const filtered = dictionary.filter(({ block: b }) => {

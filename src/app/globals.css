@@ -58,9 +58,21 @@
   }
 }
 
+html {
+  /* mobile feel: no tap-highlight flash, no double-tap-zoom delay */
+  -webkit-tap-highlight-color: transparent;
+}
+
+button, a {
+  touch-action: manipulation;
+}
+
 body {
-  /* subtle warmth gradient for depth instead of a flat wash */
-  background: linear-gradient(178deg, #f5eede 0%, #ebe2ce 100%) fixed;
+  /* subtle warmth gradient for depth. NOT background-attachment: fixed —
+     that repaints the whole ground on every scroll frame on mobile. */
+  min-height: 100dvh;
+  background: linear-gradient(178deg, #f5eede 0%, #ebe2ce 100%) no-repeat;
+  background-color: #ebe2ce;
   color: var(--color-foreground);
   font-family: var(--font-sans);
 }

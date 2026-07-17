@@ -1,137 +1,140 @@
 "use client";
 
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { Zap, BookOpen, Check, Compass } from "lucide-react";
+import { BookOpen, Check, Compass } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
 import { CourseGrid } from "@/components/home/CourseGrid";
-import { ExamShowcase } from "@/components/home/ExamShowcase";
 import { Recommended } from "@/components/home/Recommended";
 import { Header } from "@/components/layout/Header";
 import { useGameStore } from "@/store/useGameStore";
 import { Intake } from "@/components/onboarding/Intake";
 import { useMounted } from "@/hooks/useMounted";
 import { useTranslation } from "@/hooks/useTranslation";
+import { COURSES, findCourseByLesson } from "@/data/courses";
+import { allWords } from "@/data/words";
 
-// Time Attack quick-play card. Dimmed + non-interactive while locked.
-function TimeAttackCard({ disabled = false }: { disabled?: boolean }) {
-  const { t } = useTranslation();
+// Pulsing halo that animates OPACITY of a pre-shadowed layer (compositor
+// friendly) instead of animating box-shadow itself (paint-heavy on mobile).
+function GlowWrap({ glow, children }: { glow: boolean; children: React.ReactNode }) {
+  const reduce = useReducedMotion();
+  if (!glow) return <>{children}</>;
   return (
-    <Link
-      href="/speedrun"
-      aria-disabled={disabled}
-      tabIndex={disabled ? -1 : undefined}
-      className={`group flex items-center gap-4 rounded-xl px-5 py-4 transition-transform ${disabled ? "pointer-events-none opacity-50" : "hover:-translate-y-0.5"}`}
-      style={{ background: "var(--plate)", boxShadow: "var(--plate-ring)" }}
-    >
-      <span className="shrink-0 grid place-items-center w-10 h-10 rounded-full" style={{ color: "var(--plate-gold)", boxShadow: "var(--plate-gold-ring)" }}>
-        <Zap size={18} />
-      </span>
-      <span className="min-w-0">
-        <span className="block font-serif text-lg" style={{ color: "var(--plate-fg)" }}>{t('home.speedrun.title')}</span>
-        <span className="block text-sm truncate" style={{ color: "var(--plate-body)" }}>{t('home.speedrun.desc')}</span>
-      </span>
-      <span className="ml-auto" style={{ color: "var(--plate-gold)" }}>→</span>
-    </Link>
+    <div className="relative">
+      <motion.div
+        aria-hidden
+        className="absolute -inset-1 rounded-2xl pointer-events-none"
+        style={{ boxShadow: "0 0 24px 6px rgba(227,180,79,0.5)" }}
+        animate={reduce ? { opacity: 0.55 } : { opacity: [0.1, 0.65, 0.1] }}
+        transition={reduce ? undefined : { duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
+      />
+      <div className="relative">{children}</div>
+    </div>
   );
 }
 
-// Lesson 0 — the guided walkthrough, always replayable. Glows to draw the
-// eye on first run, when it is the only thing the user can open.
-function Lesson0Band({ glow = false, done = false }: { glow?: boolean; done?: boolean }) {
+// Shared plate band for the two funnel steps (あそびかた / Lesson 0).
+function FunnelBand({ href, icon, title, desc, done }: {
+  href: string; icon: React.ReactNode; title: string; desc: string; done: boolean;
+}) {
   const { t } = useTranslation();
-  const reduce = useReducedMotion();
-
-  const card = (
+  return (
     <Link
-      href="/guide"
-      className="group flex items-center gap-4 rounded-xl px-5 py-4 transition-transform hover:-translate-y-0.5"
+      href={href}
+      className="group flex items-center gap-4 rounded-xl px-5 py-4 transition-transform duration-150 hover:-translate-y-0.5 active:scale-[0.98]"
       style={{ background: "var(--plate)", boxShadow: "var(--plate-ring)" }}
     >
       <span className="shrink-0 grid place-items-center w-10 h-10 rounded-full" style={{ color: "var(--plate-gold)", boxShadow: "var(--plate-gold-ring)" }}>
-        <BookOpen size={18} />
+        {icon}
       </span>
       <span className="min-w-0">
         <span className="flex items-center gap-2">
-          <span className="font-serif text-lg" style={{ color: "var(--plate-fg)" }}>{t('home.lesson0.title')}</span>
+          <span className="font-serif text-lg" style={{ color: "var(--plate-fg)" }}>{title}</span>
           {done && (
             <span className="inline-flex items-center gap-1 text-[11px]" style={{ color: "var(--plate-dim)" }}>
               <Check size={12} /> {t('home.lesson0.done')}
             </span>
           )}
         </span>
-        <span className="block text-sm truncate" style={{ color: "var(--plate-body)" }}>{t('home.lesson0.desc')}</span>
+        <span className="block text-sm truncate" style={{ color: "var(--plate-body)" }}>{desc}</span>
       </span>
       <span className="ml-auto" style={{ color: "var(--plate-gold)" }}>→</span>
     </Link>
-  );
-
-  if (!glow) return card;
-
-  // A pulsing gold halo (static ring when reduced motion is preferred).
-  return (
-    <motion.div
-      className="rounded-xl"
-      animate={reduce ? undefined : {
-        boxShadow: [
-          "0 0 0 0 rgba(227,180,79,0.0)",
-          "0 0 26px 5px rgba(227,180,79,0.5)",
-          "0 0 0 0 rgba(227,180,79,0.0)",
-        ],
-      }}
-      transition={reduce ? undefined : { duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
-      style={reduce ? { boxShadow: "0 0 18px 3px rgba(227,180,79,0.45)" } : undefined}
-    >
-      {card}
-    </motion.div>
   );
 }
 
-// The guided section tour. Glows to draw the eye until it's been taken.
-function TutorialBand({ glow = false, done = false }: { glow?: boolean; done?: boolean }) {
-  const { t } = useTranslation();
-  const reduce = useReducedMotion();
+// One primary resume action: the next unfinished lesson in the course the
+// learner touched most recently (fallback: the first unfinished course).
+function ContinueCard() {
+  const { t, language } = useTranslation();
+  const { masteryLog, masteredWords } = useGameStore();
 
-  const card = (
-    <Link
-      href="/tutorial"
-      className="group flex items-center gap-4 rounded-xl px-5 py-4 transition-transform hover:-translate-y-0.5"
-      style={{ background: "var(--plate)", boxShadow: "var(--plate-ring)" }}
-    >
-      <span className="shrink-0 grid place-items-center w-10 h-10 rounded-full" style={{ color: "var(--plate-gold)", boxShadow: "var(--plate-gold-ring)" }}>
-        <Compass size={18} />
-      </span>
-      <span className="min-w-0">
-        <span className="flex items-center gap-2">
-          <span className="font-serif text-lg" style={{ color: "var(--plate-fg)" }}>{t('home.tutorial.title')}</span>
-          {done && (
-            <span className="inline-flex items-center gap-1 text-[11px]" style={{ color: "var(--plate-dim)" }}>
-              <Check size={12} /> {t('home.tutorial.done')}
-            </span>
-          )}
-        </span>
-        <span className="block text-sm truncate" style={{ color: "var(--plate-body)" }}>{t('home.tutorial.desc')}</span>
-      </span>
-      <span className="ml-auto" style={{ color: "var(--plate-gold)" }}>→</span>
-    </Link>
-  );
+  const target = useMemo(() => {
+    const nextIn = (courseId?: string) => {
+      const courses = courseId ? COURSES.filter(c => c.id === courseId) : COURSES;
+      for (const course of courses) {
+        const next = course.lessons.find(l => !masteredWords.includes(l.id));
+        if (next) return { course, lesson: next };
+      }
+      return null;
+    };
+    for (let i = masteryLog.length - 1; i >= 0; i--) {
+      const course = findCourseByLesson(masteryLog[i].id);
+      if (!course) continue;
+      const hit = nextIn(course.id);
+      if (hit) return hit;
+    }
+    return nextIn();
+  }, [masteryLog, masteredWords]);
 
-  if (!glow) return card;
+  if (!target) return null;
+  const word = allWords.find(w => w.id === target.lesson.id);
+  const localized = (s: string | { en: string; ja: string }) =>
+    typeof s === "string" ? s : s[language];
+  const fresh = masteredWords.length === 0;
 
   return (
-    <motion.div
-      className="rounded-xl"
-      animate={reduce ? undefined : {
-        boxShadow: [
-          "0 0 0 0 rgba(227,180,79,0.0)",
-          "0 0 26px 5px rgba(227,180,79,0.5)",
-          "0 0 0 0 rgba(227,180,79,0.0)",
-        ],
-      }}
-      transition={reduce ? undefined : { duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
-      style={reduce ? { boxShadow: "0 0 18px 3px rgba(227,180,79,0.45)" } : undefined}
+    <Link
+      href={`/lesson/${target.lesson.id}`}
+      className="group flex items-center gap-4 rounded-2xl px-6 py-5 transition-transform duration-150 hover:-translate-y-0.5 active:scale-[0.98]"
+      style={{ background: "var(--plate)", boxShadow: "var(--plate-gold-ring)" }}
     >
-      {card}
-    </motion.div>
+      <span className="min-w-0">
+        <span className="block text-[11px] uppercase tracking-[0.18em] mb-1" style={{ color: "var(--plate-gold)" }}>
+          {fresh ? t('home.continue.start') : t('home.continue.label')}
+        </span>
+        <span className="block font-serif text-2xl truncate" style={{ color: "var(--plate-fg)" }}>
+          {word ? word.word : target.lesson.label}
+        </span>
+        <span className="block text-sm truncate" style={{ color: "var(--plate-body)" }}>
+          {localized(target.course.title)}
+        </span>
+      </span>
+      <span className="ml-auto text-xl" style={{ color: "var(--plate-gold)" }}>→</span>
+    </Link>
+  );
+}
+
+// One-time celebration when Lesson 0 unlocks the catalog. Rendered only
+// after mount (the page early-returns until then), so localStorage is safe.
+function UnlockToast() {
+  const { t } = useTranslation();
+  const [show, setShow] = useState(() => !localStorage.getItem('minamoto_unlock_toast'));
+  useEffect(() => {
+    if (!show) return;
+    localStorage.setItem('minamoto_unlock_toast', '1');
+    const id = setTimeout(() => setShow(false), 4000);
+    return () => clearTimeout(id);
+  }, [show]);
+  if (!show) return null;
+  return (
+    <motion.p
+      initial={{ opacity: 0, y: -6 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="text-sm text-accent mb-6"
+    >
+      ✓ {t('home.unlocked.toast')}
+    </motion.p>
   );
 }
 
@@ -147,8 +150,28 @@ export default function Home() {
     return <Intake onComplete={completeIntake} />;
   }
 
-  // Until Lesson 0 is done, it is the only thing the user can open.
+  // First-run funnel: あそびかた glows first, then Lesson 0; everything else
+  // stays visible but locked until Lesson 0 is done.
   const locked = !hasSeenOnboarding;
+
+  const tutorialBand = (
+    <FunnelBand
+      href="/tutorial"
+      icon={<Compass size={18} />}
+      title={t('home.tutorial.title')}
+      desc={t('home.tutorial.desc')}
+      done={hasSeenTutorial}
+    />
+  );
+  const lesson0Band = (
+    <FunnelBand
+      href="/guide"
+      icon={<BookOpen size={18} />}
+      title={t('home.lesson0.title')}
+      desc={t('home.lesson0.desc')}
+      done={hasSeenOnboarding}
+    />
+  );
 
   if (locked) {
     return (
@@ -158,16 +181,14 @@ export default function Home() {
           <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-4">
             {t('home.firstrun.hint')}
           </p>
-          <Lesson0Band glow />
+          <div className="space-y-4">
+            <GlowWrap glow={!hasSeenTutorial}>{tutorialBand}</GlowWrap>
+            <GlowWrap glow={hasSeenTutorial}>{lesson0Band}</GlowWrap>
+          </div>
 
-          {/* Everything else stays visible but locked until Lesson 0 is done. */}
-          <div className="mt-12 pointer-events-none select-none space-y-8">
-            <TimeAttackCard disabled />
-            <div>
-              <h1 className="font-serif text-3xl text-foreground mb-8">{t('home.courses')}</h1>
-              <CourseGrid locked />
-            </div>
-            <ExamShowcase locked />
+          {/* The catalog stays visible but locked until Lesson 0 is done. */}
+          <div className="mt-12 pointer-events-none select-none">
+            <CourseGrid locked />
           </div>
         </main>
       </div>
@@ -178,25 +199,21 @@ export default function Home() {
     <div className="min-h-screen">
       <Header />
       <main className="max-w-3xl mx-auto px-6 py-12">
-        <div className="mb-10">
-          <TimeAttackCard />
-        </div>
+        <UnlockToast />
 
-        <h1 className="font-serif text-3xl text-foreground mb-8">{t('home.courses')}</h1>
-
-        <div className="mb-4">
-          <Lesson0Band done={hasSeenOnboarding} />
-        </div>
-
-        <div className="mb-4">
-          <TutorialBand glow={!hasSeenTutorial} done={hasSeenTutorial} />
+        <div className="mb-8">
+          <ContinueCard />
         </div>
 
         <Recommended />
 
         <CourseGrid />
 
-        <ExamShowcase />
+        {/* Replay the intro pieces anytime — quiet, at the bottom. */}
+        <div className="mt-12 space-y-3">
+          {tutorialBand}
+          {lesson0Band}
+        </div>
       </main>
     </div>
   );
