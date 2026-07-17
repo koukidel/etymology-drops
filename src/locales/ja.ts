@@ -53,7 +53,7 @@ export const ja = {
     "guide.bridge": "意味は「朝食」。\n\nでも、なぜ？ morning food ではなく？\n\n実はこの単語も、鳴と同じように**分解**できます。",
     "guide.bridge.cta": "分解してみる",
     "guide.slice.hint": "部品の間の隙間をタップして、分解してみましょう。",
-    "guide.assoc1": "お見事！ **break**（壊す）と **fast**（断食）。\n\n「断食を壊す」——でも、なぜそれが朝食に？",
+    "guide.assoc1": "お見事！ **break**（壊す）と **fast**（断食）。\n\n「断食を壊す」。でも、なぜそれが朝食に？",
     "guide.assoc2": "寝ている間、何も食べていない。つまり**断食**です。\n\n朝いちばんの食事が、その断食を**破る**。\n\nだから **breakfast**。",
     "guide.moral": "多くの英単語は、**分解**と**連想**で意味に辿り着けます。\n\n覚えやすく、忘れにくく、言葉の歴史まで見えてくる。",
     "guide.final": "では、いざ語源の世界へ。",
@@ -142,7 +142,7 @@ export const ja = {
     "tutorial.mechanism.title": "習うほど、作れる",
     "tutorial.mechanism.body": "組み立てに使えるのは、習った部品だけ。レッスンを1つ終えるたび、作れる単語が増えます。",
     "tutorial.outcome.title": "この先に待つもの",
-    "tutorial.outcome.body": "初めて見る単語も、分けて推測できるように。なぜそうなるのか——種明かしは、この後の Lesson 0 で。",
+    "tutorial.outcome.body": "初めて見る単語も、分けて推測できるように。なぜそうなるのか？種明かしは、この後の Lesson 0 で。",
 
     "intake.goal": "英語を学ぶ目的は？",
     "intake.goal.exam": "試験のため",

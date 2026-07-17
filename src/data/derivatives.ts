@@ -24,7 +24,7 @@ export const DERIVATIVES: Record<string, Derivative[]> = {
         { word: "alphabetical", gloss: { en: "in ABC order", ja: "アルファベット順の" } },
     ],
     com: [
-        { word: "company", gloss: { en: "com + panis again — those you share bread with", ja: "これも com + panis ——パンを共にする仲間たち" } },
+        { word: "company", gloss: { en: "com + panis again — those you share bread with", ja: "これも com + panis。パンを共にする仲間たち" } },
         { word: "combine", gloss: { en: "to join together", ja: "共に結ぶ→結合する" } },
     ],
     pan: [
