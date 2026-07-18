@@ -26,6 +26,7 @@ interface GameState {
     profile: OnboardingProfile | null;
     hasSeenOnboarding: boolean;    // has played Lesson 0 (the 鳴→breakfast walkthrough)
     hasSeenTutorial: boolean;      // has taken the guided tour of the app's sections
+    lastReviewDate: string | null; // ISO date the daily review was last completed
 
     unlockWord: (wordId: string) => void;
     masterWord: (wordId: string) => void;
@@ -33,6 +34,7 @@ interface GameState {
     completeIntake: (profile: OnboardingProfile) => void;
     completeOnboarding: () => void;
     completeTutorial: () => void;
+    completeReview: () => void;
     resetProgress: () => void;
 }
 
@@ -61,6 +63,7 @@ export const useGameStore = create<GameState>()(
             profile: null,
             hasSeenOnboarding: false,
             hasSeenTutorial: false,
+            lastReviewDate: null,
 
             unlockWord: (wordId) => set((state) => {
                 if (!state.unlockedWords.includes(wordId)) {
@@ -99,12 +102,15 @@ export const useGameStore = create<GameState>()(
 
             completeTutorial: () => set({ hasSeenTutorial: true }),
 
+            completeReview: () => set({ lastReviewDate: isoDate(new Date()) }),
+
             resetProgress: () => set({
                 unlockedWords: [],
                 masteredWords: [],
                 masteryLog: [],
                 streak: 0,
                 lastActiveDate: null,
+                lastReviewDate: null,
             }),
         }),
         {

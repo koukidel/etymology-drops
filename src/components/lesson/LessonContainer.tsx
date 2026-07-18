@@ -32,7 +32,7 @@ export function LessonContainer({ word }: Props) {
     const [courseDone, setCourseDone] = useState(false);
     const { t, language } = useTranslation();
 
-    const { unlockWord, masterWord, recordLessonComplete } = useGameStore();
+    const { unlockWord, masterWord, recordLessonComplete, masteredWords } = useGameStore();
 
     const localized = (s: string | { en: string; ja: string }) =>
         typeof s === 'string' ? s : s[language];
@@ -62,6 +62,29 @@ export function LessonContainer({ word }: Props) {
         return out.slice(0, 6);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [word, language]);
+
+    // Lesson words that became fully buildable thanks to THIS lesson's parts:
+    // buildable with the parts owned after it, but not with the parts before.
+    // Whole words only; their decompositions stay hidden (no spoilers).
+    const newlyBuildable = useMemo(() => {
+        const partsOf = (ids: string[]) => {
+            const s = new Set<string>();
+            for (const id of ids) {
+                const w = allWords.find(x => x.id === id);
+                if (w) for (const b of w.blocks) s.add(b.id);
+            }
+            return s;
+        };
+        const withThis = masteredWords.includes(word.id) ? masteredWords : [...masteredWords, word.id];
+        const after = partsOf(withThis);
+        const before = partsOf(withThis.filter(id => id !== word.id));
+        return allWords
+            .filter(w =>
+                w.id !== word.id &&
+                w.blocks.every(b => after.has(b.id)) &&
+                !w.blocks.every(b => before.has(b.id)))
+            .slice(0, 4);
+    }, [masteredWords, word]);
 
     const handleNext = () => {
         if (viewIndex < 2) {
@@ -125,6 +148,27 @@ export function LessonContainer({ word }: Props) {
                                 </li>
                             ))}
                         </ul>
+                    </div>
+                )}
+
+                {newlyBuildable.length > 0 && (
+                    <div className="w-full pb-5 mb-8 border-b border-border text-left">
+                        <p className="text-[11px] uppercase tracking-[0.2em] text-accent mb-3">
+                            {t('lesson.complete.buildable')}
+                        </p>
+                        <div className="flex flex-wrap items-center gap-2">
+                            {newlyBuildable.map(w => (
+                                <span key={w.id} className="rounded-full border border-border px-3 py-1 font-serif text-lg text-foreground">
+                                    {w.word}
+                                </span>
+                            ))}
+                            <Link
+                                href="/practice/build"
+                                className="text-sm text-accent hover:opacity-80 underline underline-offset-4 ml-1"
+                            >
+                                {t('lesson.complete.try_build')}
+                            </Link>
+                        </div>
                     </div>
                 )}
 
