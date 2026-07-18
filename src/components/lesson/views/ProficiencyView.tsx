@@ -82,14 +82,18 @@ export function ProficiencyView({ word, onNext }: Props) {
                 </motion.div>
             )}
 
-            <div className="grid grid-cols-1 gap-3 text-left">
+            <motion.div
+                animate={status === 'wrong' ? { x: [0, -6, 6, -4, 4, 0] } : {}}
+                transition={{ duration: 0.35 }}
+                className="grid grid-cols-1 gap-3 text-left"
+            >
                 {options.map((option, i) => {
                     const isSelected = selectedOption === option;
                     let style = "border-border bg-card text-foreground hover:border-muted-foreground";
 
                     if (isSelected) {
                         if (status === 'correct') style = "border-foreground bg-foreground text-background";
-                        if (status === 'wrong') style = "border-accent text-accent";
+                        if (status === 'wrong') style = "border-error text-error";
                         if (status === 'idle') style = "border-foreground";
                     }
 
@@ -104,7 +108,7 @@ export function ProficiencyView({ word, onNext }: Props) {
                         </button>
                     );
                 })}
-            </div>
+            </motion.div>
         </div>
     );
 }
