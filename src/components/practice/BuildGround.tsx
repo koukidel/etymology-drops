@@ -8,6 +8,7 @@ import { allWords } from "@/data/words";
 import { WordBlock } from "@/data/types";
 import { classifyWord, Lexicon, Classification, CATEGORY_LABEL, Category } from "@/lib/classify";
 import { findNextLesson } from "@/lib/nextLesson";
+import { dayHash } from "@/lib/dailyReview";
 import { useGameStore } from "@/store/useGameStore";
 import { useTranslation } from "@/hooks/useTranslation";
 
@@ -111,6 +112,21 @@ export function BuildGround() {
         return word ? { lessonId: next.lesson.id, blocks: word.blocks } : null;
     }, [ready, masteryLog, masteredWords]);
 
+    // Daily challenge: build one real word using a specific owned part.
+    // Deterministic per day, and always solvable (some fully-buildable lesson
+    // word contains the part). Completion is remembered per-day locally.
+    const today = new Date().toISOString().slice(0, 10);
+    const challenge = useMemo(() => {
+        if (!ready) return null;
+        const owned = new Set(pool.map(b => b.id));
+        const candidates = pool.filter(p =>
+            allWords.some(w => w.blocks.some(b => b.id === p.id) && w.blocks.every(b => owned.has(b.id))));
+        if (candidates.length === 0) return null;
+        return candidates[dayHash(today) % candidates.length];
+    }, [ready, pool, today]);
+    const [challengeDone, setChallengeDone] = useState(
+        () => typeof window !== "undefined" && localStorage.getItem(`minamoto_challenge_${new Date().toISOString().slice(0, 10)}`) === "1");
+
     const add = (b: WordBlock) => { setAssembly(a => [...a, b]); setResult(null); };
     const removeAt = (i: number) => { setAssembly(a => a.filter((_, j) => j !== i)); setResult(null); };
     const clear = () => { setAssembly([]); setResult(null); };
@@ -126,7 +142,12 @@ export function BuildGround() {
 
     const judge = () => {
         if (!lex || assembly.length === 0) return;
-        setResult(classifyWord(assembly, lex));
+        const r = classifyWord(assembly, lex);
+        setResult(r);
+        if (challenge && !challengeDone && r.attested && assembly.some(b => b.id === challenge.id)) {
+            localStorage.setItem(`minamoto_challenge_${today}`, "1");
+            setChallengeDone(true);
+        }
     };
 
     return (
@@ -137,6 +158,13 @@ export function BuildGround() {
                     <p className="text-xs text-muted-foreground mt-0.5">
                         {t("practice.build.reach").replace("{parts}", String(pool.length)).replace("{words}", String(reach))}
                     </p>
+                    {challenge && (
+                        <p className={`text-xs mt-1 ${challengeDone ? "text-ochre" : "text-accent"}`}>
+                            {challengeDone
+                                ? `✓ ${t("practice.build.challenge_done")}`
+                                : t("practice.build.challenge").replace("{part}", challenge.label.replace(/-/g, ""))}
+                        </p>
+                    )}
                 </div>
                 <Link href="/practice" className="text-sm text-muted-foreground hover:text-accent underline underline-offset-4">
                     {t("practice.study.finish")}

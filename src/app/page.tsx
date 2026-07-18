@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { BookOpen, Check, Compass } from "lucide-react";
+import { BookOpen, Check, Compass, RotateCcw } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
 import { CourseGrid } from "@/components/home/CourseGrid";
 import { Recommended } from "@/components/home/Recommended";
@@ -13,6 +13,7 @@ import { useMounted } from "@/hooks/useMounted";
 import { useTranslation } from "@/hooks/useTranslation";
 import { allWords } from "@/data/words";
 import { findNextLesson } from "@/lib/nextLesson";
+import { pickReviewWords } from "@/lib/dailyReview";
 
 // Pulsing halo that animates OPACITY of a pre-shadowed layer (compositor
 // friendly) instead of animating box-shadow itself (paint-heavy on mobile).
@@ -85,23 +86,40 @@ function ContinueCard() {
         <span className="block font-serif text-2xl truncate" style={{ color: "var(--plate-fg)" }}>
           {word ? word.word : target.lesson.label}
         </span>
-        {word && (
-          <span className="flex flex-wrap gap-1.5 mt-2">
-            {word.blocks.map(b => (
-              <span
-                key={b.id}
-                className="rounded-full px-2.5 py-0.5 font-serif text-sm"
-                style={b.type === "root"
-                  ? { backgroundColor: "#e3b44f", color: "#2a2413" }
-                  : { backgroundColor: "#3c5340", color: "#efe7d1" }}
-              >
-                {b.label.replace(/-/g, "")}
-              </span>
-            ))}
-          </span>
-        )}
       </span>
       <span className="ml-auto text-xl" style={{ color: "var(--plate-gold)" }}>→</span>
+    </Link>
+  );
+}
+
+// Daily review band: up to three words mastered on earlier days, once a day.
+function ReviewBand() {
+  const { t } = useTranslation();
+  const { masteryLog, masteredWords, lastReviewDate } = useGameStore();
+
+  const today = new Date().toISOString().slice(0, 10);
+  const words = useMemo(
+    () => pickReviewWords(masteryLog, masteredWords, today),
+    [masteryLog, masteredWords, today],
+  );
+
+  if (words.length === 0 || lastReviewDate === today) return null;
+  return (
+    <Link
+      href="/review"
+      className="group flex items-center gap-4 rounded-xl px-5 py-4 transition-transform duration-150 hover:-translate-y-0.5 active:scale-[0.98]"
+      style={{ background: "var(--plate)", boxShadow: "var(--plate-ring)" }}
+    >
+      <span className="shrink-0 grid place-items-center w-10 h-10 rounded-full" style={{ color: "var(--plate-gold)", boxShadow: "var(--plate-gold-ring)" }}>
+        <RotateCcw size={18} />
+      </span>
+      <span className="font-serif text-lg" style={{ color: "var(--plate-fg)" }}>
+        {t('home.review.title')}
+      </span>
+      <span className="ml-auto flex items-center gap-3">
+        <span className="text-xs tabular-nums" style={{ color: "var(--plate-dim)" }}>{words.length}</span>
+        <span style={{ color: "var(--plate-gold)" }}>→</span>
+      </span>
     </Link>
   );
 }
@@ -190,8 +208,9 @@ export default function Home() {
       <main className="max-w-3xl mx-auto px-6 py-12">
         <UnlockToast />
 
-        <div className="mb-8">
+        <div className="mb-8 space-y-3">
           <ContinueCard />
+          <ReviewBand />
         </div>
 
         <Recommended />

@@ -121,6 +121,19 @@ export const en = {
     "home.tutorial.done": "Done",
     "home.continue.label": "Continue",
     "home.continue.start": "Start",
+    "home.review.title": "Today's review",
+
+    "review.title": "Today's review",
+    "review.done.title": "Review done",
+    "review.done.body": "That's it for today. See you tomorrow.",
+    "review.empty.title": "Nothing to review yet",
+    "review.empty.body": "Words you learn in lessons show up here from the next day.",
+
+    "lesson.complete.buildable": "Words you can now build",
+    "lesson.complete.try_build": "Try them in the build ground",
+
+    "practice.build.challenge": "Today's challenge: build one real word using \"{part}\".",
+    "practice.build.challenge_done": "Challenge complete!",
     "home.unlocked.toast": "Every course is now open",
 
     "tutorial.back": "Back",

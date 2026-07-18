@@ -121,6 +121,19 @@ export const ja = {
     "home.tutorial.done": "修了",
     "home.continue.label": "続きから",
     "home.continue.start": "始める",
+    "home.review.title": "今日の復習",
+
+    "review.title": "今日の復習",
+    "review.done.title": "復習完了",
+    "review.done.body": "今日の分はおしまい。また明日。",
+    "review.empty.title": "復習はまだありません",
+    "review.empty.body": "レッスンで覚えた言葉が、翌日からここに出てきます。",
+
+    "lesson.complete.buildable": "新たに組み立てられる単語",
+    "lesson.complete.try_build": "組み立て場で試す",
+
+    "practice.build.challenge": "今日のお題：「{part}」を使って、実在する単語を1つ。",
+    "practice.build.challenge_done": "今日のお題、達成！",
     "home.unlocked.toast": "すべてのコースが開きました",
 
     "tutorial.back": "戻る",
