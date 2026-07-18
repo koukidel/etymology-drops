@@ -18,6 +18,7 @@ export function SlicerModule({ word, onComplete, autoHintMs, completeLabel }: Pr
     const [foundCuts, setFoundCuts] = useState<number[]>([]);
     const [isComplete, setIsComplete] = useState(false);
     const [hintActive, setHintActive] = useState(false);
+    const [wrongCut, setWrongCut] = useState<number | null>(null);
     const { t, language } = useTranslation();
 
     useEffect(() => {
@@ -41,7 +42,13 @@ export function SlicerModule({ word, onComplete, autoHintMs, completeLabel }: Pr
     }, [word]);
 
     const handleCut = (index: number) => {
-        if (foundCuts.includes(index) || !cuts.includes(index)) return;
+        if (foundCuts.includes(index)) return;
+        // Not a seam: flash the tapped gap red so the mistake is felt.
+        if (!cuts.includes(index)) {
+            setWrongCut(index);
+            setTimeout(() => setWrongCut(null), 450);
+            return;
+        }
 
         const newFound = [...foundCuts, index];
         setFoundCuts(newFound);
@@ -88,7 +95,11 @@ export function SlicerModule({ word, onComplete, autoHintMs, completeLabel }: Pr
 
     return (
         <section className="text-center py-8">
-            <div className="flex flex-wrap items-center justify-center gap-y-8 select-none py-10">
+            <motion.div
+                animate={wrongCut !== null ? { x: [0, -5, 5, -3, 3, 0] } : {}}
+                transition={{ duration: 0.35 }}
+                className="flex flex-wrap items-center justify-center gap-y-8 select-none py-10"
+            >
                 {word.word.split('').map((char, i) => {
                     const cutIndex = i + 1;
                     const isLast = i === word.word.length - 1;
@@ -114,8 +125,10 @@ export function SlicerModule({ word, onComplete, autoHintMs, completeLabel }: Pr
                                             className="w-px bg-accent"
                                         />
                                     ) : (
-                                        <div className={`w-1 h-1 rounded-full transition-colors ${
-                                            isHinted ? "bg-accent scale-150" : "bg-border group-hover:bg-accent/50"
+                                        <div className={`w-1 h-1 rounded-full transition-all ${
+                                            wrongCut === cutIndex
+                                                ? "bg-error scale-[2.5]"
+                                                : isHinted ? "bg-accent scale-150" : "bg-border group-hover:bg-accent/50"
                                         }`} />
                                     )}
                                 </button>
@@ -123,7 +136,7 @@ export function SlicerModule({ word, onComplete, autoHintMs, completeLabel }: Pr
                         </div>
                     );
                 })}
-            </div>
+            </motion.div>
 
             <div className="flex items-center justify-center gap-6 mt-6">
                 <p className="text-sm text-muted-foreground">{t('lesson.slicer.tap_gaps')}</p>

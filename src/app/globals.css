@@ -28,6 +28,9 @@
   --color-accent-foreground: #fbf5e7;
   --color-ring: #2f5a3c;
 
+  /* mistakes — warm terracotta red, matches the editorial palette */
+  --color-error: #b3402a;
+
   /* level-bar tints, kept inside the pine↔brass family (no stray blue) */
   --color-sage: #5c7a3e;   /* 初級 — leaf green */
   --color-ochre: #b6862a;  /* 中級 — brass */

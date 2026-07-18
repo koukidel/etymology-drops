@@ -97,12 +97,12 @@ function MiniBuild({ onSolved }: { onSolved: () => void }) {
             <motion.div
                 animate={wrong ? { x: [0, -6, 6, -4, 4, 0] } : {}}
                 transition={{ duration: 0.4 }}
-                className="min-h-[52px] rounded-xl border-2 border-dashed border-border flex items-center justify-center px-4"
+                className={`min-h-[52px] rounded-xl border-2 border-dashed flex items-center justify-center px-4 transition-colors ${wrong ? "border-error" : "border-border"}`}
             >
                 {picked.length === 0 ? (
                     <span className="text-sm text-muted-foreground">{t("tutorial.minibuild.hint")}</span>
                 ) : (
-                    <span className="font-serif text-2xl text-foreground">{assembled}</span>
+                    <span className={`font-serif text-2xl ${wrong ? "text-error" : "text-foreground"}`}>{assembled}</span>
                 )}
             </motion.div>
         </div>
