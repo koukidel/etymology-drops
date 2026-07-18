@@ -34,8 +34,8 @@ function GlowWrap({ glow, children }: { glow: boolean; children: React.ReactNode
 }
 
 // Shared plate band for the two funnel steps (あそびかた / Lesson 0).
-function FunnelBand({ href, icon, title, desc, done }: {
-  href: string; icon: React.ReactNode; title: string; desc: string; done: boolean;
+function FunnelBand({ href, icon, title, done }: {
+  href: string; icon: React.ReactNode; title: string; done: boolean;
 }) {
   const { t } = useTranslation();
   return (
@@ -47,16 +47,13 @@ function FunnelBand({ href, icon, title, desc, done }: {
       <span className="shrink-0 grid place-items-center w-10 h-10 rounded-full" style={{ color: "var(--plate-gold)", boxShadow: "var(--plate-gold-ring)" }}>
         {icon}
       </span>
-      <span className="min-w-0">
-        <span className="flex items-center gap-2">
-          <span className="font-serif text-lg" style={{ color: "var(--plate-fg)" }}>{title}</span>
-          {done && (
-            <span className="inline-flex items-center gap-1 text-[11px]" style={{ color: "var(--plate-dim)" }}>
-              <Check size={12} /> {t('home.lesson0.done')}
-            </span>
-          )}
-        </span>
-        <span className="block text-sm truncate" style={{ color: "var(--plate-body)" }}>{desc}</span>
+      <span className="min-w-0 flex items-center gap-2">
+        <span className="font-serif text-lg" style={{ color: "var(--plate-fg)" }}>{title}</span>
+        {done && (
+          <span className="inline-flex items-center gap-1 text-[11px]" style={{ color: "var(--plate-dim)" }}>
+            <Check size={12} /> {t('home.lesson0.done')}
+          </span>
+        )}
       </span>
       <span className="ml-auto" style={{ color: "var(--plate-gold)" }}>→</span>
     </Link>
@@ -66,15 +63,13 @@ function FunnelBand({ href, icon, title, desc, done }: {
 // One primary resume action: the next unfinished lesson in the course the
 // learner touched most recently (fallback: the first unfinished course).
 function ContinueCard() {
-  const { t, language } = useTranslation();
+  const { t } = useTranslation();
   const { masteryLog, masteredWords } = useGameStore();
 
   const target = useMemo(() => findNextLesson(masteryLog, masteredWords), [masteryLog, masteredWords]);
 
   if (!target) return null;
   const word = allWords.find(w => w.id === target.lesson.id);
-  const localized = (s: string | { en: string; ja: string }) =>
-    typeof s === "string" ? s : s[language];
   const fresh = masteredWords.length === 0;
 
   return (
@@ -89,9 +84,6 @@ function ContinueCard() {
         </span>
         <span className="block font-serif text-2xl truncate" style={{ color: "var(--plate-fg)" }}>
           {word ? word.word : target.lesson.label}
-        </span>
-        <span className="block text-sm truncate" style={{ color: "var(--plate-body)" }}>
-          {localized(target.course.title)}
         </span>
       </span>
       <span className="ml-auto text-xl" style={{ color: "var(--plate-gold)" }}>→</span>
@@ -143,7 +135,6 @@ export default function Home() {
       href="/tutorial"
       icon={<Compass size={18} />}
       title={t('home.tutorial.title')}
-      desc={t('home.tutorial.desc')}
       done={hasSeenTutorial}
     />
   );
@@ -152,7 +143,6 @@ export default function Home() {
       href="/guide"
       icon={<BookOpen size={18} />}
       title={t('home.lesson0.title')}
-      desc={t('home.lesson0.desc')}
       done={hasSeenOnboarding}
     />
   );

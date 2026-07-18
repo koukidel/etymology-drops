@@ -43,11 +43,10 @@ export function CourseCard({ course, className = "", locked = false }: Props) {
                         </span>
                     </div>
                 )}
-                <h2 className="font-serif text-2xl mb-1" style={{ color: "var(--plate-fg)" }}>{localized(course.title)}</h2>
-                <p className="text-sm leading-relaxed" style={{ color: "var(--plate-body)" }}>{localized(course.description)}</p>
+                <h2 className="font-serif text-2xl" style={{ color: "var(--plate-fg)" }}>{localized(course.title)}</h2>
             </div>
 
-            <div className="flex items-baseline justify-between mt-6">
+            <div className="flex items-baseline justify-between mt-4">
                 <span className="text-sm tabular-nums" style={{ color: "var(--plate-dim)" }}>
                     {done} / {total}
                 </span>

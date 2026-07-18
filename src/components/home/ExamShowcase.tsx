@@ -44,9 +44,6 @@ export function ExamShowcase({ locked = false, bare = false }: { locked?: boolea
                                 <span className="block font-serif text-xl leading-snug" style={{ color: "var(--plate-gold)" }}>
                                     {localized(course.exam!)}
                                 </span>
-                                <span className="block text-sm mt-0.5" style={{ color: "var(--plate-body)" }}>
-                                    {ja ? "対策単語" : "vocabulary"}
-                                </span>
                             </div>
                             <span className="text-xs tabular-nums" style={{ color: "var(--plate-dim)" }}>
                                 {done} / {total}
