@@ -16,11 +16,11 @@ const SECTION_ORDER: SectionKey[] = ["beginner", "intermediate", "advanced", "ex
 
 // A colour per section — leaf / brass / pine / brass — so the path scans
 // at a glance. Uses theme tokens so it adapts if the palette is swapped.
-const SECTION_STYLE: Record<SectionKey, { text: string; bar: string }> = {
-    beginner: { text: "text-sage", bar: "border-l-sage bg-sage/[0.08]" },
-    intermediate: { text: "text-ochre", bar: "border-l-ochre bg-ochre/[0.08]" },
-    advanced: { text: "text-accent", bar: "border-l-accent bg-accent/[0.07]" },
-    exams: { text: "text-ochre", bar: "border-l-ochre bg-ochre/[0.08]" },
+const SECTION_STYLE: Record<SectionKey, { text: string; bar: string; fill: string }> = {
+    beginner: { text: "text-sage", bar: "border-l-sage bg-sage/[0.08]", fill: "bg-sage" },
+    intermediate: { text: "text-ochre", bar: "border-l-ochre bg-ochre/[0.08]", fill: "bg-ochre" },
+    advanced: { text: "text-accent", bar: "border-l-accent bg-accent/[0.07]", fill: "bg-accent" },
+    exams: { text: "text-ochre", bar: "border-l-ochre bg-ochre/[0.08]", fill: "bg-ochre" },
 };
 
 // Collapsible sections: 初級 / 中級 / 上級 / 資格対策. Each bar shows the
@@ -41,8 +41,14 @@ export function CourseGrid({ locked = false }: { locked?: boolean }) {
     const toggle = (key: SectionKey) =>
         setOpen(o => ({ ...o, [key]: !o[key] }));
 
-    const sectionCourses = (key: SectionKey) =>
-        key === "exams" ? COURSES.filter(c => c.exam) : COURSES.filter(c => c.level === key);
+    // Completed courses sink to the end of their section so the next thing
+    // to do always sits on top.
+    const sectionCourses = (key: SectionKey) => {
+        const list = key === "exams" ? COURSES.filter(c => c.exam) : COURSES.filter(c => c.level === key);
+        if (!mounted) return list;
+        const isDone = (c: (typeof COURSES)[number]) => c.lessons.every(l => masteredWords.includes(l.id));
+        return [...list.filter(c => !isDone(c)), ...list.filter(isDone)];
+    };
 
     const progress = (key: SectionKey) => {
         const courses = sectionCourses(key);
@@ -70,7 +76,7 @@ export function CourseGrid({ locked = false }: { locked?: boolean }) {
                             type="button"
                             onClick={() => toggle(key)}
                             aria-expanded={isOpen}
-                            className={`w-full flex items-center justify-between rounded-lg border border-border border-l-4 ${style.bar} px-5 py-3 transition-transform active:scale-[0.99]`}
+                            className={`relative overflow-hidden w-full flex items-center justify-between rounded-lg border border-border border-l-4 ${style.bar} px-5 py-3 transition-transform active:scale-[0.99]`}
                         >
                             <h2 className={`font-serif text-xl ${style.text}`}>{label}</h2>
                             <span className="flex items-center gap-3">
@@ -82,6 +88,13 @@ export function CourseGrid({ locked = false }: { locked?: boolean }) {
                                 >
                                     <ChevronDown size={18} />
                                 </motion.span>
+                            </span>
+                            {/* thin progress line along the bottom edge */}
+                            <span aria-hidden className="absolute inset-x-0 bottom-0 h-0.5">
+                                <span
+                                    className={`block h-full ${style.fill} opacity-60 transition-[width]`}
+                                    style={{ width: `${total ? (done / total) * 100 : 0}%` }}
+                                />
                             </span>
                         </button>
 
