@@ -17,7 +17,11 @@ export function ExamShowcase({ locked = false, bare = false }: { locked?: boolea
     const localized = (s: string | { en: string; ja: string }) =>
         typeof s === "string" ? s : s[language];
 
-    const exams = COURSES.filter(c => c.exam);
+    // Completed courses sink to the end so the next thing to do stays first.
+    const isDone = (c: (typeof COURSES)[number]) =>
+        c.lessons.every(l => masteredWords.includes(l.id));
+    const all = COURSES.filter(c => c.exam);
+    const exams = mounted ? [...all.filter(c => !isDone(c)), ...all.filter(isDone)] : all;
     if (exams.length === 0) return null;
 
     return (
@@ -31,21 +35,26 @@ export function ExamShowcase({ locked = false, bare = false }: { locked?: boolea
                 {exams.map(course => {
                     const done = mounted ? course.lessons.filter(l => masteredWords.includes(l.id)).length : 0;
                     const total = course.lessons.length;
+                    const complete = done === total;
                     return (
                         <Link
                             key={course.id}
                             href={`/course/${course.id}`}
                             aria-disabled={locked}
                             tabIndex={locked ? -1 : undefined}
-                            className={`group aspect-square flex flex-col justify-between rounded-2xl p-4 transition-transform duration-150 ${locked ? "pointer-events-none opacity-50" : "hover:-translate-y-0.5 active:scale-[0.98]"}`}
+                            className={`group flex flex-col rounded-2xl p-4 transition-transform duration-150 ${locked ? "pointer-events-none opacity-50" : "hover:-translate-y-0.5 active:scale-[0.98]"} ${complete && !locked ? "opacity-70" : ""}`}
                             style={{ background: "var(--plate)", boxShadow: "var(--plate-ring)" }}
                         >
-                            <div>
-                                <span className="block font-serif text-xl leading-snug" style={{ color: "var(--plate-gold)" }}>
-                                    {localized(course.exam!)}
-                                </span>
-                            </div>
-                            <span className="text-xs tabular-nums" style={{ color: "var(--plate-dim)" }}>
+                            <span className="block font-serif text-xl leading-snug" style={{ color: "var(--plate-gold)" }}>
+                                {localized(course.exam!)}
+                            </span>
+                            <span className="block text-sm mt-0.5" style={{ color: "var(--plate-body)" }}>
+                                {ja ? "対策単語" : "vocabulary"}
+                            </span>
+                            <span className="block h-0.5 rounded-full overflow-hidden mt-3" style={{ background: "rgba(247,243,233,0.15)" }}>
+                                <span className="block h-full" style={{ width: `${total ? (done / total) * 100 : 0}%`, background: "var(--plate-gold)" }} />
+                            </span>
+                            <span className="text-xs tabular-nums mt-1.5" style={{ color: "var(--plate-dim)" }}>
                                 {done} / {total}
                             </span>
                         </Link>

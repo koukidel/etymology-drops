@@ -29,7 +29,7 @@ export function CourseCard({ course, className = "", locked = false }: Props) {
             href={`/course/${course.id}`}
             aria-disabled={locked}
             tabIndex={locked ? -1 : undefined}
-            className={`group flex flex-col justify-between rounded-xl p-6 transition-transform duration-150 ${locked ? "pointer-events-none opacity-50" : "hover:-translate-y-0.5 active:scale-[0.98]"} ${className}`}
+            className={`group flex flex-col justify-between rounded-xl p-6 transition-transform duration-150 ${locked ? "pointer-events-none opacity-50" : "hover:-translate-y-0.5 active:scale-[0.98]"} ${complete && !locked ? "opacity-70" : ""} ${className}`}
             style={{ background: "var(--plate)", boxShadow: "var(--plate-ring)" }}
         >
             <div>
@@ -46,7 +46,10 @@ export function CourseCard({ course, className = "", locked = false }: Props) {
                 <h2 className="font-serif text-2xl" style={{ color: "var(--plate-fg)" }}>{localized(course.title)}</h2>
             </div>
 
-            <div className="flex items-baseline justify-between mt-4">
+            <div className="h-0.5 rounded-full overflow-hidden mt-4" style={{ background: "rgba(247,243,233,0.15)" }}>
+                <div className="h-full" style={{ width: `${total ? (done / total) * 100 : 0}%`, background: "var(--plate-gold)" }} />
+            </div>
+            <div className="flex items-baseline justify-between mt-2">
                 <span className="text-sm tabular-nums" style={{ color: "var(--plate-dim)" }}>
                     {done} / {total}
                 </span>

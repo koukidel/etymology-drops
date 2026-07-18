@@ -85,6 +85,21 @@ function ContinueCard() {
         <span className="block font-serif text-2xl truncate" style={{ color: "var(--plate-fg)" }}>
           {word ? word.word : target.lesson.label}
         </span>
+        {word && (
+          <span className="flex flex-wrap gap-1.5 mt-2">
+            {word.blocks.map(b => (
+              <span
+                key={b.id}
+                className="rounded-full px-2.5 py-0.5 font-serif text-sm"
+                style={b.type === "root"
+                  ? { backgroundColor: "#e3b44f", color: "#2a2413" }
+                  : { backgroundColor: "#3c5340", color: "#efe7d1" }}
+              >
+                {b.label.replace(/-/g, "")}
+              </span>
+            ))}
+          </span>
+        )}
       </span>
       <span className="ml-auto text-xl" style={{ color: "var(--plate-gold)" }}>→</span>
     </Link>
