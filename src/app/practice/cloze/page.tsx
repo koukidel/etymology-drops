@@ -8,6 +8,7 @@ import { allWords } from "@/data/words";
 import { Word, WordBlock } from "@/data/types";
 import { dayHash } from "@/lib/dailyReview";
 import { useGameStore } from "@/store/useGameStore";
+import { sfx } from "@/lib/feedback";
 import { useMounted } from "@/hooks/useMounted";
 import { useTranslation } from "@/hooks/useTranslation";
 
@@ -87,6 +88,7 @@ export default function ClozePage() {
         if (status !== "idle") return;
         setPicked(b.id);
         if (b.id === hidden.id) {
+            sfx.success();
             setStatus("correct");
             setTimeout(() => {
                 setSolved(s => s + 1);
@@ -95,6 +97,7 @@ export default function ClozePage() {
                 setRoundKey(k => k + 1);
             }, 1000);
         } else {
+            sfx.wrong();
             setStatus("wrong");
             recordMiss([hidden.id]);
             setTimeout(() => { setPicked(null); setStatus("idle"); }, 800);

@@ -10,6 +10,7 @@ import { classifyWord, Lexicon, Classification, CATEGORY_LABEL, Category } from 
 import { findNextLesson } from "@/lib/nextLesson";
 import { dayHash } from "@/lib/dailyReview";
 import { localDate } from "@/lib/date";
+import { sfx } from "@/lib/feedback";
 import { useGameStore } from "@/store/useGameStore";
 import { useTranslation } from "@/hooks/useTranslation";
 
@@ -149,6 +150,9 @@ export function BuildGround() {
         if (!lex || assembly.length === 0) return;
         const r = classifyWord(assembly, lex);
         setResult(r);
+        if (r.attested) sfx.success();
+        else if (r.category === 2) sfx.coinage();
+        else sfx.wrong();
         if (challenge && !challengeDone && r.attested && assembly.some(b => b.id === challenge.id)) {
             localStorage.setItem(`minamoto_challenge_${today}`, "1");
             setChallengeDone(true);
@@ -277,13 +281,15 @@ export function BuildGround() {
                     )}
                 </div>
 
+                {/* Destructive action (クリア) sits far left, isolated from the
+                    primary 判定する button so a thumb can't hit both. */}
                 <div className="flex items-center gap-3">
-                    <span className="font-serif text-xl text-foreground truncate flex-1 min-w-0">{assembled}</span>
                     {assembly.length > 0 && (
-                        <button onClick={clear} className="text-sm text-muted-foreground hover:text-foreground underline underline-offset-4">
+                        <button onClick={clear} className="text-sm text-muted-foreground hover:text-foreground underline underline-offset-4 shrink-0">
                             {t("practice.build.clear")}
                         </button>
                     )}
+                    <span className="font-serif text-xl text-foreground truncate flex-1 min-w-0 text-center">{assembled}</span>
                     <button
                         onClick={judge}
                         disabled={!lex || assembly.length === 0}

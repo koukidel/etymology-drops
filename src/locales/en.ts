@@ -110,6 +110,8 @@ export const en = {
     "speedrun.done_count": "words decomposed",
     "speedrun.per_min": "/ min",
     "speedrun.again": "Go again",
+    "speedrun.best": "Best",
+    "speedrun.new_best": "New best!",
     "speedrun.back": "Back to Path",
     "home.speedrun.title": "Time Attack",
     "home.speedrun.desc": "Just decompose. Slice word after word against the clock.",
@@ -132,6 +134,12 @@ export const en = {
 
     "lesson.complete.buildable": "Words you can now build",
     "lesson.complete.try_build": "Try them in the build ground",
+    "lesson.complete.milestone": "🌸 {n} words learned!",
+    "lesson.complete.new_parts": "New parts:",
+    "lesson.complete.today": "Today {words} words · {days}-day streak",
+
+    "sound.mute": "Mute sounds",
+    "sound.unmute": "Unmute sounds",
 
     "practice.build.challenge": "Today's challenge: build one real word using \"{part}\".",
     "practice.build.challenge_done": "Challenge complete!",
