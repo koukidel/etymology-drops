@@ -132,6 +132,18 @@ export function BuildGround() {
     }, [ready, pool, today]);
     const [challengeDone, setChallengeDone] = useState(
         () => typeof window !== "undefined" && localStorage.getItem(`minamoto_challenge_${localDate()}`) === "1");
+    // Consecutive challenge days (a missed *today* doesn't break it yet).
+    const [challengeStreak] = useState(() => {
+        if (typeof window === "undefined") return 0;
+        const doneOn = (offset: number) => {
+            const d = new Date();
+            d.setDate(d.getDate() - offset);
+            return localStorage.getItem(`minamoto_challenge_${localDate(d)}`) === "1";
+        };
+        let n = 0;
+        for (let i = doneOn(0) ? 0 : 1; doneOn(i); i++) n++;
+        return n;
+    });
 
     const add = (b: WordBlock) => { setAssembly(a => [...a, b]); setResult(null); };
     const removeAt = (i: number) => { setAssembly(a => a.filter((_, j) => j !== i)); setResult(null); };
@@ -172,6 +184,11 @@ export function BuildGround() {
                             {challengeDone
                                 ? `✓ ${t("practice.build.challenge_done")}`
                                 : t("practice.build.challenge").replace("{part}", challenge.label.replace(/-/g, ""))}
+                            {challengeStreak >= 2 && (
+                                <span className="text-muted-foreground">
+                                    {" "}{t("practice.build.challenge_streak").replace("{n}", String(challengeStreak))}
+                                </span>
+                            )}
                         </p>
                     )}
                     {lexError && (

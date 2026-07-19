@@ -124,6 +124,7 @@ export const ja = {
     "home.continue.label": "続きから",
     "home.continue.start": "始める",
     "home.review.title": "今日の復習",
+    "home.wotd": "今日の一語",
 
     "review.title": "今日の復習",
     "review.done.title": "復習完了",
@@ -143,6 +144,7 @@ export const ja = {
 
     "practice.build.challenge": "今日のお題：「{part}」を使って、実在する単語を1つ。",
     "practice.build.challenge_done": "今日のお題、達成！",
+    "practice.build.challenge_streak": "（連続{n}日）",
     "practice.build.lexicon_error": "判定用の辞書を読み込めませんでした。",
     "practice.build.retry": "再試行",
 
@@ -193,6 +195,8 @@ export const ja = {
     "intake.commit.steady.sub": "1日15分ほど",
     "intake.commit.serious": "本気で",
     "intake.commit.serious.sub": "1日30分以上",
+
+    "intake.skip": "あとで設定する（そのまま始める）",
 
     "intake.level": "今の英語レベルは？",
     "intake.level.beginner": "初級",

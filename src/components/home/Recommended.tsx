@@ -59,13 +59,15 @@ export function Recommended() {
                 )}
             </div>
 
+            {/* Light cards: the dark plate is reserved for the hero and the
+                funnel so "special" stays special. */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {picks.map(p => (
-                    <Link key={p.lessonId} href={`/lesson/${p.lessonId}`} className="group flex items-center gap-3 rounded-xl px-4 py-3 transition-transform duration-150 hover:-translate-y-0.5 active:scale-[0.98]" style={{ background: "var(--plate)", boxShadow: "var(--plate-ring)" }}>
+                    <Link key={p.lessonId} href={`/lesson/${p.lessonId}`} className="group flex items-center gap-3 rounded-xl px-4 py-3 border border-border bg-card transition-all duration-150 hover:-translate-y-0.5 hover:border-accent/50 active:scale-[0.98]">
                         <span className="min-w-0">
-                            <span className="block font-serif text-lg truncate" style={{ color: "var(--plate-fg)" }}>{p.lessonTitle}</span>
+                            <span className="block font-serif text-lg truncate text-foreground">{p.lessonTitle}</span>
                         </span>
-                        <span className="ml-auto" style={{ color: "var(--plate-gold)" }}>→</span>
+                        <span className="ml-auto text-accent">→</span>
                     </Link>
                 ))}
             </div>

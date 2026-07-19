@@ -124,6 +124,7 @@ export const en = {
     "home.continue.label": "Continue",
     "home.continue.start": "Start",
     "home.review.title": "Today's review",
+    "home.wotd": "Word of the day",
 
     "review.title": "Today's review",
     "review.done.title": "Review done",
@@ -143,6 +144,7 @@ export const en = {
 
     "practice.build.challenge": "Today's challenge: build one real word using \"{part}\".",
     "practice.build.challenge_done": "Challenge complete!",
+    "practice.build.challenge_streak": "({n}-day streak)",
     "practice.build.lexicon_error": "Couldn't load the judging dictionary.",
     "practice.build.retry": "Retry",
 
@@ -193,6 +195,8 @@ export const en = {
     "intake.commit.steady.sub": "About 15 minutes a day",
     "intake.commit.serious": "Seriously",
     "intake.commit.serious.sub": "30 minutes a day or more",
+
+    "intake.skip": "Set up later (jump right in)",
 
     "intake.level": "How is your English now?",
     "intake.level.beginner": "Beginner",

@@ -37,6 +37,9 @@ export default function ProfilePage() {
         d.setDate(d.getDate() - (6 - i));
         return { iso: localDate(d), active: activeDays.has(localDate(d)) };
     });
+    const weekIsos = new Set(week.map(w => w.iso));
+    const weekWords = masteryLog.filter(e => e.date && weekIsos.has(e.date)).length;
+    const weekChallenges = week.filter(w => localStorage.getItem(`minamoto_challenge_${w.iso}`) === '1').length;
 
     // Most recent masteries first; undated (migrated) entries sort last.
     const recent = [...masteryLog]
@@ -79,17 +82,24 @@ export default function ProfilePage() {
                         ))}
                     </div>
 
-                    {/* 7-day habit dots: gaps are visible, which is the point. */}
-                    <div className="flex items-center gap-3">
-                        <span className="text-xs text-muted-foreground">{ja ? '直近7日' : 'Last 7 days'}</span>
-                        <span className="flex items-center gap-2">
-                            {week.map(d => (
-                                <span
-                                    key={d.iso}
-                                    title={d.iso}
-                                    className={`inline-block w-2.5 h-2.5 rounded-full ${d.active ? 'bg-accent' : 'border border-border'}`}
-                                />
-                            ))}
+                    {/* 7-day habit dots + weekly digest */}
+                    <div className="flex flex-wrap items-center justify-between gap-3">
+                        <div className="flex items-center gap-3">
+                            <span className="text-xs text-muted-foreground">{ja ? '直近7日' : 'Last 7 days'}</span>
+                            <span className="flex items-center gap-2">
+                                {week.map(d => (
+                                    <span
+                                        key={d.iso}
+                                        title={d.iso}
+                                        className={`inline-block w-2.5 h-2.5 rounded-full ${d.active ? 'bg-accent' : 'border border-border'}`}
+                                    />
+                                ))}
+                            </span>
+                        </div>
+                        <span className="text-xs text-muted-foreground tabular-nums">
+                            {ja
+                                ? `今週：${weekWords}語 ・ お題${weekChallenges}回`
+                                : `This week: ${weekWords} words · ${weekChallenges} challenges`}
                         </span>
                     </div>
 

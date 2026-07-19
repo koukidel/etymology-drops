@@ -62,6 +62,11 @@ export function CoursePath({ course }: Props) {
                             <div className="flex items-baseline justify-between gap-4 py-5">
                                 <div className="min-w-0">
                                     <div className="flex items-baseline gap-3">
+                                        {isActive && (
+                                            <span className="text-[10px] uppercase tracking-[0.15em] text-accent border border-accent/40 rounded-full px-2 py-0.5 whitespace-nowrap self-center">
+                                                {language === 'ja' ? '次はこれ' : 'Up next'}
+                                            </span>
+                                        )}
                                         <span className={`font-serif text-2xl ${isOpen ? "text-foreground" : "text-muted-foreground/60"}`}>
                                             {word?.word ?? lesson.id}
                                         </span>

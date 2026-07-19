@@ -181,12 +181,18 @@ export function LessonContainer({ word }: Props) {
                         .replace('{days}', String(Math.max(1, activeStreak)))}
                 </p>
 
+                {/* Related words fold away so the primary CTA stays above the
+                    fold; the first two show as a teaser. */}
                 {related.length > 0 && (
-                    <div className="w-full border-y border-border py-5 mb-8 text-left">
-                        <p className="text-[11px] uppercase tracking-[0.2em] text-accent mb-3">
-                            {t('lesson.complete.related')}
-                        </p>
-                        <ul className="space-y-2">
+                    <details className="w-full border-y border-border py-4 mb-8 text-left group">
+                        <summary className="cursor-pointer list-none flex items-center justify-between">
+                            <span className="text-[11px] uppercase tracking-[0.2em] text-accent">
+                                {t('lesson.complete.related')} ({related.length})
+                            </span>
+                            <span className="text-xs text-muted-foreground group-open:hidden">{language === 'ja' ? '見る' : 'Show'}</span>
+                            <span className="text-xs text-muted-foreground hidden group-open:inline">{language === 'ja' ? '閉じる' : 'Hide'}</span>
+                        </summary>
+                        <ul className="space-y-2 mt-3">
                             {related.map(r => (
                                 <li key={r.word} className="flex items-baseline gap-3">
                                     {r.href ? (
@@ -200,7 +206,7 @@ export function LessonContainer({ word }: Props) {
                                 </li>
                             ))}
                         </ul>
-                    </div>
+                    </details>
                 )}
 
                 {newlyBuildable.length > 0 && (
