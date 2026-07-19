@@ -8,6 +8,8 @@ import { COURSES } from "@/data/courses";
 import { allWords } from "@/data/words";
 import { Header } from "@/components/layout/Header";
 import { GrowthTree } from "@/components/progress/GrowthTree";
+import { CountUp } from "@/components/ui/CountUp";
+import { localDate } from "@/lib/date";
 
 export default function ProfilePage() {
     const { masteredWords, masteryLog, streak, lastActiveDate, missedParts, resetProgress } = useGameStore();
@@ -23,10 +25,18 @@ export default function ProfilePage() {
     const wordLabel = (id: string) => allWords.find(w => w.id === id)?.word ?? id;
 
     const tiles = [
-        { label: ja ? '学んだ単語' : 'Words learned', value: `${masteredWords.length}` },
-        { label: ja ? '連続学習日数' : 'Day streak', value: `${activeStreak}` },
-        { label: ja ? '修了コース' : 'Courses done', value: `${coursesDone} / ${COURSES.length}` },
+        { label: ja ? '学んだ単語' : 'Words learned', value: masteredWords.length, suffix: '' },
+        { label: ja ? '連続学習日数' : 'Day streak', value: activeStreak, suffix: '' },
+        { label: ja ? '修了コース' : 'Courses done', value: coursesDone, suffix: ` / ${COURSES.length}` },
     ];
+
+    // Last 7 days as habit dots: filled = at least one word mastered that day.
+    const activeDays = new Set(masteryLog.map(e => e.date).filter(Boolean));
+    const week = Array.from({ length: 7 }, (_, i) => {
+        const d = new Date();
+        d.setDate(d.getDate() - (6 - i));
+        return { iso: localDate(d), active: activeDays.has(localDate(d)) };
+    });
 
     // Most recent masteries first; undated (migrated) entries sort last.
     const recent = [...masteryLog]
@@ -59,12 +69,28 @@ export default function ProfilePage() {
 
                     {/* Stat tiles */}
                     <div className="grid grid-cols-3 gap-4">
-                        {tiles.map(t => (
-                            <div key={t.label} className="border border-border rounded-xl bg-card p-5">
-                                <div className="font-serif text-3xl text-foreground">{t.value}</div>
-                                <div className="text-xs text-muted-foreground mt-1">{t.label}</div>
+                        {tiles.map(tile => (
+                            <div key={tile.label} className="border border-border rounded-xl bg-card p-5">
+                                <div className="font-serif text-3xl text-foreground tabular-nums">
+                                    <CountUp value={tile.value} />{tile.suffix}
+                                </div>
+                                <div className="text-xs text-muted-foreground mt-1">{tile.label}</div>
                             </div>
                         ))}
+                    </div>
+
+                    {/* 7-day habit dots: gaps are visible, which is the point. */}
+                    <div className="flex items-center gap-3">
+                        <span className="text-xs text-muted-foreground">{ja ? '直近7日' : 'Last 7 days'}</span>
+                        <span className="flex items-center gap-2">
+                            {week.map(d => (
+                                <span
+                                    key={d.iso}
+                                    title={d.iso}
+                                    className={`inline-block w-2.5 h-2.5 rounded-full ${d.active ? 'bg-accent' : 'border border-border'}`}
+                                />
+                            ))}
+                        </span>
                     </div>
 
                     {/* Per-course progress */}

@@ -1,19 +1,34 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { Volume2, VolumeX } from "lucide-react";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useMounted } from "@/hooks/useMounted";
 import { useGameStore, currentStreak } from "@/store/useGameStore";
+import { isMuted, setMuted } from "@/lib/feedback";
 
 export function Header() {
     const { t } = useTranslation();
     const pathname = usePathname();
     const { streak, lastActiveDate } = useGameStore();
     const mounted = useMounted();
+    // localStorage-backed; synced after paint to stay SSR- and lint-safe.
+    const [muted, setMutedState] = useState(false);
+    useEffect(() => {
+        const id = requestAnimationFrame(() => setMutedState(isMuted()));
+        return () => cancelAnimationFrame(id);
+    }, []);
 
     const activeStreak = mounted ? currentStreak(streak, lastActiveDate) : 0;
+    const showMuted = mounted && muted;
+    const toggleMute = () => {
+        const next = !muted;
+        setMuted(next);
+        setMutedState(next);
+    };
 
     // Funnel order: learn → apply → look up → reflect.
     const links = [
@@ -52,6 +67,14 @@ export function Header() {
                             {`Day ${activeStreak}`}
                         </span>
                     )}
+
+                    <button
+                        onClick={toggleMute}
+                        aria-label={showMuted ? t('sound.unmute') : t('sound.mute')}
+                        className="text-muted-foreground hover:text-foreground transition-colors"
+                    >
+                        {showMuted ? <VolumeX size={16} /> : <Volume2 size={16} />}
+                    </button>
 
                     <LanguageSwitcher />
                 </div>

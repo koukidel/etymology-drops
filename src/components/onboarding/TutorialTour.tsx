@@ -6,6 +6,8 @@ import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, BookOpen, Zap, Blocks, Sprout, X } from "lucide-react";
 import { SlicerModule } from "@/components/lesson/SlicerModule";
+import { Bird } from "@/components/ui/Bird";
+import { sfx } from "@/lib/feedback";
 import { allWords } from "@/data/words";
 import { WordBlock } from "@/data/types";
 import { useGameStore } from "@/store/useGameStore";
@@ -47,9 +49,11 @@ function MiniBuild({ onSolved }: { onSolved: () => void }) {
         setPicked(next);
         const word = next.map(x => x.label.replace(/-/g, "")).join("").toLowerCase();
         if (MINI_ANSWERS[word]) {
+            sfx.success();
             setSolvedWord(word);
             onSolved();
         } else if (next.length >= 2) {
+            sfx.wrong();
             setWrong(true);
             setTimeout(() => { setWrong(false); setPicked([]); }, 700);
         }
@@ -215,7 +219,7 @@ export function TutorialTour() {
                         )}
 
                         {step === 5 && (
-                            <Panel icon={<Sprout size={26} />}>
+                            <Panel icon={<Bird size={26} />}>
                                 <H>{t("tutorial.outcome.title")}</H>
                                 <P>{t("tutorial.outcome.body")}</P>
                             </Panel>

@@ -110,6 +110,8 @@ export const ja = {
     "speedrun.done_count": "語を分解しました",
     "speedrun.per_min": "語/分",
     "speedrun.again": "もう一度",
+    "speedrun.best": "自己ベスト",
+    "speedrun.new_best": "自己ベスト更新！",
     "speedrun.back": "Pathへ戻る",
     "home.speedrun.title": "Time Attack",
     "home.speedrun.desc": "分解だけ。時間内に、次々と言葉を切り分けよう。",
@@ -132,6 +134,12 @@ export const ja = {
 
     "lesson.complete.buildable": "新たに組み立てられる単語",
     "lesson.complete.try_build": "組み立て場で試す",
+    "lesson.complete.milestone": "🌸 {n}語 達成！",
+    "lesson.complete.new_parts": "新しい部品：",
+    "lesson.complete.today": "今日 {words}語 ・ 連続 {days}日",
+
+    "sound.mute": "音を消す",
+    "sound.unmute": "音を出す",
 
     "practice.build.challenge": "今日のお題：「{part}」を使って、実在する単語を1つ。",
     "practice.build.challenge_done": "今日のお題、達成！",

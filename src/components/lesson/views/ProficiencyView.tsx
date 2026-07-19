@@ -5,6 +5,7 @@ import { Word } from "@/data/types";
 import { motion } from "framer-motion";
 import { allWords } from "@/data/words";
 import { useTranslation } from "@/hooks/useTranslation";
+import { sfx } from "@/lib/feedback";
 
 interface Props {
     word: Word;
@@ -57,9 +58,11 @@ export function ProficiencyView({ word, onNext, onResult }: Props) {
         }
 
         if (correct) {
+            sfx.success();
             setStatus('correct');
             setTimeout(onNext, 1200);
         } else {
+            sfx.wrong();
             setStatus('wrong');
             // Open the part hints: the recovery path is "read the parts",
             // not "guess again".

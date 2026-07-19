@@ -10,11 +10,23 @@ import { PrimingView } from "./views/PrimingView";
 import { SlicerView } from "./views/SlicerView";
 import { ProficiencyView } from "./views/ProficiencyView";
 
-import { useGameStore } from "@/store/useGameStore";
+import { useGameStore, currentStreak } from "@/store/useGameStore";
 import { findCourseByLesson } from "@/data/courses";
 import { allWords } from "@/data/words";
 import { DERIVATIVES } from "@/data/derivatives";
 import { useTranslation } from "@/hooks/useTranslation";
+import { dayHash } from "@/lib/dailyReview";
+import { localDate } from "@/lib/date";
+import { Bird } from "@/components/ui/Bird";
+
+// Praise rotates deterministically per word so the reward moment doesn't
+// wear out. (Duolingo's lesson: repetition kills celebration.)
+const PRAISE = {
+    ja: ["習得しました", "お見事", "その調子", "また一歩、語源に近づきました", "いい切れ味です"],
+    en: ["Word learned", "Well done", "Keep it up", "One step deeper into etymology", "A clean slice"],
+} as const;
+
+const MILESTONES = [10, 50, 100, 200];
 
 interface Props {
     word: Word;
@@ -32,7 +44,7 @@ export function LessonContainer({ word }: Props) {
     const [courseDone, setCourseDone] = useState(false);
     const { t, language } = useTranslation();
 
-    const { unlockWord, masterWord, recordLessonComplete, masteredWords, recordMiss } = useGameStore();
+    const { unlockWord, masterWord, recordLessonComplete, masteredWords, masteryLog, streak, lastActiveDate, recordMiss } = useGameStore();
 
     const localized = (s: string | { en: string; ja: string }) =>
         typeof s === 'string' ? s : s[language];
@@ -114,6 +126,17 @@ export function LessonContainer({ word }: Props) {
 
     // Completion
     if (viewIndex === 3) {
+        const lang = language === 'ja' ? 'ja' : 'en';
+        const praise = PRAISE[lang][dayHash(word.id) % PRAISE[lang].length];
+        const milestone = MILESTONES.includes(masteredWords.length) ? masteredWords.length : null;
+        const todayCount = masteryLog.filter(e => e.date === localDate()).length;
+        const activeStreak = currentStreak(streak, lastActiveDate);
+        // Parts first met in this word (in none of the other mastered words).
+        const otherParts = new Set(
+            masteredWords.filter(id => id !== word.id)
+                .flatMap(id => allWords.find(w => w.id === id)?.blocks.map(b => b.id) ?? []));
+        const newParts = word.blocks.filter(b => !otherParts.has(b.id));
+
         return (
             <div className="min-h-[60vh] flex flex-col items-center justify-center text-center p-8 max-w-xl mx-auto">
                 <motion.div
@@ -121,13 +144,42 @@ export function LessonContainer({ word }: Props) {
                     animate={{ scale: 1, opacity: 1 }}
                     className="mb-8 p-4 border border-border rounded-full"
                 >
-                    <Check size={32} className="text-foreground" />
+                    {courseDone ? <Bird size={32} /> : <Check size={32} className="text-foreground" />}
                 </motion.div>
                 <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-2">
-                    {courseDone ? t('lesson.complete.course') : t('lesson.complete.title')}
+                    {courseDone ? t('lesson.complete.course') : praise}
                 </p>
                 <h2 className="font-serif text-5xl text-foreground mb-3">{word.word}</h2>
-                <p className="text-muted-foreground mb-8">{t('lesson.complete.subtitle')}</p>
+                <p className="text-muted-foreground mb-2">{t('lesson.complete.subtitle')}</p>
+
+                {milestone && (
+                    <p className="text-sm text-ochre mb-2">
+                        {t('lesson.complete.milestone').replace('{n}', String(milestone))}
+                    </p>
+                )}
+
+                {newParts.length > 0 && (
+                    <p className="flex items-center flex-wrap justify-center gap-1.5 text-sm text-muted-foreground mb-2">
+                        <span>{t('lesson.complete.new_parts')}</span>
+                        {newParts.map(b => (
+                            <span
+                                key={b.id}
+                                className="rounded-full px-2.5 py-0.5 font-serif"
+                                style={b.type === 'root'
+                                    ? { backgroundColor: 'var(--chip-root-bg)', color: 'var(--chip-root-fg)' }
+                                    : { backgroundColor: 'var(--chip-prefix-bg)', color: 'var(--chip-prefix-fg)' }}
+                            >
+                                {b.label.replace(/-/g, '')}
+                            </span>
+                        ))}
+                    </p>
+                )}
+
+                <p className="text-xs text-muted-foreground mb-8">
+                    {t('lesson.complete.today')
+                        .replace('{words}', String(todayCount))
+                        .replace('{days}', String(Math.max(1, activeStreak)))}
+                </p>
 
                 {related.length > 0 && (
                     <div className="w-full border-y border-border py-5 mb-8 text-left">

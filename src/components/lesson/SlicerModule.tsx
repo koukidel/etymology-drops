@@ -4,6 +4,7 @@ import { useState, useMemo, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Word } from "@/data/types";
 import { useTranslation } from "@/hooks/useTranslation";
+import { sfx } from "@/lib/feedback";
 
 interface Props {
     word: Word;
@@ -45,11 +46,13 @@ export function SlicerModule({ word, onComplete, autoHintMs, completeLabel }: Pr
         if (foundCuts.includes(index)) return;
         // Not a seam: flash the tapped gap red so the mistake is felt.
         if (!cuts.includes(index)) {
+            sfx.wrong();
             setWrongCut(index);
             setTimeout(() => setWrongCut(null), 450);
             return;
         }
 
+        sfx.snap();
         const newFound = [...foundCuts, index];
         setFoundCuts(newFound);
         if (newFound.length === cuts.length) {
@@ -106,17 +109,23 @@ export function SlicerModule({ word, onComplete, autoHintMs, completeLabel }: Pr
                     const isFound = foundCuts.includes(cutIndex);
                     const isHinted = hintActive && cuts.includes(cutIndex) && !isFound;
 
+                    // A found cut pushes the two sides slightly apart — the
+                    // word visibly "comes apart" instead of just gaining a line.
+                    const cutBefore = foundCuts.includes(i); // cut right before this letter
                     return (
                         <div key={i} className="flex items-center">
-                            <span className="font-serif text-5xl sm:text-6xl text-foreground">
+                            <motion.span
+                                animate={{ marginLeft: cutBefore ? 6 : 0 }}
+                                className="font-serif text-5xl sm:text-6xl text-foreground"
+                            >
                                 {char}
-                            </span>
+                            </motion.span>
 
                             {!isLast && (
                                 <button
                                     onClick={() => handleCut(cutIndex)}
                                     aria-label={`Cut after letter ${i + 1}`}
-                                    className="w-6 h-16 mx-0.5 cursor-pointer flex items-center justify-center group relative"
+                                    className="w-10 h-16 -mx-1.5 cursor-pointer flex items-center justify-center group relative"
                                 >
                                     {isFound ? (
                                         <motion.div
