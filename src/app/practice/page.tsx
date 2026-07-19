@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Zap, BookOpenText, Blocks } from "lucide-react";
+import { Zap, BookOpenText, Blocks, PuzzleIcon } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import { useMounted } from "@/hooks/useMounted";
 import { useTranslation } from "@/hooks/useTranslation";
@@ -14,6 +14,7 @@ export default function PracticePage() {
     const modes = [
         { href: "/speedrun", icon: Zap, title: t("practice.timeattack.title"), desc: t("practice.timeattack.desc") },
         { href: "/practice/study", icon: BookOpenText, title: t("practice.study.title"), desc: t("practice.study.desc") },
+        { href: "/practice/cloze", icon: PuzzleIcon, title: t("practice.cloze.title"), desc: t("practice.cloze.desc") },
         { href: "/practice/build", icon: Blocks, title: t("practice.build.title"), desc: t("practice.build.desc") },
     ];
 

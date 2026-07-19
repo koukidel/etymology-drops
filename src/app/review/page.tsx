@@ -8,31 +8,43 @@ import { Header } from "@/components/layout/Header";
 import { ProficiencyView } from "@/components/lesson/views/ProficiencyView";
 import { pickReviewWords } from "@/lib/dailyReview";
 import { localDate } from "@/lib/date";
+import { findNextLesson } from "@/lib/nextLesson";
 import { useGameStore } from "@/store/useGameStore";
 import { useMounted } from "@/hooks/useMounted";
 import { useTranslation } from "@/hooks/useTranslation";
 
-const todayIso = () => localDate();
-
 export default function ReviewPage() {
     const { t } = useTranslation();
-    const { masteryLog, masteredWords, lastReviewDate, completeReview } = useGameStore();
+    const {
+        masteryLog, masteredWords, lastReviewDate, srs,
+        completeReview, recordReviewResult, recordMiss,
+    } = useGameStore();
     const mounted = useMounted();
     const [index, setIndex] = useState(0);
     const [finished, setFinished] = useState(false);
 
-    // Picked once per visit; stable within the day.
+    // SRS-due words first. Deps exclude `srs` deliberately: answering updates
+    // srs mid-session, and the picked set must not reshuffle under the user.
+    // masteryLog/masteredWords only change via lessons, so recomputes happen
+    // exactly once — after the store rehydrates.
     const words = useMemo(
-        () => pickReviewWords(masteryLog, masteredWords, todayIso()),
+        () => pickReviewWords(masteryLog, masteredWords, localDate(), 3, srs),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [masteryLog, masteredWords],
+    );
+
+    const nextLesson = useMemo(
+        () => findNextLesson(masteryLog, masteredWords),
         [masteryLog, masteredWords],
     );
 
     if (!mounted) return null;
 
-    const doneToday = lastReviewDate === todayIso();
+    const doneToday = lastReviewDate === localDate();
     const nothingToReview = words.length === 0;
 
     if (finished || doneToday || nothingToReview) {
+        const empty = nothingToReview && !finished && !doneToday;
         return (
             <div className="min-h-screen">
                 <Header />
@@ -45,25 +57,37 @@ export default function ReviewPage() {
                         <Check size={28} className="text-foreground" />
                     </motion.div>
                     <h1 className="font-serif text-3xl text-foreground mb-2">
-                        {nothingToReview && !finished && !doneToday
-                            ? t("review.empty.title")
-                            : t("review.done.title")}
+                        {empty ? t("review.empty.title") : t("review.done.title")}
                     </h1>
                     <p className="text-muted-foreground mb-8">
-                        {nothingToReview && !finished && !doneToday
-                            ? t("review.empty.body")
-                            : t("review.done.body")}
+                        {empty ? t("review.empty.body") : t("review.done.body")}
                     </p>
-                    <Link
-                        href="/"
-                        className="px-8 py-2.5 bg-foreground text-background rounded-full hover:opacity-90 transition-opacity"
-                    >
-                        {t("speedrun.back")}
-                    </Link>
+                    <div className="flex flex-col items-center gap-4">
+                        {nextLesson && (
+                            <Link
+                                href={`/lesson/${nextLesson.lesson.id}`}
+                                className="px-8 py-2.5 bg-foreground text-background rounded-full hover:opacity-90 transition-opacity"
+                            >
+                                {t("review.next_lesson")}
+                            </Link>
+                        )}
+                        <Link href="/" className="text-sm text-muted-foreground hover:text-accent underline underline-offset-4">
+                            {t("speedrun.back")}
+                        </Link>
+                    </div>
                 </main>
             </div>
         );
     }
+
+    const current = words[index];
+
+    const handleResult = (correct: boolean) => {
+        recordReviewResult(current.id, correct);
+        if (!correct) {
+            recordMiss(current.blocks.map(b => b.id));
+        }
+    };
 
     const next = () => {
         if (index + 1 < words.length) {
@@ -85,7 +109,7 @@ export default function ReviewPage() {
                     </span>
                 </div>
                 {/* key remounts the quiz per word */}
-                <ProficiencyView key={words[index].id} word={words[index]} onNext={next} />
+                <ProficiencyView key={current.id} word={current} onNext={next} onResult={handleResult} />
             </main>
         </div>
     );

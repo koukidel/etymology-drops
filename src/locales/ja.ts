@@ -126,6 +126,7 @@ export const ja = {
     "review.title": "今日の復習",
     "review.done.title": "復習完了",
     "review.done.body": "今日の分はおしまい。また明日。",
+    "review.next_lesson": "続きのレッスンへ",
     "review.empty.title": "復習はまだありません",
     "review.empty.body": "レッスンで覚えた言葉が、翌日からここに出てきます。",
 
@@ -136,6 +137,16 @@ export const ja = {
     "practice.build.challenge_done": "今日のお題、達成！",
     "practice.build.lexicon_error": "判定用の辞書を読み込めませんでした。",
     "practice.build.retry": "再試行",
+
+    "practice.cloze.title": "穴埋め",
+    "practice.cloze.desc": "抜けた部品を思い出して埋める。想起の練習。",
+    "practice.cloze.instruction": "欠けている部品はどれ？",
+    "practice.cloze.solved": "問正解",
+    "practice.cloze.empty_title": "まだ問題を作れません",
+    "practice.cloze.empty_body": "レッスンで単語を覚えると、ここで穴埋めに挑戦できます。",
+
+    "progress.weak_parts": "苦手な部品",
+    "progress.weak_parts.hint": "この部品を使うレッスンでおさらいしましょう。",
     "home.unlocked.toast": "すべてのコースが開きました",
 
     "tutorial.back": "戻る",

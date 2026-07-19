@@ -126,6 +126,7 @@ export const en = {
     "review.title": "Today's review",
     "review.done.title": "Review done",
     "review.done.body": "That's it for today. See you tomorrow.",
+    "review.next_lesson": "Continue to the next lesson",
     "review.empty.title": "Nothing to review yet",
     "review.empty.body": "Words you learn in lessons show up here from the next day.",
 
@@ -136,6 +137,16 @@ export const en = {
     "practice.build.challenge_done": "Challenge complete!",
     "practice.build.lexicon_error": "Couldn't load the judging dictionary.",
     "practice.build.retry": "Retry",
+
+    "practice.cloze.title": "Fill the gap",
+    "practice.cloze.desc": "Recall the missing part and fill it in. Generative practice.",
+    "practice.cloze.instruction": "Which part is missing?",
+    "practice.cloze.solved": "solved",
+    "practice.cloze.empty_title": "No puzzles yet",
+    "practice.cloze.empty_body": "Learn words in lessons and they'll show up here as fill-the-gap puzzles.",
+
+    "progress.weak_parts": "Parts to revisit",
+    "progress.weak_parts.hint": "Review them in a lesson that uses this part.",
     "home.unlocked.toast": "Every course is now open",
 
     "tutorial.back": "Back",
