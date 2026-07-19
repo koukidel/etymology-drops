@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Newsreader } from "next/font/google";
+import { Inter, Newsreader, Noto_Serif_JP } from "next/font/google";
 import "./globals.css";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 
@@ -14,6 +14,17 @@ const newsreader = Newsreader({
   variable: "--font-newsreader",
   style: ["normal", "italic"],
   display: "swap",
+});
+
+// Japanese serif for JA headings/copy: Latin stays Newsreader (it sorts first
+// in the stack), CJK falls through to Noto Serif JP instead of a gothic
+// system fallback — mixed-script lines stop clashing.
+const notoSerifJP = Noto_Serif_JP({
+  subsets: ["latin"],
+  weight: ["400", "600"],
+  variable: "--font-noto-serif-jp",
+  display: "swap",
+  preload: false,
 });
 
 export const viewport: Viewport = {
@@ -46,7 +57,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.variable} ${newsreader.variable} antialiased font-sans`} suppressHydrationWarning>
+      <body className={`${inter.variable} ${newsreader.variable} ${notoSerifJP.variable} antialiased font-sans`} suppressHydrationWarning>
         <LanguageProvider>
           <main className="relative">
             {children}

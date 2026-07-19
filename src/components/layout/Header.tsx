@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Volume2, VolumeX } from "lucide-react";
 import { LanguageSwitcher } from "./LanguageSwitcher";
+import { Seal } from "@/components/ui/Seal";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useMounted } from "@/hooks/useMounted";
 import { useGameStore, currentStreak } from "@/store/useGameStore";
@@ -41,8 +42,10 @@ export function Header() {
     return (
         <header className="border-b border-border bg-background sticky top-0 z-40">
             <div className="max-w-3xl mx-auto px-6 h-16 flex items-center justify-between">
-                <Link href="/" className="font-serif text-xl text-foreground">
-                    {t('app.title')}
+                <Link href="/" className="flex items-center gap-2 font-serif text-xl text-foreground" aria-label={t('app.title')}>
+                    <Seal size={26} />
+                    {/* In JA the seal IS the wordmark; EN keeps the romanized name. */}
+                    {t('app.title') !== '源' && <span>{t('app.title')}</span>}
                 </Link>
 
                 <div className="flex items-center gap-6">
