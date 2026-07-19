@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { localDate, localYesterday } from '@/lib/date';
 
 export interface MasteryEntry {
     id: string;
@@ -38,15 +39,10 @@ interface GameState {
     resetProgress: () => void;
 }
 
-const isoDate = (d: Date) => d.toISOString().slice(0, 10);
-
-/** Streak counts only if the last lesson was today or yesterday. */
+/** Streak counts only if the last lesson was today or yesterday (local time). */
 export const currentStreak = (streak: number, lastActiveDate: string | null): number => {
     if (!lastActiveDate) return 0;
-    const today = new Date();
-    const yesterday = new Date(today);
-    yesterday.setDate(today.getDate() - 1);
-    return lastActiveDate === isoDate(today) || lastActiveDate === isoDate(yesterday)
+    return lastActiveDate === localDate() || lastActiveDate === localYesterday()
         ? streak
         : 0;
 };
@@ -76,7 +72,7 @@ export const useGameStore = create<GameState>()(
                 const updates: Partial<GameState> = {};
                 if (!state.masteredWords.includes(wordId)) {
                     updates.masteredWords = [...state.masteredWords, wordId];
-                    updates.masteryLog = [...state.masteryLog, { id: wordId, date: isoDate(new Date()) }];
+                    updates.masteryLog = [...state.masteryLog, { id: wordId, date: localDate() }];
                 }
                 if (!state.unlockedWords.includes(wordId)) {
                     updates.unlockedWords = [...state.unlockedWords, wordId];
@@ -89,10 +85,10 @@ export const useGameStore = create<GameState>()(
                 const yesterday = new Date(today);
                 yesterday.setDate(today.getDate() - 1);
 
-                if (state.lastActiveDate === isoDate(today)) return {};
+                if (state.lastActiveDate === localDate(today)) return {};
                 return {
-                    streak: state.lastActiveDate === isoDate(yesterday) ? state.streak + 1 : 1,
-                    lastActiveDate: isoDate(today),
+                    streak: state.lastActiveDate === localDate(yesterday) ? state.streak + 1 : 1,
+                    lastActiveDate: localDate(today),
                 };
             }),
 
@@ -102,7 +98,7 @@ export const useGameStore = create<GameState>()(
 
             completeTutorial: () => set({ hasSeenTutorial: true }),
 
-            completeReview: () => set({ lastReviewDate: isoDate(new Date()) }),
+            completeReview: () => set({ lastReviewDate: localDate() }),
 
             resetProgress: () => set({
                 unlockedWords: [],

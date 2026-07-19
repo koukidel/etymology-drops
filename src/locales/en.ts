@@ -134,6 +134,8 @@ export const en = {
 
     "practice.build.challenge": "Today's challenge: build one real word using \"{part}\".",
     "practice.build.challenge_done": "Challenge complete!",
+    "practice.build.lexicon_error": "Couldn't load the judging dictionary.",
+    "practice.build.retry": "Retry",
     "home.unlocked.toast": "Every course is now open",
 
     "tutorial.back": "Back",

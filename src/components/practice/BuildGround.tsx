@@ -9,13 +9,14 @@ import { WordBlock } from "@/data/types";
 import { classifyWord, Lexicon, Classification, CATEGORY_LABEL, Category } from "@/lib/classify";
 import { findNextLesson } from "@/lib/nextLesson";
 import { dayHash } from "@/lib/dailyReview";
+import { localDate } from "@/lib/date";
 import { useGameStore } from "@/store/useGameStore";
 import { useTranslation } from "@/hooks/useTranslation";
 
 const TYPE_STYLE: Record<WordBlock["type"], { bg: string; fg: string }> = {
-    prefix: { bg: "#3c5340", fg: "#efe7d1" }, // mid pine
-    root: { bg: "#e3b44f", fg: "#2a2413" },   // brass (the accent)
-    suffix: { bg: "#21362a", fg: "#c2c6ac" }, // deep pine
+    prefix: { bg: "var(--chip-prefix-bg)", fg: "var(--chip-prefix-fg)" },
+    root: { bg: "var(--chip-root-bg)", fg: "var(--chip-root-fg)" },
+    suffix: { bg: "var(--chip-suffix-bg)", fg: "var(--chip-suffix-fg)" },
 };
 
 const CATEGORY_COLOR: Record<Category, string> = {
@@ -68,27 +69,31 @@ function wordsWithinReach(ownedIds: Set<string>): number {
     return n;
 }
 
-function useLexicon(): Lexicon | null {
+// A failed fetch used to silently fall back to "nothing is attested", which
+// made every real word judge as a non-word. Surface the failure instead.
+function useLexicon(): { lex: Lexicon | null; error: boolean; retry: () => void } {
     const [lex, setLex] = useState<Lexicon | null>(null);
+    const [error, setError] = useState(false);
+    const [attempt, setAttempt] = useState(0);
     useEffect(() => {
         let alive = true;
         fetch("/lexicon/words.txt")
-            .then(r => r.text())
+            .then(r => { if (!r.ok) throw new Error(String(r.status)); return r.text(); })
             .then(text => {
                 const rank = new Map<string, number>();
                 text.split("\n").forEach((w, i) => { if (w && !rank.has(w)) rank.set(w, i); });
                 if (alive) setLex({ rank: (w: string) => rank.get(w.toLowerCase()) });
             })
-            .catch(() => { if (alive) setLex({ rank: () => undefined }); });
+            .catch(() => { if (alive) { setLex(null); setError(true); } });
         return () => { alive = false; };
-    }, []);
-    return lex;
+    }, [attempt]);
+    return { lex, error, retry: () => { setError(false); setAttempt(a => a + 1); } };
 }
 
 export function BuildGround() {
     const { t, language } = useTranslation();
     const reduce = useReducedMotion();
-    const lex = useLexicon();
+    const { lex, error: lexError, retry: retryLexicon } = useLexicon();
     const { masteredWords, masteryLog } = useGameStore();
     const dropRef = useRef<HTMLDivElement>(null);
     const [assembly, setAssembly] = useState<WordBlock[]>([]);
@@ -115,7 +120,7 @@ export function BuildGround() {
     // Daily challenge: build one real word using a specific owned part.
     // Deterministic per day, and always solvable (some fully-buildable lesson
     // word contains the part). Completion is remembered per-day locally.
-    const today = new Date().toISOString().slice(0, 10);
+    const today = localDate();
     const challenge = useMemo(() => {
         if (!ready) return null;
         const owned = new Set(pool.map(b => b.id));
@@ -125,7 +130,7 @@ export function BuildGround() {
         return candidates[dayHash(today) % candidates.length];
     }, [ready, pool, today]);
     const [challengeDone, setChallengeDone] = useState(
-        () => typeof window !== "undefined" && localStorage.getItem(`minamoto_challenge_${new Date().toISOString().slice(0, 10)}`) === "1");
+        () => typeof window !== "undefined" && localStorage.getItem(`minamoto_challenge_${localDate()}`) === "1");
 
     const add = (b: WordBlock) => { setAssembly(a => [...a, b]); setResult(null); };
     const removeAt = (i: number) => { setAssembly(a => a.filter((_, j) => j !== i)); setResult(null); };
@@ -163,6 +168,14 @@ export function BuildGround() {
                             {challengeDone
                                 ? `✓ ${t("practice.build.challenge_done")}`
                                 : t("practice.build.challenge").replace("{part}", challenge.label.replace(/-/g, ""))}
+                        </p>
+                    )}
+                    {lexError && (
+                        <p className="text-xs mt-1 text-error" role="alert">
+                            {t("practice.build.lexicon_error")}{" "}
+                            <button onClick={retryLexicon} className="underline underline-offset-2 hover:opacity-80">
+                                {t("practice.build.retry")}
+                            </button>
                         </p>
                     )}
                 </div>

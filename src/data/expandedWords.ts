@@ -150,7 +150,7 @@ export const expandedWords: Word[] = [
         word: "Intermittent",
         meaning: { en: "Occurring at irregular intervals; not continuous or steady.", ja: "不規則な間隔で起こる、断続的な。" },
         history: { en: "From 'inter-' (between) + 'mit' (send). Sent between intervals.", ja: "'inter-' (間に) + 'mit' (送る) に由来。間隔を置いて送られる。" },
-        blocks: [{ id: "inter", label: "Inter-", meaning: { en: "Between", ja: "間に" }, type: "prefix" }, { id: "mit", label: "Mit", meaning: { en: "Send", ja: "送る" }, type: "root" }],
+        blocks: [{ id: "inter", label: "Inter-", meaning: { en: "Between", ja: "間に" }, type: "prefix" }, { id: "mit", label: "Mitt", meaning: { en: "Send", ja: "送る" }, type: "root" }, { id: "ent", label: "Ent", meaning: { en: "Having the quality of", ja: "〜な" }, type: "suffix" }],
         icon: "Activity"
     },
     {
@@ -270,7 +270,7 @@ export const expandedWords: Word[] = [
         word: "Epilogue",
         meaning: { en: "A section or speech at the end of a book or play.", ja: "本や劇の終わりの部分やスピーチ（結びの言葉）。" },
         history: { en: "From 'epi-' (upon/after) + 'log' (word). Words added after.", ja: "'epi-' (〜の上に/後に) + 'log' (言葉) に由来。後に追加された言葉。" },
-        blocks: [{ id: "epi", label: "Epi-", meaning: { en: "Upon/End", ja: "〜の上に/終わり" }, type: "prefix" }, { id: "log", label: "Log", meaning: { en: "Word", ja: "言葉" }, type: "root" }],
+        blocks: [{ id: "epi", label: "Epi-", meaning: { en: "Upon/End", ja: "〜の上に/終わり" }, type: "prefix" }, { id: "log", label: "Logue", meaning: { en: "Word", ja: "言葉" }, type: "root" }],
         icon: "Book"
     },
     {
@@ -278,7 +278,7 @@ export const expandedWords: Word[] = [
         word: "Dialogue",
         meaning: { en: "Conversation between two or more people.", ja: "2人以上の人々の間の会話（対話）。" },
         history: { en: "From 'dia-' (across) + 'log' (word). Words across people.", ja: "'dia-' (横切って) + 'log' (言葉) に由来。人々の間を行き交う言葉。" },
-        blocks: [{ id: "dia", label: "Dia-", meaning: { en: "Across", ja: "横切って" }, type: "prefix" }, { id: "log", label: "Log", meaning: { en: "Word", ja: "言葉" }, type: "root" }],
+        blocks: [{ id: "dia", label: "Dia-", meaning: { en: "Across", ja: "横切って" }, type: "prefix" }, { id: "log", label: "Logue", meaning: { en: "Word", ja: "言葉" }, type: "root" }],
         icon: "MessageCircle"
     },
     {
@@ -330,7 +330,7 @@ export const expandedWords: Word[] = [
         word: "Uncomplicated",
         meaning: { en: "Simple and straightforward.", ja: "単純でわかりやすい。" },
         history: { en: "From 'un-' (not) + 'com-' (together) + 'ply' (fold). Not folded together.", ja: "'un-' (不) + 'com-' (共に) + 'ply' (折る) に由来。共に折り重なっていない（複雑でない）。" },
-        blocks: [{ id: "un", label: "Un-", meaning: { en: "Not", ja: "不" }, type: "prefix" }, { id: "com", label: "Com-", meaning: { en: "Together", ja: "共に" }, type: "prefix" }, { id: "ply", label: "Ply", meaning: { en: "Fold", ja: "折る" }, type: "root" }],
+        blocks: [{ id: "un", label: "Un-", meaning: { en: "Not", ja: "不" }, type: "prefix" }, { id: "com", label: "Com-", meaning: { en: "Together", ja: "共に" }, type: "prefix" }, { id: "ply", label: "Plic", meaning: { en: "Fold", ja: "折る" }, type: "root" }, { id: "ate", label: "Ated", meaning: { en: "To make, do", ja: "〜する" }, type: "suffix" }],
         icon: "Circle"
     },
     {
@@ -360,7 +360,7 @@ export const expandedWords: Word[] = [
         word: "Nonextended",
         meaning: { en: "Not stretched out or prolonged.", ja: "引き伸ばされていない、延長されていない。" },
         history: { en: "From 'non-' (not) + 'ex-' (out) + 'tend' (stretch). Not stretched out.", ja: "'non-' (不) + 'ex-' (外へ) + 'tend' (伸ばす) に由来。外へ伸ばされていない。" },
-        blocks: [{ id: "non", label: "Non-", meaning: { en: "Not", ja: "不" }, type: "prefix" }, { id: "ex", label: "Ex-", meaning: { en: "Out", ja: "外へ" }, type: "prefix" }, { id: "tend", label: "Tend", meaning: { en: "Stretch", ja: "伸ばす" }, type: "root" }],
+        blocks: [{ id: "non", label: "Non-", meaning: { en: "Not", ja: "不" }, type: "prefix" }, { id: "ex", label: "Ex-", meaning: { en: "Out", ja: "外へ" }, type: "prefix" }, { id: "tend", label: "Tend", meaning: { en: "Stretch", ja: "伸ばす" }, type: "root" }, { id: "ed", label: "Ed", meaning: { en: "Made into (past)", ja: "〜された" }, type: "suffix" }],
         icon: "Minimize"
     },
     {
@@ -390,7 +390,7 @@ export const expandedWords: Word[] = [
         word: "Reproduction",
         meaning: { en: "The action or process of making a copy of something.", ja: "何かのコピーを作る行為またはプロセス（再生/複製）。" },
         history: { en: "From 're-' (again) + 'pro-' (forward) + 'duct' (lead). Leading forward again.", ja: "'re-' (再び) + 'pro-' (前方へ) + 'duct' (導く) に由来。再び前方へ導くこと。" },
-        blocks: [{ id: "re", label: "Re-", meaning: { en: "Again", ja: "再び" }, type: "prefix" }, { id: "pro", label: "Pro-", meaning: { en: "Forward", ja: "前方へ" }, type: "prefix" }, { id: "duct", label: "Duct", meaning: { en: "Lead", ja: "導く" }, type: "root" }],
+        blocks: [{ id: "re", label: "Re-", meaning: { en: "Again", ja: "再び" }, type: "prefix" }, { id: "pro", label: "Pro-", meaning: { en: "Forward", ja: "前方へ" }, type: "prefix" }, { id: "duct", label: "Duct", meaning: { en: "Lead", ja: "導く" }, type: "root" }, { id: "ion", label: "Ion", meaning: { en: "Act or result of", ja: "〜すること" }, type: "suffix" }],
         icon: "Copy"
     },
     {
@@ -420,7 +420,7 @@ export const expandedWords: Word[] = [
         word: "Indisposed",
         meaning: { en: "Slightly unwell; unwilling.", ja: "少し気分が悪い、気が進まない。" },
         history: { en: "From 'in-' (not) + 'dis-' (away) + 'pose' (put). Not placed correctly (mood/health).", ja: "'in-' (不) + 'dis-' (離れて) + 'pose' (置く) に由来。正しく置かれていない（気分/健康）。" },
-        blocks: [{ id: "in", label: "In-", meaning: { en: "Not", ja: "不" }, type: "prefix" }, { id: "dis", label: "Dis-", meaning: { en: "Away", ja: "離れて" }, type: "prefix" }, { id: "pose", label: "Pose", meaning: { en: "Put", ja: "置く" }, type: "root" }],
+        blocks: [{ id: "in", label: "In-", meaning: { en: "Not", ja: "不" }, type: "prefix" }, { id: "dis", label: "Dis-", meaning: { en: "Away", ja: "離れて" }, type: "prefix" }, { id: "pose", label: "Pos", meaning: { en: "Put", ja: "置く" }, type: "root" }, { id: "ed", label: "Ed", meaning: { en: "Made into (past)", ja: "〜された" }, type: "suffix" }],
         icon: "Frown"
     },
     {
@@ -450,7 +450,7 @@ export const expandedWords: Word[] = [
         word: "Oversufficient",
         meaning: { en: "More than enough; excessive.", ja: "十分すぎる、過剰な。" },
         history: { en: "From 'over-' (excess) + 'sub-' (under) + 'fic' (make). Made over-under? (Complex).", ja: "'over-' (過剰) + 'sub-' (下) + 'fic' (作る) に由来。過剰に作られた？（複雑）。" },
-        blocks: [{ id: "over", label: "Over-", meaning: { en: "Excess", ja: "過剰" }, type: "prefix" }, { id: "suf", label: "Suf-", meaning: { en: "Under/Up (from Sub-)", ja: "下/上" }, type: "prefix" }, { id: "fic", label: "Fic", meaning: { en: "Make", ja: "作る" }, type: "root" }],
+        blocks: [{ id: "over", label: "Over-", meaning: { en: "Excess", ja: "過剰" }, type: "prefix" }, { id: "suf", label: "Suf-", meaning: { en: "Under/Up (from Sub-)", ja: "下/上" }, type: "prefix" }, { id: "fic", label: "Fic", meaning: { en: "Make", ja: "作る" }, type: "root" }, { id: "ient", label: "Ient", meaning: { en: "Having the quality of", ja: "〜な" }, type: "suffix" }],
         icon: "MoreHorizontal"
     },
     {
@@ -470,7 +470,7 @@ export const expandedWords: Word[] = [
         word: "Efficient",
         meaning: { en: "(especially of a system or machine) achieving maximum productivity with minimum wasted effort or expense.", ja: "（特にシステムや機械が）最小限の無駄な労力や費用で最大の生産性を達成すること（効率的な）。" },
         history: { en: "From 'ex-' (out) + 'fic' (make). Working out well.", ja: "'ex-' (外へ) + 'fic' (作る) に由来。うまく機能すること。" },
-        blocks: [{ id: "ef", label: "Ef-", meaning: { en: "Out (from Ex-)", ja: "外へ" }, type: "prefix" }, { id: "fic", label: "Fic", meaning: { en: "Make", ja: "作る" }, type: "root" }],
+        blocks: [{ id: "ef", label: "Ef-", meaning: { en: "Out (from Ex-)", ja: "外へ" }, type: "prefix" }, { id: "fic", label: "Fic", meaning: { en: "Make", ja: "作る" }, type: "root" }, { id: "ient", label: "Ient", meaning: { en: "Having the quality of", ja: "〜な" }, type: "suffix" }],
         icon: "Zap"
     },
 
@@ -480,7 +480,7 @@ export const expandedWords: Word[] = [
         word: "Mistranscribe",
         meaning: { en: "To transcribe incorrectly.", ja: "不正確に書き写す（書き損じる）。" },
         history: { en: "From 'mis-' (wrong) + 'trans-' (across) + 'scribe' (write). To write across wrongly.", ja: "'mis-' (誤って) + 'trans-' (横切って) + 'scribe' (書く) に由来。誤って書き写すこと。" },
-        blocks: [{ id: "mis", label: "Mis-", meaning: { en: "Wrong", ja: "誤って" }, type: "prefix" }, { id: "trans", label: "Trans-", meaning: { en: "Across", ja: "横切って" }, type: "prefix" }, { id: "scribe", label: "Scribe", meaning: { en: "Write", ja: "書く" }, type: "root" }],
+        blocks: [{ id: "mis", label: "Mis-", meaning: { en: "Wrong", ja: "誤って" }, type: "prefix" }, { id: "trans", label: "Tran-", meaning: { en: "Across", ja: "横切って" }, type: "prefix" }, { id: "scribe", label: "Scribe", meaning: { en: "Write", ja: "書く" }, type: "root" }],
         icon: "AlertTriangle"
     },
     {
