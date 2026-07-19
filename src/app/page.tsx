@@ -14,6 +14,7 @@ import { useTranslation } from "@/hooks/useTranslation";
 import { allWords } from "@/data/words";
 import { findNextLesson } from "@/lib/nextLesson";
 import { pickReviewWords } from "@/lib/dailyReview";
+import { localDate } from "@/lib/date";
 
 // Pulsing halo that animates OPACITY of a pre-shadowed layer (compositor
 // friendly) instead of animating box-shadow itself (paint-heavy on mobile).
@@ -97,7 +98,7 @@ function ReviewBand() {
   const { t } = useTranslation();
   const { masteryLog, masteredWords, lastReviewDate } = useGameStore();
 
-  const today = new Date().toISOString().slice(0, 10);
+  const today = localDate();
   const words = useMemo(
     () => pickReviewWords(masteryLog, masteredWords, today),
     [masteryLog, masteredWords, today],

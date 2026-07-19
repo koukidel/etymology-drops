@@ -7,11 +7,12 @@ import { Check } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import { ProficiencyView } from "@/components/lesson/views/ProficiencyView";
 import { pickReviewWords } from "@/lib/dailyReview";
+import { localDate } from "@/lib/date";
 import { useGameStore } from "@/store/useGameStore";
 import { useMounted } from "@/hooks/useMounted";
 import { useTranslation } from "@/hooks/useTranslation";
 
-const todayIso = () => new Date().toISOString().slice(0, 10);
+const todayIso = () => localDate();
 
 export default function ReviewPage() {
     const { t } = useTranslation();

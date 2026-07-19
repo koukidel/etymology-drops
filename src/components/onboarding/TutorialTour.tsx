@@ -86,8 +86,8 @@ function MiniBuild({ onSolved }: { onSolved: () => void }) {
                             disabled={used}
                             className={`rounded-full px-4 py-2 font-serif text-lg transition-all duration-150 active:scale-[0.95] ${used ? "opacity-30" : ""}`}
                             style={b.type === "root"
-                                ? { backgroundColor: "#e3b44f", color: "#2a2413" }
-                                : { backgroundColor: "#3c5340", color: "#efe7d1" }}
+                                ? { backgroundColor: "var(--chip-root-bg)", color: "var(--chip-root-fg)" }
+                                : { backgroundColor: "var(--chip-prefix-bg)", color: "var(--chip-prefix-fg)" }}
                         >
                             {b.label.replace(/-/g, "")}
                         </button>

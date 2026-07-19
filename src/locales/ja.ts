@@ -134,6 +134,8 @@ export const ja = {
 
     "practice.build.challenge": "今日のお題：「{part}」を使って、実在する単語を1つ。",
     "practice.build.challenge_done": "今日のお題、達成！",
+    "practice.build.lexicon_error": "判定用の辞書を読み込めませんでした。",
+    "practice.build.retry": "再試行",
     "home.unlocked.toast": "すべてのコースが開きました",
 
     "tutorial.back": "戻る",
