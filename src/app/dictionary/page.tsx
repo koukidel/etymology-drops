@@ -3,15 +3,20 @@
 import { allWords } from "@/data/words";
 import { Block } from "@/data/types";
 import { useState, useMemo } from "react";
-import { X } from "lucide-react";
+import Link from "next/link";
+import { Check, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "@/hooks/useTranslation";
+import { useGameStore } from "@/store/useGameStore";
+import { useMounted } from "@/hooks/useMounted";
 import { Header } from "@/components/layout/Header";
 
 type Filter = 'all' | 'prefix' | 'root' | 'suffix';
 
 export default function DictionaryPage() {
     const { t, language } = useTranslation();
+    const { masteredWords } = useGameStore();
+    const mounted = useMounted();
     const [filter, setFilter] = useState<Filter>('all');
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedBlock, setSelectedBlock] = useState<Block | null>(null);
@@ -55,6 +60,31 @@ export default function DictionaryPage() {
             word.blocks.some(b => b.id === selectedBlock.id && b.type === selectedBlock.type)
         );
     }, [selectedBlock]);
+
+    const masteredCount = mounted
+        ? relatedWords.filter(w => masteredWords.includes(w.id)).length
+        : 0;
+
+    // あと1部品: words the learner could build if they only had this part —
+    // every OTHER part is already owned. The strongest reason to learn it.
+    const almostBuildable = useMemo(() => {
+        if (!selectedBlock || !mounted) return [];
+        const owned = new Set(
+            masteredWords.flatMap(id => allWords.find(w => w.id === id)?.blocks.map(b => b.id) ?? []));
+        if (owned.has(selectedBlock.id)) return [];
+        return relatedWords.filter(w =>
+            !masteredWords.includes(w.id) &&
+            w.blocks.every(b => b.id === selectedBlock.id || owned.has(b.id)));
+    }, [selectedBlock, relatedWords, masteredWords, mounted]);
+
+    // Reverse lookup: typing a whole word (inspect, breakfast…) surfaces the
+    // words themselves with their decomposition — the dictionary works both
+    // directions.
+    const wordHits = useMemo(() => {
+        const q = searchQuery.trim().toLowerCase();
+        if (q.length < 2) return [];
+        return allWords.filter(w => w.word.toLowerCase().includes(q)).slice(0, 5);
+    }, [searchQuery]);
 
     const displayLabel = (block: Block) => {
         const bare = block.label.replace(/-/g, '');
@@ -131,6 +161,33 @@ export default function DictionaryPage() {
                     ))}
                 </div>
 
+                {/* Reverse lookup: whole-word matches with their decomposition */}
+                {wordHits.length > 0 && (
+                    <section className="mb-8">
+                        <h2 className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-3">
+                            {ja ? '単語から引く' : 'Words'}
+                        </h2>
+                        <ul className="space-y-2">
+                            {wordHits.map(w => (
+                                <li key={w.id}>
+                                    <Link href={`/lesson/${w.id}`} className="flex flex-wrap items-baseline gap-x-3 gap-y-1 py-1.5 group">
+                                        <span className="font-serif text-xl text-foreground group-hover:text-accent transition-colors">{w.word}</span>
+                                        <span className="flex items-center gap-1">
+                                            {w.blocks.map((b, i) => (
+                                                <span key={i} className={`text-sm font-serif ${b.type === 'root' ? 'text-accent' : 'text-muted-foreground'}`}>
+                                                    {i > 0 && <span className="text-muted-foreground/50 mr-1">+</span>}
+                                                    {b.label.replace(/-/g, '')}
+                                                </span>
+                                            ))}
+                                        </span>
+                                        <span className="text-sm text-muted-foreground truncate">{localized(w.meaning)}</span>
+                                    </Link>
+                                </li>
+                            ))}
+                        </ul>
+                    </section>
+                )}
+
                 {/* List */}
                 <ul className="divide-y divide-border border-y border-border">
                     {filtered.map(({ block, count }) => (
@@ -155,10 +212,16 @@ export default function DictionaryPage() {
                     ))}
                 </ul>
 
-                {filtered.length === 0 && (
-                    <p className="text-sm text-muted-foreground mt-8 text-center">
-                        {language === 'ja' ? '見つかりませんでした。' : 'Nothing found.'}
-                    </p>
+                {filtered.length === 0 && wordHits.length === 0 && (
+                    <div className="mt-12 text-center">
+                        <p className="font-serif text-3xl text-border mb-3">源</p>
+                        <p className="text-sm text-muted-foreground">
+                            {ja ? `「${searchQuery}」は見つかりませんでした。` : `Nothing found for “${searchQuery}”.`}
+                        </p>
+                        <p className="text-xs text-muted-foreground mt-1">
+                            {ja ? '部品の綴りや意味でも検索できます。' : 'Try searching by a part’s spelling or meaning.'}
+                        </p>
+                    </div>
                 )}
             </main>
 
@@ -198,16 +261,40 @@ export default function DictionaryPage() {
                             </div>
 
                             <div className="flex-1 overflow-y-auto p-6">
+                                {almostBuildable.length > 0 && (
+                                    <div className="mb-6 rounded-lg border border-dashed border-ochre/60 px-4 py-3">
+                                        <p className="text-[11px] uppercase tracking-[0.15em] text-ochre mb-1.5">
+                                            {ja ? 'あと、この部品だけ' : 'Only this part missing'}
+                                        </p>
+                                        <p className="text-sm text-muted-foreground">
+                                            {ja
+                                                ? `この部品を習うと ${almostBuildable.slice(0, 3).map(w => w.word).join('、')} が組み立てられるようになります。`
+                                                : `Learn this part and you can build ${almostBuildable.slice(0, 3).map(w => w.word).join(', ')}.`}
+                                        </p>
+                                    </div>
+                                )}
+
                                 <h3 className="text-[11px] uppercase tracking-[0.15em] text-muted-foreground mb-4">
                                     {t('codex.related_words')} ({relatedWords.length})
+                                    {mounted && masteredCount > 0 && (
+                                        <span className="ml-2 text-accent normal-case tracking-normal">
+                                            ・{ja ? `習得 ${masteredCount} / ${relatedWords.length}` : `${masteredCount} / ${relatedWords.length} learned`}
+                                        </span>
+                                    )}
                                 </h3>
                                 <ul className="divide-y divide-border">
-                                    {relatedWords.map((word) => (
-                                        <li key={word.id} className="py-3">
-                                            <p className="font-serif text-lg text-foreground">{word.word}</p>
-                                            <p className="text-sm text-muted-foreground">{localized(word.meaning)}</p>
-                                        </li>
-                                    ))}
+                                    {relatedWords.map((word) => {
+                                        const done = mounted && masteredWords.includes(word.id);
+                                        return (
+                                            <li key={word.id} className="py-3 flex items-start justify-between gap-3">
+                                                <div className="min-w-0">
+                                                    <p className={`font-serif text-lg ${done ? 'text-accent' : 'text-foreground'}`}>{word.word}</p>
+                                                    <p className="text-sm text-muted-foreground">{localized(word.meaning)}</p>
+                                                </div>
+                                                {done && <Check size={16} className="text-accent shrink-0 mt-1.5" />}
+                                            </li>
+                                        );
+                                    })}
                                 </ul>
                             </div>
                         </motion.div>

@@ -40,7 +40,7 @@ interface GameState {
     unlockWord: (wordId: string) => void;
     masterWord: (wordId: string) => void;
     recordLessonComplete: () => void;
-    completeIntake: (profile: OnboardingProfile) => void;
+    completeIntake: (profile: OnboardingProfile | null) => void;
     completeOnboarding: () => void;
     completeTutorial: () => void;
     completeReview: () => void;

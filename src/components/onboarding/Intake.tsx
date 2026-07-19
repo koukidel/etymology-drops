@@ -9,6 +9,7 @@ import { OnboardingProfile, LearnerLevel } from "@/store/useGameStore";
 interface Props {
     onComplete: (profile: OnboardingProfile) => void;
     onExit?: () => void;
+    onSkip?: () => void;
 }
 
 // Each question: a translation-key prefix for the prompt and its option values.
@@ -19,7 +20,7 @@ const LEVELS: LearnerLevel[] = ["beginner", "intermediate", "advanced"];
 type Step = "goal" | "commit" | "level";
 const ORDER: Step[] = ["goal", "commit", "level"];
 
-export function Intake({ onComplete, onExit }: Props) {
+export function Intake({ onComplete, onExit, onSkip }: Props) {
     const { t } = useTranslation();
     const [step, setStep] = useState<Step>("goal");
     const [goal, setGoal] = useState<string | null>(null);
@@ -87,6 +88,19 @@ export function Intake({ onComplete, onExit }: Props) {
                         {step === "level" && renderOptions(LEVELS, "intake.level", (v) => pickLevel(v as LearnerLevel))}
                     </motion.div>
                 </AnimatePresence>
+
+                {/* First-run friction valve: straight to the app; settings can
+                    come later via /intake. */}
+                {onSkip && (
+                    <p className="text-center mt-10">
+                        <button
+                            onClick={onSkip}
+                            className="text-sm text-muted-foreground hover:text-foreground underline underline-offset-4 transition-colors"
+                        >
+                            {t('intake.skip')}
+                        </button>
+                    </p>
+                )}
             </div>
         </div>
     );

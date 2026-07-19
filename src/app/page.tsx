@@ -125,6 +125,37 @@ function ReviewBand() {
   );
 }
 
+// Word of the day: one unmastered lesson word, rotating daily. A light card
+// (plate stays reserved for the hero/funnel).
+function WordOfTheDay() {
+  const { t, language } = useTranslation();
+  const { masteredWords } = useGameStore();
+  const today = localDate();
+
+  const word = useMemo(() => {
+    const candidates = allWords.filter(w => !masteredWords.includes(w.id));
+    if (candidates.length === 0) return null;
+    let h = 5381;
+    const s = today + "wotd";
+    for (let i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) >>> 0;
+    return candidates[h % candidates.length];
+  }, [masteredWords, today]);
+
+  if (!word) return null;
+  const meaning = typeof word.meaning === "string" ? word.meaning : word.meaning[language];
+  return (
+    <Link
+      href={`/lesson/${word.id}`}
+      className="group flex items-baseline gap-3 rounded-xl px-4 py-3 border border-border bg-card transition-all duration-150 hover:-translate-y-0.5 hover:border-accent/50 active:scale-[0.98] mb-8"
+    >
+      <span className="text-[11px] uppercase tracking-[0.18em] text-accent whitespace-nowrap">{t('home.wotd')}</span>
+      <span className="font-serif text-lg text-foreground">{word.word}</span>
+      <span className="text-sm text-muted-foreground truncate min-w-0">{meaning}</span>
+      <span className="ml-auto text-accent">→</span>
+    </Link>
+  );
+}
+
 // One-time celebration when Lesson 0 unlocks the catalog. Rendered only
 // after mount (the page early-returns until then), so localStorage is safe.
 function UnlockToast() {
@@ -157,7 +188,7 @@ export default function Home() {
   if (!isMounted) return null; // Prevent hydration mismatch
 
   if (!hasCompletedIntake) {
-    return <Intake onComplete={completeIntake} />;
+    return <Intake onComplete={completeIntake} onSkip={() => completeIntake(null)} />;
   }
 
   // First-run funnel: あそびかた glows first, then Lesson 0; everything else
@@ -215,6 +246,8 @@ export default function Home() {
         </div>
 
         <Recommended />
+
+        <WordOfTheDay />
 
         <CourseGrid />
 
