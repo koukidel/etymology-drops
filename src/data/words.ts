@@ -1,5 +1,6 @@
 import { familiarWords } from "./familiarWords";
 import { familiarWordsExtra } from "./familiarWordsExtra";
+import { katakanaWords } from "./katakanaWords";
 import { builderWords } from "./builderWords";
 import { inventionWords } from "./inventionWords";
 import { eikenPre2Words } from "./eikenPre2Words";
@@ -16,6 +17,7 @@ import { Word } from "./types";
 export const allWords: Word[] = [
     ...familiarWords,
     ...familiarWordsExtra,
+    ...katakanaWords,
     ...builderWords,
     ...inventionWords,
     ...expandedWords,

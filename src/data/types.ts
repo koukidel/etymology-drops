@@ -43,4 +43,6 @@ export interface Word {
     bossChallenges?: BossChallenge[];
     /** Textbook-style margin note shown in the lesson story stage. */
     tip?: LocalizedString;
+    /** Short natural sentence using the word, shown in the story stage. */
+    example?: LocalizedString;
 }

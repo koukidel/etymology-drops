@@ -89,6 +89,25 @@ export const COURSES: Course[] = [
         ],
     },
     {
+        id: "katakana",
+        title: { en: "Katakana Words", ja: "身近なカタカナ語" },
+        description: {
+            en: "English you already say every day. Now see the parts inside.",
+            ja: "毎日カタカナで使っている英語。中の部品を見たことはありますか。",
+        },
+        level: "beginner",
+        lessons: [
+            { id: "internet", label: "INTER · NET", title: { en: "A net between nets", ja: "網と網の間の網" } },
+            { id: "network", label: "NET · WORK", title: { en: "Worked into a net", ja: "編まれた網" } },
+            { id: "supermarket", label: "SUPER · MARKET", title: { en: "Beyond the market", ja: "市場を超えた市場" } },
+            { id: "recycle", label: "RE · CYCLE", title: { en: "Around the circle again", ja: "もう一度、輪へ" } },
+            { id: "microphone", label: "MICRO · PHONE", title: { en: "Small sound", ja: "小さな音" } },
+            { id: "remote", label: "RE · MOTE", title: { en: "Moved away", ja: "遠くへ動かされた" } },
+            { id: "passport", label: "PASS · PORT", title: { en: "Pass the port", ja: "港を通る" } },
+            { id: "interview", label: "INTER · VIEW", title: { en: "Seeing between", ja: "間で見る" } },
+        ],
+    },
+    {
         id: "eiken-pre2",
         title: { en: "Building Everyday Words", ja: "身近な単語の組み立て" },
         description: {

@@ -6,6 +6,7 @@ import { Word } from "./types";
 export const familiarWordsExtra: Word[] = [
     {
         id: "disaster",
+        example: { en: "The town recovered quickly from the disaster.", ja: "その町は災害からすぐに立ち直りました。" },
         word: "Disaster",
         meaning: { en: "A sudden great misfortune.", ja: "突然の大きな災難、災害。" },
         history: {
@@ -24,6 +25,7 @@ export const familiarWordsExtra: Word[] = [
     },
     {
         id: "sarcasm",
+        example: { en: "His thanks were pure sarcasm.", ja: "彼のお礼は完全な皮肉でした。" },
         word: "Sarcasm",
         meaning: { en: "Mocking or bitterly ironic language.", ja: "皮肉、あてこすり。" },
         history: {
@@ -42,6 +44,7 @@ export const familiarWordsExtra: Word[] = [
     },
     {
         id: "quarantine",
+        example: { en: "The ship stayed in quarantine for forty days.", ja: "その船は40日間、検疫のため停泊しました。" },
         word: "Quarantine",
         meaning: { en: "Isolation to stop a disease from spreading.", ja: "隔離、検疫。" },
         history: {
@@ -60,6 +63,7 @@ export const familiarWordsExtra: Word[] = [
     },
     {
         id: "candidate",
+        example: { en: "She is the strongest candidate for the job.", ja: "彼女はその仕事の最有力候補です。" },
         word: "Candidate",
         meaning: { en: "A person who applies for a job or election.", ja: "候補者。" },
         history: {
@@ -78,6 +82,7 @@ export const familiarWordsExtra: Word[] = [
     },
     {
         id: "tragedy",
+        example: { en: "The play is a famous Greek tragedy.", ja: "その劇は有名なギリシャ悲劇です。" },
         word: "Tragedy",
         meaning: { en: "A very sad event; a serious drama.", ja: "悲劇。" },
         history: {
@@ -96,6 +101,7 @@ export const familiarWordsExtra: Word[] = [
     },
     {
         id: "curfew",
+        example: { en: "The city set a curfew after the storm.", ja: "嵐のあと、市は夜間外出禁止令を出しました。" },
         word: "Curfew",
         meaning: { en: "A rule to stay indoors after a set time.", ja: "門限、外出禁止令。" },
         history: {
@@ -114,6 +120,7 @@ export const familiarWordsExtra: Word[] = [
     },
     {
         id: "malaria",
+        example: { en: "Mosquito nets protect people from malaria.", ja: "蚊帳はマラリアから人々を守ります。" },
         word: "Malaria",
         meaning: { en: "A disease spread by mosquitoes.", ja: "マラリア。" },
         history: {
@@ -132,6 +139,7 @@ export const familiarWordsExtra: Word[] = [
     },
     {
         id: "nightmare",
+        example: { en: "I woke up from a terrible nightmare.", ja: "ひどい悪夢から目が覚めました。" },
         word: "Nightmare",
         meaning: { en: "A frightening dream.", ja: "悪夢。" },
         history: {
@@ -150,6 +158,7 @@ export const familiarWordsExtra: Word[] = [
     },
     {
         id: "rival",
+        example: { en: "The two schools are old rivals.", ja: "その2校は昔からのライバルです。" },
         word: "Rival",
         meaning: { en: "A competitor.", ja: "競争相手、ライバル。" },
         history: {
@@ -168,6 +177,7 @@ export const familiarWordsExtra: Word[] = [
     },
     {
         id: "decide",
+        example: { en: "We need to decide by Friday.", ja: "金曜日までに決める必要があります。" },
         word: "Decide",
         meaning: { en: "To make a choice.", ja: "決める。" },
         history: {
@@ -186,6 +196,7 @@ export const familiarWordsExtra: Word[] = [
     },
     {
         id: "denim",
+        example: { en: "He wore a jacket made of denim.", ja: "彼はデニムのジャケットを着ていました。" },
         word: "Denim",
         meaning: { en: "A strong cotton cloth used for jeans.", ja: "デニム生地。" },
         history: {
@@ -204,6 +215,7 @@ export const familiarWordsExtra: Word[] = [
     },
     {
         id: "hippopotamus",
+        example: { en: "A hippopotamus spends most of the day in water.", ja: "カバは1日の大半を水の中で過ごします。" },
         word: "Hippopotamus",
         meaning: { en: "A large African river animal.", ja: "カバ。" },
         history: {
@@ -222,6 +234,7 @@ export const familiarWordsExtra: Word[] = [
     },
     {
         id: "villain",
+        example: { en: "Every good story needs a villain.", ja: "良い物語には悪役が必要です。" },
         word: "Villain",
         meaning: { en: "A wicked character.", ja: "悪役、悪党。" },
         history: {

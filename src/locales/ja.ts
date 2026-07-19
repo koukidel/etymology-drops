@@ -69,6 +69,7 @@ export const ja = {
     "lesson.priming.origin_story": "言葉の物語",
     "lesson.priming.i_understand": "覚えた",
     "lesson.tip_label": "豆知識",
+    "lesson.example_label": "例文",
 
     "lesson.slicer.title": "言葉を分解する",
     "lesson.slicer.instruction": "部品と部品の境目を見つけましょう。",
@@ -125,6 +126,7 @@ export const ja = {
     "home.continue.start": "始める",
     "home.review.title": "今日の復習",
     "home.wotd": "今日の一語",
+    "home.stories.title": "語源の読み物",
 
     "review.title": "今日の復習",
     "review.done.title": "復習完了",

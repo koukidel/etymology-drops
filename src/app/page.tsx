@@ -274,6 +274,16 @@ export default function Home() {
         <div className="mt-12 space-y-3">
           {tutorialBand}
           {lesson0Band}
+          <Link
+            href="/stories"
+            className="group flex items-center gap-4 rounded-xl px-5 py-4 border border-border bg-card transition-all duration-150 hover:-translate-y-0.5 hover:border-accent/50 active:scale-[0.98]"
+          >
+            <span className="shrink-0 grid place-items-center w-10 h-10 rounded-full border border-border text-accent">
+              <BookOpen size={18} />
+            </span>
+            <span className="font-serif text-lg text-foreground">{t('home.stories.title')}</span>
+            <span className="ml-auto text-accent">→</span>
+          </Link>
         </div>
       </main>
     </div>

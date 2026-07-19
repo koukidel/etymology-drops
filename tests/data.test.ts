@@ -34,6 +34,15 @@ describe("word data", () => {
         expect(missing).toEqual([]);
     });
 
+    it("examples, when present, have ja + en", () => {
+        const bad = allWords
+            .filter(w => w.example !== undefined)
+            .filter(w => typeof w.example !== "string" &&
+                (typeof w.example?.en !== "string" || typeof w.example?.ja !== "string"))
+            .map(w => w.id);
+        expect(bad).toEqual([]);
+    });
+
     it("every word has at least one root", () => {
         const rootless = allWords.filter(w => !w.blocks.some(b => b.type === "root")).map(w => w.id);
         expect(rootless).toEqual([]);
