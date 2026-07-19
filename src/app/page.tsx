@@ -156,6 +156,24 @@ function WordOfTheDay() {
   );
 }
 
+// Evening nudge when the streak is alive but today has no lesson yet:
+// lighter than a push notification, sharper than nothing.
+function StreakWarning() {
+  const { streak, lastActiveDate } = useGameStore();
+  const { language } = useTranslation();
+  const hour = new Date().getHours();
+  const yesterday = (() => { const d = new Date(); d.setDate(d.getDate() - 1); return localDate(d); })();
+
+  if (hour < 17 || streak < 1 || lastActiveDate !== yesterday) return null;
+  return (
+    <p className="text-sm text-ochre mb-6" role="status">
+      {language === 'ja'
+        ? `連続${streak}日が今夜リセットされます。1レッスンで継続！`
+        : `Your ${streak}-day streak resets tonight. One lesson keeps it alive!`}
+    </p>
+  );
+}
+
 // One-time celebration when Lesson 0 unlocks the catalog. Rendered only
 // after mount (the page early-returns until then), so localStorage is safe.
 function UnlockToast() {
@@ -239,6 +257,7 @@ export default function Home() {
       <Header />
       <main className="max-w-3xl mx-auto px-6 py-12">
         <UnlockToast />
+        <StreakWarning />
 
         <div className="mb-8 space-y-3">
           <ContinueCard />

@@ -171,7 +171,48 @@ export default function ProfilePage() {
                         </section>
                     )}
 
-                    <div className="flex items-center gap-6">
+                    {/* Backup: progress lives only in this browser's storage. */}
+                    <div className="flex flex-wrap items-center gap-6">
+                        <button
+                            onClick={() => {
+                                const data = {
+                                    store: localStorage.getItem('etymology-quest-storage'),
+                                    language: localStorage.getItem('etymology_language'),
+                                    exportedAt: new Date().toISOString(),
+                                };
+                                const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                                const a = document.createElement('a');
+                                a.href = URL.createObjectURL(blob);
+                                a.download = `minamoto-progress-${localDate()}.json`;
+                                a.click();
+                                URL.revokeObjectURL(a.href);
+                            }}
+                            className="text-sm text-muted-foreground hover:text-accent transition-colors underline underline-offset-4"
+                        >
+                            {ja ? '進捗を書き出す' : 'Export progress'}
+                        </button>
+                        <label className="text-sm text-muted-foreground hover:text-accent transition-colors underline underline-offset-4 cursor-pointer">
+                            {ja ? '進捗を読み込む' : 'Import progress'}
+                            <input
+                                type="file"
+                                accept="application/json"
+                                className="hidden"
+                                onChange={async e => {
+                                    const file = e.target.files?.[0];
+                                    if (!file) return;
+                                    try {
+                                        const data = JSON.parse(await file.text());
+                                        if (typeof data.store !== 'string') throw new Error('bad file');
+                                        JSON.parse(data.store); // validate before committing
+                                        localStorage.setItem('etymology-quest-storage', data.store);
+                                        if (typeof data.language === 'string') localStorage.setItem('etymology_language', data.language);
+                                        window.location.reload();
+                                    } catch {
+                                        alert(ja ? 'ファイルを読み込めませんでした。' : 'Could not read that file.');
+                                    }
+                                }}
+                            />
+                        </label>
                         <button
                             onClick={() => {
                                 if (confirm(ja ? '本当にすべての進捗をリセットしますか？この操作は取り消せません。' : 'Reset all progress? This cannot be undone.')) {
