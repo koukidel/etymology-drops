@@ -116,7 +116,7 @@ export function SlicerModule({ word, onComplete, autoHintMs, completeLabel }: Pr
                         <div key={i} className="flex items-center">
                             <motion.span
                                 animate={{ marginLeft: cutBefore ? 6 : 0 }}
-                                className="font-serif text-5xl sm:text-6xl text-foreground"
+                                className="font-serif text-5xl sm:text-6xl text-foreground tracking-[0.05em]"
                             >
                                 {char}
                             </motion.span>
