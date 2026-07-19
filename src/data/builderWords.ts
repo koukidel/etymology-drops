@@ -5,6 +5,7 @@ import { Word } from "./types";
 export const builderWords: Word[] = [
     {
         id: "unhappy",
+        example: { en: "He looked unhappy with the result.", ja: "彼はその結果に不満そうでした。" },
         word: "Unhappy",
         meaning: {
             en: "Not happy; sad.",
@@ -26,6 +27,7 @@ export const builderWords: Word[] = [
     },
     {
         id: "drinkable",
+        example: { en: "Is this water drinkable?", ja: "この水は飲めますか？" },
         word: "Drinkable",
         meaning: {
             en: "Safe or pleasant to drink.",
@@ -47,6 +49,7 @@ export const builderWords: Word[] = [
     },
     {
         id: "playful",
+        example: { en: "The kitten is in a playful mood.", ja: "その子猫は遊びたい気分です。" },
         word: "Playful",
         meaning: {
             en: "Full of fun and light-heartedness.",
@@ -68,6 +71,7 @@ export const builderWords: Word[] = [
     },
     {
         id: "player",
+        example: { en: "She is the best player on the team.", ja: "彼女はチームで一番の選手です。" },
         word: "Player",
         meaning: {
             en: "A person who plays.",

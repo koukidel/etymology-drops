@@ -5,6 +5,7 @@ import { Word } from "./types";
 export const inventionWords: Word[] = [
     {
         id: "telephone",
+        example: { en: "The telephone rang twice and stopped.", ja: "電話が2回鳴って止まりました。" },
         word: "Telephone",
         meaning: {
             en: "A device for talking to someone far away.",
@@ -26,6 +27,7 @@ export const inventionWords: Word[] = [
     },
     {
         id: "photograph",
+        example: { en: "This photograph was taken in 1950.", ja: "この写真は1950年に撮られました。" },
         word: "Photograph",
         meaning: {
             en: "A picture made with a camera.",
@@ -47,6 +49,7 @@ export const inventionWords: Word[] = [
     },
     {
         id: "television",
+        example: { en: "We watched the news on television.", ja: "私たちはテレビでニュースを見ました。" },
         word: "Television",
         meaning: {
             en: "A device that shows moving pictures from far away.",
@@ -68,6 +71,7 @@ export const inventionWords: Word[] = [
     },
     {
         id: "microscope",
+        example: { en: "You can see the cells under a microscope.", ja: "顕微鏡で細胞が見えます。" },
         word: "Microscope",
         meaning: {
             en: "An instrument for seeing very small things.",
@@ -89,6 +93,7 @@ export const inventionWords: Word[] = [
     },
     {
         id: "bicycle",
+        example: { en: "I go to school by bicycle.", ja: "私は自転車で通学しています。" },
         word: "Bicycle",
         meaning: {
             en: "A vehicle with two wheels.",
@@ -110,6 +115,7 @@ export const inventionWords: Word[] = [
     },
     {
         id: "subway",
+        example: { en: "Take the subway to the museum.", ja: "美術館へは地下鉄で行ってください。" },
         word: "Subway",
         meaning: {
             en: "An underground railway.",

@@ -7,6 +7,12 @@ interface PageProps {
     params: Promise<{ wordId: string }>;
 }
 
+// Prerender every lesson at build time: the page shell (and its data) ships
+// as static HTML; only the interactive LessonContainer hydrates on the client.
+export function generateStaticParams() {
+    return allWords.map(w => ({ wordId: w.id }));
+}
+
 export default async function LessonPage({ params }: PageProps) {
     const { wordId } = await params;
     const word = allWords.find((w) => w.id === wordId);

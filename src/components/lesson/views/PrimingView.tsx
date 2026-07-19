@@ -15,6 +15,10 @@ export function PrimingView({ word, onNext }: Props) {
     const history = typeof word.history === 'string' ? word.history : word.history[language];
     const meaning = typeof word.meaning === 'string' ? word.meaning : word.meaning[language];
     const tip = word.tip ? (typeof word.tip === 'string' ? word.tip : word.tip[language]) : null;
+    // Example always shows the English sentence; the JA translation rides
+    // below it in JA mode (the sentence itself is the point).
+    const exampleEn = word.example ? (typeof word.example === 'string' ? word.example : word.example.en) : null;
+    const exampleJa = word.example && typeof word.example !== 'string' ? word.example.ja : null;
 
     return (
         <motion.div
@@ -37,6 +41,18 @@ export function PrimingView({ word, onNext }: Props) {
                     {history}
                 </p>
             </blockquote>
+
+            {exampleEn && (
+                <div className="text-left mx-auto max-w-md">
+                    <p className="text-[11px] uppercase tracking-[0.2em] text-muted-foreground mb-2">
+                        {t('lesson.example_label')}
+                    </p>
+                    <p className="font-serif text-lg text-foreground leading-relaxed">{exampleEn}</p>
+                    {language === 'ja' && exampleJa && (
+                        <p className="text-sm text-muted-foreground mt-1">{exampleJa}</p>
+                    )}
+                </div>
+            )}
 
             {tip && (
                 <aside className="border-y border-border py-4 text-left mx-auto max-w-md">

@@ -5,6 +5,7 @@ import { Word } from "./types";
 export const familiarWords: Word[] = [
     {
         id: "breakfast",
+        example: { en: "I usually have breakfast at seven.", ja: "私はたいてい7時に朝食をとります。" },
         word: "Breakfast",
         meaning: {
             en: "The first meal of the day.",
@@ -68,6 +69,7 @@ export const familiarWords: Word[] = [
     },
     {
         id: "goodbye",
+        example: { en: "She waved goodbye at the station.", ja: "彼女は駅でさよならと手を振りました。" },
         word: "Goodbye",
         meaning: {
             en: "A phrase said when parting.",
@@ -89,6 +91,7 @@ export const familiarWords: Word[] = [
     },
     {
         id: "alphabet",
+        example: { en: "Children learn the alphabet before they read.", ja: "子どもは読む前にアルファベットを覚えます。" },
         word: "Alphabet",
         meaning: {
             en: "The set of letters used to write a language.",
@@ -110,6 +113,7 @@ export const familiarWords: Word[] = [
     },
     {
         id: "companion",
+        example: { en: "His dog has been his companion for ten years.", ja: "彼の犬は10年来の相棒です。" },
         word: "Companion",
         meaning: {
             en: "A person you spend time with; a friend on the way.",
@@ -132,6 +136,7 @@ export const familiarWords: Word[] = [
     },
     {
         id: "window",
+        example: { en: "Open the window and let in some air.", ja: "窓を開けて空気を入れてください。" },
         word: "Window",
         meaning: {
             en: "An opening in a wall that lets in light and air.",
@@ -153,6 +158,7 @@ export const familiarWords: Word[] = [
     },
     {
         id: "muscle",
+        example: { en: "Swimming uses almost every muscle in your body.", ja: "水泳は体のほぼすべての筋肉を使います。" },
         word: "Muscle",
         meaning: {
             en: "Body tissue that produces movement.",
@@ -174,6 +180,7 @@ export const familiarWords: Word[] = [
     },
     {
         id: "salary",
+        example: { en: "She gets her salary at the end of the month.", ja: "彼女は月末に給料を受け取ります。" },
         word: "Salary",
         meaning: {
             en: "Money received regularly for work.",

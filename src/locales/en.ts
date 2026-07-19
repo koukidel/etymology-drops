@@ -69,6 +69,7 @@ export const en = {
     "lesson.priming.origin_story": "The story",
     "lesson.priming.i_understand": "Got it",
     "lesson.tip_label": "Margin note",
+    "lesson.example_label": "In a sentence",
 
     "lesson.slicer.title": "Take the word apart",
     "lesson.slicer.instruction": "Find the seams between its parts.",
@@ -125,6 +126,7 @@ export const en = {
     "home.continue.start": "Start",
     "home.review.title": "Today's review",
     "home.wotd": "Word of the day",
+    "home.stories.title": "Origin stories",
 
     "review.title": "Today's review",
     "review.done.title": "Review done",
