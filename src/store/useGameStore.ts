@@ -7,6 +7,12 @@ export interface MasteryEntry {
     date: string | null; // ISO date (YYYY-MM-DD); null for progress migrated from before logging
 }
 
+/** Spaced-repetition state for one mastered word. */
+export interface SrsEntry {
+    interval: number; // days until the next review after a correct answer
+    due: string;      // ISO date (local) the word is next due
+}
+
 export type LearnerLevel = 'beginner' | 'intermediate' | 'advanced';
 
 export interface OnboardingProfile {
@@ -28,6 +34,8 @@ interface GameState {
     hasSeenOnboarding: boolean;    // has played Lesson 0 (the 鳴→breakfast walkthrough)
     hasSeenTutorial: boolean;      // has taken the guided tour of the app's sections
     lastReviewDate: string | null; // ISO date the daily review was last completed
+    srs: Record<string, SrsEntry>; // spaced repetition per mastered word
+    missedParts: Record<string, number>; // quiz misses per part id (weak-part detection)
 
     unlockWord: (wordId: string) => void;
     masterWord: (wordId: string) => void;
@@ -36,8 +44,17 @@ interface GameState {
     completeOnboarding: () => void;
     completeTutorial: () => void;
     completeReview: () => void;
+    /** SRS update after a review answer: wrong → due tomorrow, right → interval doubles. */
+    recordReviewResult: (wordId: string, correct: boolean) => void;
+    recordMiss: (partIds: string[]) => void;
     resetProgress: () => void;
 }
+
+const addDays = (iso: string, days: number): string => {
+    const [y, m, d] = iso.split('-').map(Number);
+    const dt = new Date(y, m - 1, d + days);
+    return localDate(dt);
+};
 
 /** Streak counts only if the last lesson was today or yesterday (local time). */
 export const currentStreak = (streak: number, lastActiveDate: string | null): number => {
@@ -60,6 +77,8 @@ export const useGameStore = create<GameState>()(
             hasSeenOnboarding: false,
             hasSeenTutorial: false,
             lastReviewDate: null,
+            srs: {},
+            missedParts: {},
 
             unlockWord: (wordId) => set((state) => {
                 if (!state.unlockedWords.includes(wordId)) {
@@ -73,6 +92,8 @@ export const useGameStore = create<GameState>()(
                 if (!state.masteredWords.includes(wordId)) {
                     updates.masteredWords = [...state.masteredWords, wordId];
                     updates.masteryLog = [...state.masteryLog, { id: wordId, date: localDate() }];
+                    // First review comes tomorrow.
+                    updates.srs = { ...state.srs, [wordId]: { interval: 1, due: addDays(localDate(), 1) } };
                 }
                 if (!state.unlockedWords.includes(wordId)) {
                     updates.unlockedWords = [...state.unlockedWords, wordId];
@@ -100,6 +121,18 @@ export const useGameStore = create<GameState>()(
 
             completeReview: () => set({ lastReviewDate: localDate() }),
 
+            recordReviewResult: (wordId, correct) => set((state) => {
+                const prev = state.srs[wordId] ?? { interval: 1, due: localDate() };
+                const interval = correct ? Math.min(prev.interval * 2, 60) : 1;
+                return { srs: { ...state.srs, [wordId]: { interval, due: addDays(localDate(), interval) } } };
+            }),
+
+            recordMiss: (partIds) => set((state) => {
+                const next = { ...state.missedParts };
+                for (const id of partIds) next[id] = (next[id] ?? 0) + 1;
+                return { missedParts: next };
+            }),
+
             resetProgress: () => set({
                 unlockedWords: [],
                 masteredWords: [],
@@ -107,11 +140,13 @@ export const useGameStore = create<GameState>()(
                 streak: 0,
                 lastActiveDate: null,
                 lastReviewDate: null,
+                srs: {},
+                missedParts: {},
             }),
         }),
         {
             name: 'etymology-quest-storage',
-            version: 5,
+            version: 6,
             migrate: (persisted, version) => {
                 const old = (persisted ?? {}) as Record<string, unknown>;
 
@@ -179,7 +214,21 @@ export const useGameStore = create<GameState>()(
 
                 // v5: the guided section tour. Everyone gets it offered once
                 // (dismissible band on the home), so default false unless set.
-                return { ...withIntake, hasSeenTutorial: old.hasSeenTutorial === true };
+                // v5: the guided section tour flag.
+                const withTutorial = { ...withIntake, hasSeenTutorial: old.hasSeenTutorial === true };
+
+                // v6: spaced repetition + weak-part tracking. Seed the SRS queue
+                // from the mastery log (everything already learned is due now).
+                const srs: Record<string, SrsEntry> = (old.srs as Record<string, SrsEntry>) ?? {};
+                for (const e of withTutorial.masteryLog) {
+                    if (!srs[e.id]) srs[e.id] = { interval: 1, due: localDate() };
+                }
+                return {
+                    ...withTutorial,
+                    lastReviewDate: typeof old.lastReviewDate === 'string' ? old.lastReviewDate : null,
+                    srs,
+                    missedParts: (old.missedParts as Record<string, number>) ?? {},
+                };
             },
         }
     )

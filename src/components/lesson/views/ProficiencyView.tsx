@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Word } from "@/data/types";
 import { motion } from "framer-motion";
 import { allWords } from "@/data/words";
@@ -9,25 +9,39 @@ import { useTranslation } from "@/hooks/useTranslation";
 interface Props {
     word: Word;
     onNext: () => void;
+    /** Reports the FIRST answer only: true if it was correct on the first try. */
+    onResult?: (firstTryCorrect: boolean) => void;
 }
 
-export function ProficiencyView({ word, onNext }: Props) {
+const shuffle = <T,>(a: T[]): T[] => [...a].sort(() => Math.random() - 0.5);
+
+export function ProficiencyView({ word, onNext, onResult }: Props) {
     const [selectedOption, setSelectedOption] = useState<string | null>(null);
     const [status, setStatus] = useState<'idle' | 'correct' | 'wrong'>('idle');
     const [showHint, setShowHint] = useState(false);
+    const answered = useRef(false);
     const { t, language } = useTranslation();
 
     const [{ options, correctAnswer }] = useState(() => {
-        const answer = typeof word.meaning === 'string' ? word.meaning : word.meaning[language];
+        const meaningOf = (w: Word) => (typeof w.meaning === 'string' ? w.meaning : w.meaning[language]);
+        const answer = meaningOf(word);
 
-        const distractors = allWords
-            .filter(w => w.id !== word.id)
-            .sort(() => 0.5 - Math.random())
-            .slice(0, 3)
-            .map(w => typeof w.meaning === 'string' ? w.meaning : w.meaning[language]);
+        // Distractors prefer words sharing a part with the target, so telling
+        // them apart requires reading the parts — the quiz itself trains the
+        // etymological habit instead of rewarding surface guessing.
+        const partIds = new Set(word.blocks.map(b => b.id));
+        const related = allWords.filter(w => w.id !== word.id && w.blocks.some(b => partIds.has(b.id)));
+        const unrelated = allWords.filter(w => w.id !== word.id && !w.blocks.some(b => partIds.has(b.id)));
+
+        const distractors: string[] = [];
+        for (const w of [...shuffle(related), ...shuffle(unrelated)]) {
+            const m = meaningOf(w);
+            if (m !== answer && !distractors.includes(m)) distractors.push(m);
+            if (distractors.length === 3) break;
+        }
 
         return {
-            options: [answer, ...distractors].sort(() => Math.random() - 0.5),
+            options: shuffle([answer, ...distractors]),
             correctAnswer: answer,
         };
     });
@@ -36,11 +50,20 @@ export function ProficiencyView({ word, onNext }: Props) {
         if (status !== 'idle') return;
         setSelectedOption(option);
 
-        if (option === correctAnswer) {
+        const correct = option === correctAnswer;
+        if (!answered.current) {
+            answered.current = true;
+            onResult?.(correct);
+        }
+
+        if (correct) {
             setStatus('correct');
             setTimeout(onNext, 1200);
         } else {
             setStatus('wrong');
+            // Open the part hints: the recovery path is "read the parts",
+            // not "guess again".
+            setShowHint(true);
             setTimeout(() => {
                 setStatus('idle');
                 setSelectedOption(null);

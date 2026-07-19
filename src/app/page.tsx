@@ -96,12 +96,12 @@ function ContinueCard() {
 // Daily review band: up to three words mastered on earlier days, once a day.
 function ReviewBand() {
   const { t } = useTranslation();
-  const { masteryLog, masteredWords, lastReviewDate } = useGameStore();
+  const { masteryLog, masteredWords, lastReviewDate, srs } = useGameStore();
 
   const today = localDate();
   const words = useMemo(
-    () => pickReviewWords(masteryLog, masteredWords, today),
-    [masteryLog, masteredWords, today],
+    () => pickReviewWords(masteryLog, masteredWords, today, 3, srs),
+    [masteryLog, masteredWords, today, srs],
   );
 
   if (words.length === 0 || lastReviewDate === today) return null;

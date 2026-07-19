@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useGameStore, currentStreak } from "@/store/useGameStore";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useMounted } from "@/hooks/useMounted";
@@ -9,8 +10,8 @@ import { Header } from "@/components/layout/Header";
 import { GrowthTree } from "@/components/progress/GrowthTree";
 
 export default function ProfilePage() {
-    const { masteredWords, masteryLog, streak, lastActiveDate, resetProgress } = useGameStore();
-    const { language } = useTranslation();
+    const { masteredWords, masteryLog, streak, lastActiveDate, missedParts, resetProgress } = useGameStore();
+    const { t, language } = useTranslation();
     const mounted = useMounted();
 
     if (!mounted) return null;
@@ -31,6 +32,18 @@ export default function ProfilePage() {
     const recent = [...masteryLog]
         .sort((a, b) => (b.date ?? '').localeCompare(a.date ?? ''))
         .slice(0, 8);
+
+    // Weak parts: most-missed quiz parts (2+ misses), with a lesson to revisit.
+    const weakParts = Object.entries(missedParts)
+        .filter(([, n]) => n >= 2)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 3)
+        .map(([partId, misses]) => {
+            const carrier = allWords.find(w => w.blocks.some(b => b.id === partId));
+            const block = carrier?.blocks.find(b => b.id === partId);
+            return block && carrier ? { partId, misses, label: block.label.replace(/-/g, ''), lessonId: carrier.id } : null;
+        })
+        .filter((x): x is NonNullable<typeof x> => x !== null);
 
     return (
         <div className="min-h-screen">
@@ -80,6 +93,28 @@ export default function ProfilePage() {
                             })}
                         </div>
                     </section>
+
+                    {/* Weak parts */}
+                    {weakParts.length > 0 && (
+                        <section>
+                            <h2 className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-1.5">
+                                {t('progress.weak_parts')}
+                            </h2>
+                            <p className="text-xs text-muted-foreground mb-4">{t('progress.weak_parts.hint')}</p>
+                            <div className="flex flex-wrap gap-2.5">
+                                {weakParts.map(p => (
+                                    <Link
+                                        key={p.partId}
+                                        href={`/lesson/${p.lessonId}`}
+                                        className="inline-flex items-baseline gap-2 rounded-full border border-border px-4 py-1.5 hover:border-accent transition-colors"
+                                    >
+                                        <span className="font-serif text-lg text-foreground">{p.label}</span>
+                                        <span className="text-xs text-error tabular-nums">×{p.misses}</span>
+                                    </Link>
+                                ))}
+                            </div>
+                        </section>
+                    )}
 
                     {/* Recent history */}
                     {recent.length > 0 && (

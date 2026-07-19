@@ -32,7 +32,7 @@ export function LessonContainer({ word }: Props) {
     const [courseDone, setCourseDone] = useState(false);
     const { t, language } = useTranslation();
 
-    const { unlockWord, masterWord, recordLessonComplete, masteredWords } = useGameStore();
+    const { unlockWord, masterWord, recordLessonComplete, masteredWords, recordMiss } = useGameStore();
 
     const localized = (s: string | { en: string; ja: string }) =>
         typeof s === 'string' ? s : s[language];
@@ -241,7 +241,13 @@ export function LessonContainer({ word }: Props) {
                         className="w-full h-full flex flex-col justify-center"
                     >
                         {viewIndex === 0 && <SlicerView word={word} onNext={handleNext} />}
-                        {viewIndex === 1 && <ProficiencyView word={word} onNext={handleNext} />}
+                        {viewIndex === 1 && (
+                            <ProficiencyView
+                                word={word}
+                                onNext={handleNext}
+                                onResult={correct => { if (!correct) recordMiss(word.blocks.map(b => b.id)); }}
+                            />
+                        )}
                         {viewIndex === 2 && <PrimingView word={word} onNext={handleNext} />}
                     </motion.div>
                 </AnimatePresence>
