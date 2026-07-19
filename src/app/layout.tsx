@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter, Newsreader, Noto_Serif_JP } from "next/font/google";
 import "./globals.css";
 import { LanguageProvider } from "@/contexts/LanguageContext";
+import { ServiceWorker } from "@/components/platform/ServiceWorker";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -28,25 +29,34 @@ const notoSerifJP = Noto_Serif_JP({
 });
 
 export const viewport: Viewport = {
-  themeColor: "#faf7f2",
+  themeColor: "#f2ebda",
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
 };
 
 export const metadata: Metadata = {
-  title: "Etymology Drops",
-  description: "Every word has a story. Learn the hidden histories inside everyday English.",
+  // Set NEXT_PUBLIC_SITE_URL at deploy time so OG image URLs are absolute.
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"),
+  title: "源 Minamoto ｜ 語源で覚える英単語",
+  description: "分ければ、意味が見える。英単語を語源の部品に分解して学ぶアプリ。少しの部品が、何千もの単語に届く。",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "Etymology Drops",
+    title: "源 Minamoto",
   },
   openGraph: {
-    title: "Etymology Drops",
-    description: "Every word has a story. Learn the hidden histories inside everyday English.",
+    title: "源 Minamoto ｜ 語源で覚える英単語",
+    description: "分ければ、意味が見える。英単語を語源の部品に分解して学ぶアプリ。",
     type: "website",
+    images: [{ url: "/og.png", width: 1200, height: 630 }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "源 Minamoto ｜ 語源で覚える英単語",
+    description: "分ければ、意味が見える。英単語を語源の部品に分解して学ぶアプリ。",
+    images: ["/og.png"],
   },
 };
 
@@ -63,6 +73,15 @@ export default function RootLayout({
             {children}
           </main>
         </LanguageProvider>
+        <ServiceWorker />
+        {/* Privacy-light analytics, enabled only when a host is configured. */}
+        {process.env.NEXT_PUBLIC_ANALYTICS_HOST && process.env.NEXT_PUBLIC_ANALYTICS_DOMAIN && (
+          <script
+            defer
+            data-domain={process.env.NEXT_PUBLIC_ANALYTICS_DOMAIN}
+            src={`${process.env.NEXT_PUBLIC_ANALYTICS_HOST}/js/script.js`}
+          />
+        )}
       </body>
     </html>
   );

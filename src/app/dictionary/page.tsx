@@ -10,6 +10,7 @@ import { useTranslation } from "@/hooks/useTranslation";
 import { useGameStore } from "@/store/useGameStore";
 import { useMounted } from "@/hooks/useMounted";
 import { Header } from "@/components/layout/Header";
+import { Speak } from "@/components/ui/Speak";
 
 type Filter = 'all' | 'prefix' | 'root' | 'suffix';
 
@@ -172,6 +173,7 @@ export default function DictionaryPage() {
                                 <li key={w.id}>
                                     <Link href={`/lesson/${w.id}`} className="flex flex-wrap items-baseline gap-x-3 gap-y-1 py-1.5 group">
                                         <span className="font-serif text-xl text-foreground group-hover:text-accent transition-colors">{w.word}</span>
+                                        <Speak word={w.word} size={15} />
                                         <span className="flex items-center gap-1">
                                             {w.blocks.map((b, i) => (
                                                 <span key={i} className={`text-sm font-serif ${b.type === 'root' ? 'text-accent' : 'text-muted-foreground'}`}>

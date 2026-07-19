@@ -1,21 +1,13 @@
 {
-  "name": "Etymology Drops",
-  "short_name": "Drops",
-  "description": "Every word has a story. Learn the hidden histories inside everyday English.",
+  "name": "源 Minamoto — 語源で覚える英単語",
+  "short_name": "源",
+  "description": "分ければ、意味が見える。英単語を語源の部品に分解して学ぶアプリ。",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#faf7f2",
-  "theme_color": "#faf7f2",
+  "background_color": "#f2ebda",
+  "theme_color": "#f2ebda",
   "icons": [
-    {
-      "src": "/icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "/icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png"
-    }
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
   ]
 }

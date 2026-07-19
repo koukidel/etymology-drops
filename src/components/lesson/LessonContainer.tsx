@@ -18,6 +18,7 @@ import { useTranslation } from "@/hooks/useTranslation";
 import { dayHash } from "@/lib/dailyReview";
 import { localDate } from "@/lib/date";
 import { Bird } from "@/components/ui/Bird";
+import { Speak } from "@/components/ui/Speak";
 
 // Praise rotates deterministically per word so the reward moment doesn't
 // wear out. (Duolingo's lesson: repetition kills celebration.)
@@ -137,6 +138,41 @@ export function LessonContainer({ word }: Props) {
                 .flatMap(id => allWords.find(w => w.id === id)?.blocks.map(b => b.id) ?? []));
         const newParts = word.blocks.filter(b => !otherParts.has(b.id));
 
+        // 記念カード: a shareable PNG drawn on the spot (no server, no assets).
+        const downloadShareCard = () => {
+            const course = findCourseByLesson(word.id);
+            const title = course
+                ? (typeof course.title === 'string' ? course.title : course.title[language])
+                : word.word;
+            const c = document.createElement('canvas');
+            c.width = 1080; c.height = 1080;
+            const ctx = c.getContext('2d');
+            if (!ctx) return;
+            const g = ctx.createLinearGradient(0, 0, 0, 1080);
+            g.addColorStop(0, '#f5eede'); g.addColorStop(1, '#ebe2ce');
+            ctx.fillStyle = g; ctx.fillRect(0, 0, 1080, 1080);
+            ctx.fillStyle = '#a33b26';
+            ctx.beginPath(); ctx.roundRect(90, 90, 132, 132, 28); ctx.fill();
+            ctx.fillStyle = '#f7f3e9'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+            ctx.font = '600 84px "Noto Serif JP", "Hiragino Mincho ProN", serif';
+            ctx.fillText('源', 156, 162);
+            ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+            ctx.fillStyle = '#c9a24c'; ctx.font = '44px "Noto Serif JP", serif';
+            ctx.fillText(language === 'ja' ? 'コース修了' : 'Course complete', 90, 500);
+            ctx.fillStyle = '#1e2a20'; ctx.font = '600 72px "Noto Serif JP", Georgia, serif';
+            ctx.fillText(title, 90, 600);
+            ctx.fillStyle = '#6a7059'; ctx.font = '38px Inter, system-ui, sans-serif';
+            ctx.fillText(
+                language === 'ja' ? `これまでに ${masteredWords.length}語 ・ ${localDate()}` : `${masteredWords.length} words so far · ${localDate()}`,
+                90, 680);
+            ctx.fillStyle = '#949b80'; ctx.font = '32px Inter, system-ui, sans-serif';
+            ctx.fillText('源 Minamoto', 90, 960);
+            const a = document.createElement('a');
+            a.download = `minamoto-${course?.id ?? word.id}.png`;
+            a.href = c.toDataURL('image/png');
+            a.click();
+        };
+
         return (
             <div className="min-h-[60vh] flex flex-col items-center justify-center text-center p-8 max-w-xl mx-auto">
                 <motion.div
@@ -149,7 +185,10 @@ export function LessonContainer({ word }: Props) {
                 <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-2">
                     {courseDone ? t('lesson.complete.course') : praise}
                 </p>
-                <h2 className="font-serif text-5xl text-foreground mb-3">{word.word}</h2>
+                <h2 className="font-serif text-5xl text-foreground mb-3 inline-flex items-center gap-3">
+                    {word.word}
+                    <Speak word={word.word} size={22} />
+                </h2>
                 <p className="text-muted-foreground mb-2">{t('lesson.complete.subtitle')}</p>
 
                 {milestone && (
@@ -231,6 +270,14 @@ export function LessonContainer({ word }: Props) {
                 )}
 
                 <div className="flex flex-col items-center gap-4">
+                    {courseDone && (
+                        <button
+                            onClick={downloadShareCard}
+                            className="text-sm text-accent hover:opacity-80 underline underline-offset-4"
+                        >
+                            {language === 'ja' ? '記念カードを保存' : 'Save a memento card'}
+                        </button>
+                    )}
                     {nextLessonId && (
                         <Link
                             href={`/lesson/${nextLessonId}`}
