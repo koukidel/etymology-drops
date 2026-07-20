@@ -194,11 +194,25 @@ export function LessonContainer({ word, onFinished }: Props) {
                 </h2>
                 <p className="text-muted-foreground mb-2">{t('lesson.complete.subtitle')}</p>
 
-                {milestone && (
+                {milestone === 50 ? (
+                    /* At 50 words, the app says out loud what it believes —
+                       at the moment the learner has earned hearing it. */
+                    <blockquote className="rounded-2xl px-6 py-5 my-3 max-w-md text-left"
+                        style={{ background: 'var(--plate)', boxShadow: 'var(--plate-gold-ring)' }}>
+                        <p className="text-[11px] uppercase tracking-[0.2em] mb-2" style={{ color: 'var(--plate-gold)' }}>
+                            🌸 {t('lesson.complete.milestone').replace('{n}', '50')}
+                        </p>
+                        <p className="font-serif text-lg leading-relaxed" style={{ color: 'var(--plate-fg)' }}>
+                            {language === 'ja'
+                                ? '50語。あなたはもう、知らない単語を恐れません。分けて、部品を読んで、推測する。この見方は、言葉の外でも役に立ちます。'
+                                : "Fifty words. You no longer fear an unknown word: you split it, read the parts, and make a guess. That way of seeing works far beyond language."}
+                        </p>
+                    </blockquote>
+                ) : milestone ? (
                     <p className="text-sm text-ochre mb-2">
                         {t('lesson.complete.milestone').replace('{n}', String(milestone))}
                     </p>
-                )}
+                ) : null}
 
                 {newParts.length > 0 && (
                     <p className="flex items-center flex-wrap justify-center gap-1.5 text-sm text-muted-foreground mb-2">

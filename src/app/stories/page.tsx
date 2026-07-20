@@ -1,6 +1,8 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
+import { Share2, Check } from "lucide-react";
 import { allWords } from "@/data/words";
 import { Word } from "@/data/types";
 import { Header } from "@/components/layout/Header";
@@ -19,10 +21,27 @@ export default function StoriesPage() {
     const { language } = useTranslation();
     const ja = language === "ja";
     const loc = (s: string | { en: string; ja: string }) => (typeof s === "string" ? s : s[language]);
+    const [shared, setShared] = useState<string | null>(null);
 
     const stories = CURATED
         .map(id => allWords.find(w => w.id === id))
         .filter((w): w is Word => Boolean(w));
+
+    // Stories get forwarded, features don't: one tap to send the story
+    // itself (native share sheet, clipboard fallback).
+    const share = async (w: Word) => {
+        const text = `${w.word} = ${w.blocks.map(b => b.label.replace(/-/g, "")).join(" + ")}\n${loc(w.history)}`;
+        const url = typeof window !== "undefined" ? `${window.location.origin}/stories` : "";
+        try {
+            if (navigator.share) {
+                await navigator.share({ title: `源 Minamoto ・ ${w.word}`, text, url });
+            } else {
+                await navigator.clipboard.writeText(`${text}\n${url}`);
+            }
+            setShared(w.id);
+            setTimeout(() => setShared(null), 2000);
+        } catch { /* user cancelled the sheet */ }
+    };
 
     return (
         <div className="min-h-screen">
@@ -52,12 +71,22 @@ export default function StoriesPage() {
                             <p className="font-serif text-lg text-foreground leading-relaxed mb-4">
                                 {loc(w.history)}
                             </p>
-                            <Link
-                                href={`/lesson/${w.id}`}
-                                className="text-sm text-accent hover:opacity-80 underline underline-offset-4"
-                            >
-                                {ja ? "この言葉を習う" : "Learn this word"} →
-                            </Link>
+                            <div className="flex items-center gap-6">
+                                <Link
+                                    href={`/lesson/${w.id}`}
+                                    className="text-sm text-accent hover:opacity-80 underline underline-offset-4"
+                                >
+                                    {ja ? "この言葉を習う" : "Learn this word"} →
+                                </Link>
+                                <button
+                                    onClick={() => share(w)}
+                                    className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-accent transition-colors"
+                                >
+                                    {shared === w.id
+                                        ? (<><Check size={14} /> {ja ? "コピーしました" : "Copied"}</>)
+                                        : (<><Share2 size={14} /> {ja ? "この話を送る" : "Share this story"}</>)}
+                                </button>
+                            </div>
                         </article>
                     ))}
                 </div>

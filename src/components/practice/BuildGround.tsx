@@ -62,6 +62,14 @@ function ownedParts(masteredWords: string[]): WordBlock[] {
     return [...m.values()].sort((a, b) => (a.type === "root" ? 0 : 1) - (b.type === "root" ? 0 : 1));
 }
 
+// Every part in the app, for すべて mode: the full sandbox, open from day one.
+function allParts(): WordBlock[] {
+    const m = new Map<string, WordBlock>();
+    for (const w of allWords) for (const b of w.blocks) if (!m.has(b.id)) m.set(b.id, b);
+    return [...m.values()].sort((a, b) =>
+        (a.type === "root" ? 0 : 1) - (b.type === "root" ? 0 : 1) || a.label.localeCompare(b.label));
+}
+
 // "Words within reach": how many real lesson words can be fully built from the
 // parts the learner owns — the generative multiplier made visible.
 function wordsWithinReach(ownedIds: Set<string>): number {
@@ -107,6 +115,19 @@ export function BuildGround() {
     const positions = useMemo(() => scatter(pool.length), [pool.length]);
     const reach = useMemo(() => wordsWithinReach(new Set(pool.map(b => b.id))), [pool]);
     const ready = pool.length >= 2;
+
+    // Two modes: 習った部品 (the growth loop — parts are earned) and すべて
+    // (the full sandbox). Progression stays the default; the full sandbox is
+    // one tap away, so the ground is never locked shut.
+    const [mode, setModeState] = useState<"owned" | "all">(
+        () => (typeof window !== "undefined" && localStorage.getItem("minamoto_build_mode") === "all") ? "all" : "owned");
+    const setMode = (m: "owned" | "all") => {
+        setModeState(m);
+        localStorage.setItem("minamoto_build_mode", m);
+        setAssembly([]);
+        setResult(null);
+    };
+    const everyPart = useMemo(() => allParts(), []);
 
     // While locked: preview the parts the next lesson would unlock, so the
     // learn → build loop is concrete, and link straight to that lesson.
@@ -176,10 +197,24 @@ export function BuildGround() {
             <div className="flex items-baseline justify-between py-3 shrink-0">
                 <div>
                     <h1 className="font-serif text-2xl text-foreground">{t("practice.build.title")}</h1>
+                    <div className="inline-flex rounded-full border border-border p-0.5 mt-1.5 mb-1">
+                        {(["owned", "all"] as const).map(m => (
+                            <button
+                                key={m}
+                                onClick={() => setMode(m)}
+                                className={`px-3 py-1 text-xs rounded-full transition-colors ${
+                                    mode === m ? "bg-foreground text-background" : "text-muted-foreground hover:text-foreground"}`}
+                            >
+                                {m === "owned" ? t("practice.build.mode_owned") : t("practice.build.mode_all")}
+                            </button>
+                        ))}
+                    </div>
                     <p className="text-xs text-muted-foreground mt-0.5">
-                        {t("practice.build.reach").replace("{parts}", String(pool.length)).replace("{words}", String(reach))}
+                        {mode === "owned"
+                            ? t("practice.build.reach").replace("{parts}", String(pool.length)).replace("{words}", String(reach))
+                            : t("practice.build.all_desc").replace("{parts}", String(everyPart.length))}
                     </p>
-                    {challenge && (
+                    {mode === "owned" && challenge && (
                         <p className={`text-xs mt-1 ${challengeDone ? "text-ochre" : "text-accent"}`}>
                             {challengeDone
                                 ? `✓ ${t("practice.build.challenge_done")}`
@@ -205,7 +240,7 @@ export function BuildGround() {
                 </Link>
             </div>
 
-            {!ready ? (
+            {mode === "owned" && !ready ? (
                 <div className="flex-1 min-h-0 rounded-2xl border border-dashed border-border bg-muted/30 flex flex-col items-center justify-center text-center px-8 gap-3">
                     <p className="font-serif text-xl text-foreground">{t("practice.build.locked_title")}</p>
                     <p className="text-sm text-muted-foreground max-w-xs">{t("practice.build.locked_desc")}</p>
@@ -239,7 +274,29 @@ export function BuildGround() {
                 </div>
             ) : (
             <>
-            {/* Bubble pool — the learner's unlocked morphemes, floating freely */}
+            {mode === "all" ? (
+                /* Full sandbox: every part in the app, grouped roots-first in a
+                   scrollable tray (150+ chips would drown the floating field). */
+                <div className="flex-1 min-h-0 overflow-y-auto rounded-2xl border border-border bg-muted/40 p-4">
+                    <div className="flex flex-wrap gap-2">
+                        {everyPart.map(b => {
+                            const s = TYPE_STYLE[b.type];
+                            return (
+                                <button
+                                    key={b.id}
+                                    onClick={() => add(b)}
+                                    title={typeof b.meaning === "string" ? b.meaning : b.meaning[language]}
+                                    className="rounded-full px-3 py-1.5 font-serif text-sm sm:text-base shadow-sm whitespace-nowrap transition-transform active:scale-[0.94]"
+                                    style={{ backgroundColor: s.bg, color: s.fg }}
+                                >
+                                    {b.label.replace(/-/g, "")}
+                                </button>
+                            );
+                        })}
+                    </div>
+                </div>
+            ) : (
+            /* Bubble pool — the learner's unlocked morphemes, floating freely */
             <div className="relative flex-1 min-h-0 rounded-2xl border border-border bg-muted/40">
                 {pool.map((b, i) => {
                     const s = TYPE_STYLE[b.type];
@@ -270,6 +327,7 @@ export function BuildGround() {
                     );
                 })}
             </div>
+            )}
 
             {/* Assembly bar — always visible, pinned below the pool */}
             <div className="shrink-0 pt-3 pb-4 space-y-3">

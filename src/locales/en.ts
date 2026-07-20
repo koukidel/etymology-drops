@@ -31,6 +31,9 @@ export const en = {
     "practice.build.locked_desc": "Master lessons to unlock their parts — then come back and build with them here.",
     "practice.build.locked_cta": "Go to this lesson",
     "practice.build.next_parts": "Parts you'll unlock in the next lesson",
+    "practice.build.mode_owned": "My parts",
+    "practice.build.mode_all": "All",
+    "practice.build.all_desc": "Build freely with all {parts} parts.",
 
     "home.courses": "Path",
 
