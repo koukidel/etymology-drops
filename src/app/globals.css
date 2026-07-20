@@ -86,3 +86,10 @@ body {
   /* palt: proportional CJK punctuation/kana spacing — no effect on Latin. */
   font-feature-settings: "palt";
 }
+
+/* Room for the mobile bottom tab bar, only on pages that render one. */
+:root { --tabbar-h: 0px; }
+@media (max-width: 639px) {
+  body:has(nav[data-tabbar]) { padding-bottom: 64px; }
+  body:has(nav[data-tabbar]) { --tabbar-h: 64px; }
+}

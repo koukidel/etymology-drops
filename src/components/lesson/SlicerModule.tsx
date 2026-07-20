@@ -88,20 +88,31 @@ export function SlicerModule({ word, onComplete, autoHintMs, completeLabel }: Pr
 
                 <button
                     onClick={() => onComplete && onComplete()}
-                    className="px-10 py-3 bg-foreground text-background rounded-full hover:opacity-90 transition-opacity"
-                >
+                    className="w-full max-w-xs sm:w-auto px-10 py-3 bg-foreground text-background rounded-full hover:opacity-90 transition-opacity"                >
                     {completeLabel ?? t('lesson.slicer.continue')}
                 </button>
             </motion.div>
         );
     }
 
+    // The word must NEVER wrap: slicing across a line break contradicts the
+    // whole exercise. Long words scale down instead (fit-to-width tiers).
+    const len = word.word.length;
+    const letterCls = len >= 13 ? "text-xl sm:text-4xl"
+        : len >= 11 ? "text-2xl sm:text-5xl"
+        : len >= 9 ? "text-4xl sm:text-6xl"
+        : "text-5xl sm:text-6xl";
+    const gapCls = len >= 13 ? "w-5 -mx-1"
+        : len >= 11 ? "w-6 -mx-1"
+        : len >= 9 ? "w-8 -mx-1"
+        : "w-10 -mx-1.5";
+
     return (
         <section className="text-center py-8">
             <motion.div
                 animate={wrongCut !== null ? { x: [0, -5, 5, -3, 3, 0] } : {}}
                 transition={{ duration: 0.35 }}
-                className="flex flex-wrap items-center justify-center gap-y-8 select-none py-10"
+                className="flex flex-nowrap items-center justify-center select-none py-10"
             >
                 {word.word.split('').map((char, i) => {
                     const cutIndex = i + 1;
@@ -116,7 +127,7 @@ export function SlicerModule({ word, onComplete, autoHintMs, completeLabel }: Pr
                         <div key={i} className="flex items-center">
                             <motion.span
                                 animate={{ marginLeft: cutBefore ? 6 : 0 }}
-                                className="font-serif text-5xl sm:text-6xl text-foreground tracking-[0.05em]"
+                                className={`font-serif text-foreground tracking-[0.05em] ${letterCls}`}
                             >
                                 {char}
                             </motion.span>
@@ -125,7 +136,7 @@ export function SlicerModule({ word, onComplete, autoHintMs, completeLabel }: Pr
                                 <button
                                     onClick={() => handleCut(cutIndex)}
                                     aria-label={`Cut after letter ${i + 1}`}
-                                    className="w-10 h-16 -mx-1.5 cursor-pointer flex items-center justify-center group relative"
+                                    className={`h-16 cursor-pointer flex items-center justify-center group relative ${gapCls}`}
                                 >
                                     {isFound ? (
                                         <motion.div

@@ -172,7 +172,7 @@ export function BuildGround() {
     };
 
     return (
-        <div className="mx-auto w-full max-w-3xl px-4 flex flex-col" style={{ height: "calc(100dvh - 4rem)" }}>
+        <div className="mx-auto w-full max-w-3xl px-4 flex flex-col" style={{ height: "calc(100dvh - 4rem - var(--tabbar-h))" }}>
             <div className="flex items-baseline justify-between py-3 shrink-0">
                 <div>
                     <h1 className="font-serif text-2xl text-foreground">{t("practice.build.title")}</h1>
