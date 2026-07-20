@@ -176,7 +176,7 @@ export function SpeedrunRunner() {
                 <div className="flex justify-center gap-8 text-sm text-muted-foreground">
                     <span>{fmt(elapsed)}</span>
                     <span>{wordsPerMin} {t("speedrun.per_min")}</span>
-                    <span className={isNewBest ? "text-ochre" : ""}>
+                    <span className={isNewBest ? "text-celebrate" : ""}>
                         {isNewBest ? t("speedrun.new_best") : `${t("speedrun.best")} ${best}`}
                     </span>
                 </div>

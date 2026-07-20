@@ -215,7 +215,7 @@ export function BuildGround() {
                             : t("practice.build.all_desc").replace("{parts}", String(everyPart.length))}
                     </p>
                     {mode === "owned" && challenge && (
-                        <p className={`text-xs mt-1 ${challengeDone ? "text-ochre" : "text-accent"}`}>
+                        <p className={`text-xs mt-1 ${challengeDone ? "text-celebrate" : "text-accent"}`}>
                             {challengeDone
                                 ? `✓ ${t("practice.build.challenge_done")}`
                                 : t("practice.build.challenge").replace("{part}", challenge.label.replace(/-/g, ""))}

@@ -29,31 +29,27 @@ export function CourseCard({ course, className = "", locked = false }: Props) {
             href={`/course/${course.id}`}
             aria-disabled={locked}
             tabIndex={locked ? -1 : undefined}
-            className={`group flex flex-col justify-between rounded-xl p-6 transition-transform duration-150 ${locked ? "pointer-events-none opacity-50" : "hover:-translate-y-0.5 active:scale-[0.98]"} ${complete && !locked ? "opacity-70" : ""} ${className}`}
-            style={{ background: "var(--plate)", boxShadow: "var(--plate-ring)" }}
+            className={`group flex flex-col justify-between rounded-xl p-6 border border-border bg-card transition-all duration-150 ${locked ? "pointer-events-none opacity-50" : "hover:-translate-y-0.5 hover:border-accent/50 active:scale-[0.98]"} ${complete && !locked ? "opacity-70" : ""} ${className}`}
         >
             <div>
                 {course.exam && (
                     <div className="mb-3">
-                        <span
-                            className="text-[11px] uppercase tracking-[0.15em] rounded-full px-2.5 py-0.5"
-                            style={{ color: "var(--plate-gold)", boxShadow: "var(--plate-gold-ring)" }}
-                        >
+                        <span className="text-[11px] uppercase tracking-[0.15em] rounded-full px-2.5 py-0.5 text-ochre border border-ochre/40">
                             {localized(course.exam)}
                         </span>
                     </div>
                 )}
-                <h2 className="font-serif text-2xl" style={{ color: "var(--plate-fg)" }}>{localized(course.title)}</h2>
+                <h2 className="font-serif text-2xl text-foreground">{localized(course.title)}</h2>
             </div>
 
-            <div className="h-0.5 rounded-full overflow-hidden mt-4" style={{ background: "rgba(247,243,233,0.15)" }}>
-                <div className="h-full" style={{ width: `${total ? (done / total) * 100 : 0}%`, background: "var(--plate-gold)" }} />
+            <div className="h-0.5 rounded-full overflow-hidden mt-4 bg-muted">
+                <div className="h-full bg-accent" style={{ width: `${total ? (done / total) * 100 : 0}%` }} />
             </div>
             <div className="flex items-baseline justify-between mt-2">
-                <span className="text-sm tabular-nums" style={{ color: "var(--plate-dim)" }}>
+                <span className="text-sm tabular-nums text-muted-foreground">
                     {done} / {total}
                 </span>
-                <span className="text-sm" style={{ color: "var(--plate-gold)" }}>
+                <span className={`text-sm ${complete ? "text-celebrate" : "text-accent"}`}>
                     {complete
                         ? (language === 'ja' ? '修了' : 'Complete')
                         : <>{language === 'ja' ? (done > 0 ? '続きから' : '始める') : (done > 0 ? 'Continue' : 'Start')} &rarr;</>}
