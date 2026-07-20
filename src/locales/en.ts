@@ -126,6 +126,17 @@ export const en = {
     "home.continue.start": "Start",
     "home.review.title": "Today's review",
     "home.wotd": "Word of the day",
+
+    "today.title": "Today's step",
+    "today.minutes": "about 3 min",
+    "today.tagline": "Three minutes a day, through etymology.",
+    "today.card_start": "Learn your first word",
+    "today.card_done": "Today's step is done",
+    "today.one_more": "Take one more step",
+    "today.done_title": "Today's step is done",
+    "today.done_body": "That's it for today. See you tomorrow.",
+    "today.challenge_link": "Today's challenge",
+    "today.continue": "Continue",
     "home.stories.title": "Origin stories",
 
     "review.title": "Today's review",

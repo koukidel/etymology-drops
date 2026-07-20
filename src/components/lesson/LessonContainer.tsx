@@ -31,6 +31,9 @@ const MILESTONES = [10, 50, 100, 200];
 
 interface Props {
     word: Word;
+    /** Set when embedded in the 今日の一歩 session: the completion screen
+     *  keeps its celebration but hands navigation back to the session. */
+    onFinished?: () => void;
 }
 
 interface RelatedEntry {
@@ -39,7 +42,7 @@ interface RelatedEntry {
     href?: string;
 }
 
-export function LessonContainer({ word }: Props) {
+export function LessonContainer({ word, onFinished }: Props) {
     const [viewIndex, setViewIndex] = useState(0);
     const [nextLessonId, setNextLessonId] = useState<string | null>(null);
     const [courseDone, setCourseDone] = useState(false);
@@ -278,17 +281,28 @@ export function LessonContainer({ word }: Props) {
                             {language === 'ja' ? '記念カードを保存' : 'Save a memento card'}
                         </button>
                     )}
-                    {nextLessonId && (
-                        <Link
-                            href={`/lesson/${nextLessonId}`}
-                            className="px-10 py-3 bg-foreground text-background rounded-full hover:opacity-90 transition-opacity"
+                    {onFinished ? (
+                        <button
+                            onClick={onFinished}
+                            className="px-10 py-3 bg-foreground text-background rounded-full hover:opacity-90 transition-opacity active:scale-[0.98]"
                         >
-                            {t('lesson.complete.continue')}
-                        </Link>
+                            {t('today.continue')}
+                        </button>
+                    ) : (
+                        <>
+                            {nextLessonId && (
+                                <Link
+                                    href={`/lesson/${nextLessonId}`}
+                                    className="px-10 py-3 bg-foreground text-background rounded-full hover:opacity-90 transition-opacity"
+                                >
+                                    {t('lesson.complete.continue')}
+                                </Link>
+                            )}
+                            <Link href="/" className="text-sm text-muted-foreground hover:text-foreground transition-colors underline underline-offset-4">
+                                {t('lesson.complete.back')}
+                            </Link>
+                        </>
                     )}
-                    <Link href="/" className="text-sm text-muted-foreground hover:text-foreground transition-colors underline underline-offset-4">
-                        {t('lesson.complete.back')}
-                    </Link>
                 </div>
             </div>
         );

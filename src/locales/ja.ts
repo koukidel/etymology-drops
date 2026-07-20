@@ -126,6 +126,17 @@ export const ja = {
     "home.continue.start": "始める",
     "home.review.title": "今日の復習",
     "home.wotd": "今日の一語",
+
+    "today.title": "今日の一歩",
+    "today.minutes": "約3分",
+    "today.tagline": "1日3分、語源で英単語。",
+    "today.card_start": "最初の単語を習う",
+    "today.card_done": "今日の一歩、完了",
+    "today.one_more": "もう一歩すすむ",
+    "today.done_title": "今日の一歩、完了",
+    "today.done_body": "今日の分はおしまい。また明日。",
+    "today.challenge_link": "今日のお題へ",
+    "today.continue": "続ける",
     "home.stories.title": "語源の読み物",
 
     "review.title": "今日の復習",
