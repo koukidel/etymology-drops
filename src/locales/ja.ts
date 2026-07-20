@@ -31,6 +31,9 @@ export const ja = {
     "practice.build.locked_desc": "レッスンを進めて部品を集めると、ここで組み立てられるようになります。",
     "practice.build.locked_cta": "このレッスンへ",
     "practice.build.next_parts": "次のレッスンで手に入る部品",
+    "practice.build.mode_owned": "習った部品",
+    "practice.build.mode_all": "すべて",
+    "practice.build.all_desc": "全{parts}個の部品で自由に組み立て。",
 
     "home.courses": "Path",
 
