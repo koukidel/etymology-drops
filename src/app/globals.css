@@ -31,6 +31,10 @@
   /* mistakes — warm terracotta red, matches the editorial palette */
   --color-error: #b3402a;
 
+  /* 祝い — the seal's vermilion. Appears ONLY at wins (milestones, new
+     bests, course completion), so its arrival itself is the reward. */
+  --color-celebrate: #a33b26;
+
   /* level-bar tints, kept inside the pine↔brass family (no stray blue) */
   --color-sage: #5c7a3e;   /* 初級 — leaf green */
   --color-ochre: #b6862a;  /* 中級 — brass */
@@ -54,10 +58,12 @@
   --plate-ring: inset 0 0 0 1px rgba(227, 180, 79, 0.20);
   --plate-gold-ring: inset 0 0 0 1px rgba(227, 180, 79, 0.42);
 
-  /* Morpheme chips (build ground, tutorial mini-build, previews). */
+  /* Morpheme chips: three part types, three unmistakable hues.
+     語根=真鍮(金), 接頭辞=松(緑), 接尾辞=藍(青). The old suffix green was
+     indistinguishable from the prefix green (contrast ratio 1.54). */
   --chip-root-bg: #e3b44f;    --chip-root-fg: #2a2413;
   --chip-prefix-bg: #3c5340;  --chip-prefix-fg: #efe7d1;
-  --chip-suffix-bg: #21362a;  --chip-suffix-fg: #c2c6ac;
+  --chip-suffix-bg: #3b5a72;  --chip-suffix-fg: #e9f0f4;
 }
 
 @layer utilities {

@@ -42,19 +42,18 @@ export function ExamShowcase({ locked = false, bare = false }: { locked?: boolea
                             href={`/course/${course.id}`}
                             aria-disabled={locked}
                             tabIndex={locked ? -1 : undefined}
-                            className={`group flex flex-col rounded-2xl p-4 transition-transform duration-150 ${locked ? "pointer-events-none opacity-50" : "hover:-translate-y-0.5 active:scale-[0.98]"} ${complete && !locked ? "opacity-70" : ""}`}
-                            style={{ background: "var(--plate)", boxShadow: "var(--plate-ring)" }}
+                            className={`group flex flex-col rounded-2xl p-4 border border-border bg-card transition-all duration-150 ${locked ? "pointer-events-none opacity-50" : "hover:-translate-y-0.5 hover:border-accent/50 active:scale-[0.98]"} ${complete && !locked ? "opacity-70" : ""}`}
                         >
-                            <span className="block font-serif text-xl leading-snug" style={{ color: "var(--plate-gold)" }}>
+                            <span className="block font-serif text-xl leading-snug text-ochre">
                                 {localized(course.exam!)}
                             </span>
-                            <span className="block text-sm mt-0.5" style={{ color: "var(--plate-body)" }}>
+                            <span className="block text-sm mt-0.5 text-muted-foreground">
                                 {ja ? "対策単語" : "vocabulary"}
                             </span>
-                            <span className="block h-0.5 rounded-full overflow-hidden mt-3" style={{ background: "rgba(247,243,233,0.15)" }}>
-                                <span className="block h-full" style={{ width: `${total ? (done / total) * 100 : 0}%`, background: "var(--plate-gold)" }} />
+                            <span className="block h-0.5 rounded-full overflow-hidden mt-3 bg-muted">
+                                <span className="block h-full bg-accent" style={{ width: `${total ? (done / total) * 100 : 0}%` }} />
                             </span>
-                            <span className="text-xs tabular-nums mt-1.5" style={{ color: "var(--plate-dim)" }}>
+                            <span className="text-xs tabular-nums mt-1.5 text-muted-foreground">
                                 {done} / {total}
                             </span>
                         </Link>

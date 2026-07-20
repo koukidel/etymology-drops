@@ -186,7 +186,7 @@ export function LessonContainer({ word, onFinished }: Props) {
                     {courseDone ? <Bird size={32} /> : <Check size={32} className="text-foreground" />}
                 </motion.div>
                 <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-2">
-                    {courseDone ? t('lesson.complete.course') : praise}
+                    {courseDone ? <span className="text-celebrate">{t('lesson.complete.course')}</span> : praise}
                 </p>
                 <h2 className="font-serif text-5xl text-foreground mb-3 inline-flex items-center gap-3">
                     {word.word}
@@ -209,7 +209,7 @@ export function LessonContainer({ word, onFinished }: Props) {
                         </p>
                     </blockquote>
                 ) : milestone ? (
-                    <p className="text-sm text-ochre mb-2">
+                    <p className="text-sm text-celebrate mb-2">
                         {t('lesson.complete.milestone').replace('{n}', String(milestone))}
                     </p>
                 ) : null}
@@ -223,6 +223,8 @@ export function LessonContainer({ word, onFinished }: Props) {
                                 className="rounded-full px-2.5 py-0.5 font-serif"
                                 style={b.type === 'root'
                                     ? { backgroundColor: 'var(--chip-root-bg)', color: 'var(--chip-root-fg)' }
+                                    : b.type === 'suffix'
+                                    ? { backgroundColor: 'var(--chip-suffix-bg)', color: 'var(--chip-suffix-fg)' }
                                     : { backgroundColor: 'var(--chip-prefix-bg)', color: 'var(--chip-prefix-fg)' }}
                             >
                                 {b.label.replace(/-/g, '')}

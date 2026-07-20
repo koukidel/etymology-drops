@@ -175,7 +175,7 @@ function UnlockToast() {
     <motion.p
       initial={{ opacity: 0, y: -6 }}
       animate={{ opacity: 1, y: 0 }}
-      className="text-sm text-accent mb-6"
+      className="text-sm text-celebrate mb-6"
     >
       ✓ {t('home.unlocked.toast')}
     </motion.p>

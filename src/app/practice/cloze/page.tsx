@@ -166,6 +166,8 @@ export default function ClozePage() {
                                         isPicked && status === "wrong" ? "outline outline-2 outline-error" : ""}`}
                                     style={b.type === "root"
                                         ? { backgroundColor: "var(--chip-root-bg)", color: "var(--chip-root-fg)" }
+                                        : b.type === "suffix"
+                                        ? { backgroundColor: "var(--chip-suffix-bg)", color: "var(--chip-suffix-fg)" }
                                         : { backgroundColor: "var(--chip-prefix-bg)", color: "var(--chip-prefix-fg)" }}
                                 >
                                     {b.label.replace(/-/g, "")}

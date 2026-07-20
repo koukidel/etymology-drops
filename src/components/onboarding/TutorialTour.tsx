@@ -91,6 +91,8 @@ function MiniBuild({ onSolved }: { onSolved: () => void }) {
                             className={`rounded-full px-4 py-2 font-serif text-lg transition-all duration-150 active:scale-[0.95] ${used ? "opacity-30" : ""}`}
                             style={b.type === "root"
                                 ? { backgroundColor: "var(--chip-root-bg)", color: "var(--chip-root-fg)" }
+                                : b.type === "suffix"
+                                ? { backgroundColor: "var(--chip-suffix-bg)", color: "var(--chip-suffix-fg)" }
                                 : { backgroundColor: "var(--chip-prefix-bg)", color: "var(--chip-prefix-fg)" }}
                         >
                             {b.label.replace(/-/g, "")}
