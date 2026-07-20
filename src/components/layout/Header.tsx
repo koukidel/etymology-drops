@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Volume2, VolumeX } from "lucide-react";
 import { LanguageSwitcher } from "./LanguageSwitcher";
+import { TabBar } from "./TabBar";
 import { Seal } from "@/components/ui/Seal";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useMounted } from "@/hooks/useMounted";
@@ -49,7 +50,8 @@ export function Header() {
                 </Link>
 
                 <div className="flex items-center gap-6">
-                    <nav className="flex items-center gap-5">
+                    {/* Top nav on desktop only; mobile uses the bottom TabBar. */}
+                    <nav className="hidden sm:flex items-center gap-5">
                         {links.map(link => (
                             <Link
                                 key={link.href}
@@ -82,6 +84,7 @@ export function Header() {
                     <LanguageSwitcher />
                 </div>
             </div>
+            <TabBar />
         </header>
     );
 }

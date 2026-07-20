@@ -67,8 +67,7 @@ export function PrimingView({ word, onNext }: Props) {
 
             <button
                 onClick={onNext}
-                className="px-10 py-3 bg-foreground text-background rounded-full hover:opacity-90 transition-opacity"
-            >
+                className="w-full max-w-xs sm:w-auto px-10 py-3 bg-foreground text-background rounded-full hover:opacity-90 transition-opacity"            >
                 {t('lesson.priming.i_understand')}
             </button>
         </motion.div>
