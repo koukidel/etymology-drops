@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { BookOpen, Check, Compass, RotateCcw } from "lucide-react";
+import { BookOpen, Check, Compass } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
 import { CourseGrid } from "@/components/home/CourseGrid";
 import { Recommended } from "@/components/home/Recommended";
@@ -62,96 +62,81 @@ function FunnelBand({ href, icon, title, done }: {
   );
 }
 
-// One primary resume action: the next unfinished lesson in the course the
-// learner touched most recently (fallback: the first unfinished course).
-function ContinueCard() {
-  const { t } = useTranslation();
-  const { masteryLog, masteredWords } = useGameStore();
+// 今日の一歩: the single decision-free entry point. Due reviews + one new
+// lesson behind one button; when done, it closes for the day.
+function TodayCard() {
+  const { t, language } = useTranslation();
+  const { masteryLog, masteredWords, lastReviewDate, lastActiveDate, srs } = useGameStore();
+  const ja = language === 'ja';
+  const today = localDate();
 
-  const target = useMemo(() => findNextLesson(masteryLog, masteredWords), [masteryLog, masteredWords]);
+  const reviews = useMemo(
+    () => (lastReviewDate === today ? [] : pickReviewWords(masteryLog, masteredWords, today, 3, srs)),
+    [masteryLog, masteredWords, lastReviewDate, today, srs],
+  );
+  const next = useMemo(() => findNextLesson(masteryLog, masteredWords), [masteryLog, masteredWords]);
+  const nextWord = next ? allWords.find(w => w.id === next.lesson.id) : null;
 
-  if (!target) return null;
-  const word = allWords.find(w => w.id === target.lesson.id);
+  const done = lastActiveDate === today && reviews.length === 0;
   const fresh = masteredWords.length === 0;
 
-  return (
-    <Link
-      href={`/lesson/${target.lesson.id}`}
-      className="group flex items-center gap-4 rounded-2xl px-6 py-5 transition-transform duration-150 hover:-translate-y-0.5 active:scale-[0.98]"
-      style={{ background: "var(--plate)", boxShadow: "var(--plate-gold-ring)" }}
-    >
-      <span className="min-w-0">
-        <span className="block text-[11px] uppercase tracking-[0.18em] mb-1" style={{ color: "var(--plate-gold)" }}>
-          {fresh ? t('home.continue.start') : t('home.continue.label')}
-        </span>
-        <span className="block font-serif text-2xl truncate" style={{ color: "var(--plate-fg)" }}>
-          {word ? word.word : target.lesson.label}
-        </span>
-      </span>
-      <span className="ml-auto text-xl" style={{ color: "var(--plate-gold)" }}>→</span>
-    </Link>
-  );
-}
-
-// Daily review band: up to three words mastered on earlier days, once a day.
-function ReviewBand() {
-  const { t } = useTranslation();
-  const { masteryLog, masteredWords, lastReviewDate, srs } = useGameStore();
-
-  const today = localDate();
-  const words = useMemo(
-    () => pickReviewWords(masteryLog, masteredWords, today, 3, srs),
-    [masteryLog, masteredWords, today, srs],
-  );
-
-  if (words.length === 0 || lastReviewDate === today) return null;
-  return (
-    <Link
-      href="/review"
-      className="group flex items-center gap-4 rounded-xl px-5 py-4 transition-transform duration-150 hover:-translate-y-0.5 active:scale-[0.98]"
-      style={{ background: "var(--plate)", boxShadow: "var(--plate-ring)" }}
-    >
-      <span className="shrink-0 grid place-items-center w-10 h-10 rounded-full" style={{ color: "var(--plate-gold)", boxShadow: "var(--plate-gold-ring)" }}>
-        <RotateCcw size={18} />
-      </span>
-      <span className="font-serif text-lg" style={{ color: "var(--plate-fg)" }}>
-        {t('home.review.title')}
-      </span>
-      <span className="ml-auto flex items-center gap-3">
-        <span className="text-xs tabular-nums" style={{ color: "var(--plate-dim)" }}>{words.length}</span>
-        <span style={{ color: "var(--plate-gold)" }}>→</span>
-      </span>
-    </Link>
-  );
-}
-
-// Word of the day: one unmastered lesson word, rotating daily. A light card
-// (plate stays reserved for the hero/funnel).
-function WordOfTheDay() {
-  const { t, language } = useTranslation();
-  const { masteredWords } = useGameStore();
-  const today = localDate();
-
-  const word = useMemo(() => {
+  // Word of the day rides inside the done state, so the card stays the
+  // page's single top element.
+  const wotd = useMemo(() => {
     const candidates = allWords.filter(w => !masteredWords.includes(w.id));
     if (candidates.length === 0) return null;
     let h = 5381;
-    const s = today + "wotd";
-    for (let i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) >>> 0;
+    const str = today + 'wotd';
+    for (let i = 0; i < str.length; i++) h = ((h << 5) + h + str.charCodeAt(i)) >>> 0;
     return candidates[h % candidates.length];
   }, [masteredWords, today]);
 
-  if (!word) return null;
-  const meaning = typeof word.meaning === "string" ? word.meaning : word.meaning[language];
+  if (done) {
+    return (
+      <div className="rounded-2xl px-6 py-5" style={{ background: 'var(--plate)', boxShadow: 'var(--plate-ring)' }}>
+        <p className="text-[11px] uppercase tracking-[0.18em] mb-1" style={{ color: 'var(--plate-gold)' }}>
+          {t('today.title')}
+        </p>
+        <p className="font-serif text-xl mb-3" style={{ color: 'var(--plate-fg)' }}>
+          ✓ {t('today.card_done')}
+        </p>
+        <div className="flex flex-wrap items-center gap-x-5 gap-y-1 text-sm">
+          {wotd && (
+            <Link href={`/lesson/${wotd.id}`} className="hover:opacity-80" style={{ color: 'var(--plate-body)' }}>
+              {t('home.wotd')}：<span className="font-serif" style={{ color: 'var(--plate-gold)' }}>{wotd.word}</span>
+            </Link>
+          )}
+          <Link href="/today" className="hover:opacity-80 underline underline-offset-4" style={{ color: 'var(--plate-body)' }}>
+            {t('today.one_more')}
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  const contents = [
+    reviews.length > 0 ? (ja ? `復習 ${reviews.length}問` : `${reviews.length} reviews`) : null,
+    nextWord ? (ja ? `新しい単語「${nextWord.word}」` : `new word “${nextWord.word}”`) : null,
+  ].filter(Boolean).join(ja ? ' と ' : ' + ');
+
   return (
     <Link
-      href={`/lesson/${word.id}`}
-      className="group flex items-baseline gap-3 rounded-xl px-4 py-3 border border-border bg-card transition-all duration-150 hover:-translate-y-0.5 hover:border-accent/50 active:scale-[0.98] mb-8"
+      href="/today"
+      className="group flex items-center gap-4 rounded-2xl px-6 py-6 transition-transform duration-150 hover:-translate-y-0.5 active:scale-[0.98]"
+      style={{ background: 'var(--plate)', boxShadow: 'var(--plate-gold-ring)' }}
     >
-      <span className="text-[11px] uppercase tracking-[0.18em] text-accent whitespace-nowrap">{t('home.wotd')}</span>
-      <span className="font-serif text-lg text-foreground">{word.word}</span>
-      <span className="text-sm text-muted-foreground truncate min-w-0">{meaning}</span>
-      <span className="ml-auto text-accent">→</span>
+      <span className="min-w-0">
+        <span className="block text-[11px] uppercase tracking-[0.18em] mb-1" style={{ color: 'var(--plate-gold)' }}>
+          {t('today.title')} ・ {t('today.minutes')}
+        </span>
+        <span className="block font-serif text-2xl" style={{ color: 'var(--plate-fg)' }}>
+          {fresh ? t('today.card_start') : contents}
+        </span>
+        <span className="block text-sm mt-1" style={{ color: 'var(--plate-body)' }}>
+          {t('today.tagline')}
+        </span>
+      </span>
+      <span className="ml-auto text-2xl" style={{ color: 'var(--plate-gold)' }}>→</span>
     </Link>
   );
 }
@@ -205,7 +190,10 @@ export default function Home() {
 
   if (!isMounted) return null; // Prevent hydration mismatch
 
-  if (!hasCompletedIntake) {
+  // Intake comes AFTER the Lesson 0 aha, not before it. The product's first
+  // job is to show that the decomposition perspective exists; only someone
+  // who has felt that is worth asking three questions of.
+  if (hasSeenOnboarding && !hasCompletedIntake) {
     return <Intake onComplete={completeIntake} onSkip={() => completeIntake(null)} />;
   }
 
@@ -259,14 +247,11 @@ export default function Home() {
         <UnlockToast />
         <StreakWarning />
 
-        <div className="mb-8 space-y-3">
-          <ContinueCard />
-          <ReviewBand />
+        <div className="mb-8">
+          <TodayCard />
         </div>
 
         <Recommended />
-
-        <WordOfTheDay />
 
         <CourseGrid />
 
