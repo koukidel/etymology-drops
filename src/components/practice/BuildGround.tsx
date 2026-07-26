@@ -34,12 +34,15 @@ const hash = (n: number) => { const x = Math.sin(n * 127.1 + 311.7) * 43758.5453
 function scatter(count: number) {
     const cols = count <= 6 ? 3 : count <= 15 ? 4 : 5;
     const rows = Math.max(1, Math.ceil(count / cols));
+    // Vertical jitter is a % of total height, so on tall canvases (すべて mode,
+    // 30+ rows) it must shrink or chips from distant rows pile on each other.
+    const vJitter = Math.min(5, 40 / rows);
     return Array.from({ length: count }, (_, i) => {
         const col = i % cols;
         const row = Math.floor(i / cols);
         return {
             left: Math.min(90, Math.max(4, ((col + 0.5) / cols) * 100 + (hash(i) * 2 - 1) * 7)),
-            top: Math.min(94, Math.max(3, ((row + 0.5) / rows) * 100 + (hash(i + 99) * 2 - 1) * 5)),
+            top: Math.min(94, Math.max(3, ((row + 0.5) / rows) * 100 + (hash(i + 99) * 2 - 1) * vJitter)),
             dur: 3.5 + hash(i + 7) * 3,
             dx: (hash(i + 3) * 2 - 1) * 7,
             dy: (hash(i + 5) * 2 - 1) * 8,
@@ -128,6 +131,7 @@ export function BuildGround() {
         setResult(null);
     };
     const everyPart = useMemo(() => allParts(), []);
+    const allPositions = useMemo(() => scatter(everyPart.length), [everyPart.length]);
 
     // While locked: preview the parts the next lesson would unlock, so the
     // learn → build loop is concrete, and link straight to that lesson.
@@ -275,22 +279,37 @@ export function BuildGround() {
             ) : (
             <>
             {mode === "all" ? (
-                /* Full sandbox: every part in the app, grouped roots-first in a
-                   scrollable tray (150+ chips would drown the floating field). */
-                <div className="flex-1 min-h-0 overflow-y-auto rounded-2xl border border-border bg-muted/40 p-4">
-                    <div className="flex flex-wrap gap-2">
-                        {everyPart.map(b => {
+                /* Full sandbox: every part in the app, floating like the owned
+                   pool. Too many for one screen, so the field is a tall canvas
+                   that scrolls — an endless drifting meadow, not a neat tray. */
+                <div className="flex-1 min-h-0 overflow-y-auto rounded-2xl border border-border bg-muted/40">
+                    <div className="relative" style={{ height: `${Math.ceil(everyPart.length / 5) * 72}px` }}>
+                        {everyPart.map((b, i) => {
                             const s = TYPE_STYLE[b.type];
+                            const pos = allPositions[i];
                             return (
-                                <button
+                                <motion.div
                                     key={b.id}
-                                    onClick={() => add(b)}
-                                    title={typeof b.meaning === "string" ? b.meaning : b.meaning[language]}
-                                    className="rounded-full px-3 py-1.5 font-serif text-sm sm:text-base shadow-sm whitespace-nowrap transition-transform active:scale-[0.94]"
-                                    style={{ backgroundColor: s.bg, color: s.fg }}
+                                    drag
+                                    dragSnapToOrigin
+                                    dragElastic={0.25}
+                                    whileDrag={{ scale: 1.12, zIndex: 50 }}
+                                    onDragEnd={onDrop(b)}
+                                    className="absolute cursor-grab active:cursor-grabbing touch-none -translate-x-1/2 -translate-y-1/2"
+                                    style={{ left: `${pos.left}%`, top: `${pos.top}%` }}
                                 >
-                                    {b.label.replace(/-/g, "")}
-                                </button>
+                                    <motion.button
+                                        type="button"
+                                        onClick={() => add(b)}
+                                        animate={reduce ? undefined : { x: [0, pos.dx, 0], y: [0, pos.dy, 0] }}
+                                        transition={reduce ? undefined : { duration: pos.dur, delay: pos.delay, repeat: Infinity, ease: "easeInOut" }}
+                                        className="rounded-full px-3 py-1.5 font-serif text-sm sm:text-base shadow-sm whitespace-nowrap"
+                                        style={{ backgroundColor: s.bg, color: s.fg }}
+                                        title={loc(b.meaning)}
+                                    >
+                                        {b.label.replace(/-/g, "")}
+                                    </motion.button>
+                                </motion.div>
                             );
                         })}
                     </div>
