@@ -131,7 +131,25 @@ export function BuildGround() {
         setResult(null);
     };
     const everyPart = useMemo(() => allParts(), []);
-    const allPositions = useMemo(() => scatter(everyPart.length), [everyPart.length]);
+
+    // すべて mode fits on ONE screen: 239 chips can't float in a phone-sized
+    // field, so the ground deals a hand of parts and a shuffle button brings
+    // the next hand. Deterministic shuffle (module hash) keeps SSR happy.
+    const ALL_HAND = 28;
+    const shuffledAll = useMemo(() => {
+        const arr = [...everyPart];
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(hash(i) * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+    }, [everyPart]);
+    const [allPage, setAllPage] = useState(0);
+    const handCount = Math.max(1, Math.ceil(shuffledAll.length / ALL_HAND));
+    const visibleAll = useMemo(
+        () => shuffledAll.slice(allPage * ALL_HAND, (allPage + 1) * ALL_HAND),
+        [shuffledAll, allPage]);
+    const allPositions = useMemo(() => scatter(visibleAll.length), [visibleAll.length]);
 
     // While locked: preview the parts the next lesson would unlock, so the
     // learn → build loop is concrete, and link straight to that lesson.
@@ -279,40 +297,44 @@ export function BuildGround() {
             ) : (
             <>
             {mode === "all" ? (
-                /* Full sandbox: every part in the app, floating like the owned
-                   pool. Too many for one screen, so the field is a tall canvas
-                   that scrolls — an endless drifting meadow, not a neat tray. */
-                <div className="flex-1 min-h-0 overflow-y-auto rounded-2xl border border-border bg-muted/40">
-                    <div className="relative" style={{ height: `${Math.ceil(everyPart.length / 5) * 72}px` }}>
-                        {everyPart.map((b, i) => {
-                            const s = TYPE_STYLE[b.type];
-                            const pos = allPositions[i];
-                            return (
-                                <motion.div
-                                    key={b.id}
-                                    drag
-                                    dragSnapToOrigin
-                                    dragElastic={0.25}
-                                    whileDrag={{ scale: 1.12, zIndex: 50 }}
-                                    onDragEnd={onDrop(b)}
-                                    className="absolute cursor-grab active:cursor-grabbing touch-none -translate-x-1/2 -translate-y-1/2"
-                                    style={{ left: `${pos.left}%`, top: `${pos.top}%` }}
+                /* Full sandbox: a one-screen floating hand of parts; the
+                   shuffle button deals the next hand — no scrolling. */
+                <div className="relative flex-1 min-h-0 rounded-2xl border border-border bg-muted/40">
+                    {visibleAll.map((b, i) => {
+                        const s = TYPE_STYLE[b.type];
+                        const pos = allPositions[i];
+                        return (
+                            <motion.div
+                                key={b.id}
+                                drag
+                                dragSnapToOrigin
+                                dragElastic={0.25}
+                                whileDrag={{ scale: 1.12, zIndex: 50 }}
+                                onDragEnd={onDrop(b)}
+                                className="absolute cursor-grab active:cursor-grabbing touch-none -translate-x-1/2 -translate-y-1/2"
+                                style={{ left: `${pos.left}%`, top: `${pos.top}%` }}
+                            >
+                                <motion.button
+                                    type="button"
+                                    onClick={() => add(b)}
+                                    animate={reduce ? undefined : { x: [0, pos.dx, 0], y: [0, pos.dy, 0] }}
+                                    transition={reduce ? undefined : { duration: pos.dur, delay: pos.delay, repeat: Infinity, ease: "easeInOut" }}
+                                    className="rounded-full px-3 py-1.5 font-serif text-sm sm:text-base shadow-sm whitespace-nowrap"
+                                    style={{ backgroundColor: s.bg, color: s.fg }}
+                                    title={loc(b.meaning)}
                                 >
-                                    <motion.button
-                                        type="button"
-                                        onClick={() => add(b)}
-                                        animate={reduce ? undefined : { x: [0, pos.dx, 0], y: [0, pos.dy, 0] }}
-                                        transition={reduce ? undefined : { duration: pos.dur, delay: pos.delay, repeat: Infinity, ease: "easeInOut" }}
-                                        className="rounded-full px-3 py-1.5 font-serif text-sm sm:text-base shadow-sm whitespace-nowrap"
-                                        style={{ backgroundColor: s.bg, color: s.fg }}
-                                        title={loc(b.meaning)}
-                                    >
-                                        {b.label.replace(/-/g, "")}
-                                    </motion.button>
-                                </motion.div>
-                            );
-                        })}
-                    </div>
+                                    {b.label.replace(/-/g, "")}
+                                </motion.button>
+                            </motion.div>
+                        );
+                    })}
+                    <button
+                        onClick={() => setAllPage(p => (p + 1) % handCount)}
+                        className="absolute bottom-3 right-3 z-10 rounded-full border border-border bg-card px-4 py-1.5 text-xs text-muted-foreground shadow-sm hover:text-foreground transition-colors active:scale-[0.96]"
+                    >
+                        ⟳ {t("practice.build.shuffle")}
+                        <span className="tabular-nums"> {allPage + 1}/{handCount}</span>
+                    </button>
                 </div>
             ) : (
             /* Bubble pool — the learner's unlocked morphemes, floating freely */
