@@ -34,6 +34,7 @@ export const ja = {
     "practice.build.mode_owned": "習った部品",
     "practice.build.mode_all": "すべて",
     "practice.build.all_desc": "全{parts}個の部品で自由に組み立て。",
+    "practice.build.shuffle": "部品を入れ替える",
 
     "home.courses": "Path",
 

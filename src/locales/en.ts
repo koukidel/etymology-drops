@@ -34,6 +34,7 @@ export const en = {
     "practice.build.mode_owned": "My parts",
     "practice.build.mode_all": "All",
     "practice.build.all_desc": "Build freely with all {parts} parts.",
+    "practice.build.shuffle": "Shuffle parts",
 
     "home.courses": "Path",
 
