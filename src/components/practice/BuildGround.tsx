@@ -135,7 +135,7 @@ export function BuildGround() {
     // すべて mode fits on ONE screen: 239 chips can't float in a phone-sized
     // field, so the ground deals a hand of parts and a shuffle button brings
     // the next hand. Deterministic shuffle (module hash) keeps SSR happy.
-    const ALL_HAND = 28;
+    const ALL_HAND = 40;
     const shuffledAll = useMemo(() => {
         const arr = [...everyPart];
         for (let i = arr.length - 1; i > 0; i--) {
@@ -149,7 +149,10 @@ export function BuildGround() {
     const visibleAll = useMemo(
         () => shuffledAll.slice(allPage * ALL_HAND, (allPage + 1) * ALL_HAND),
         [shuffledAll, allPage]);
-    const allPositions = useMemo(() => scatter(visibleAll.length), [visibleAll.length]);
+    // Keep the bottom-right corner clear: that's where the shuffle button sits.
+    const allPositions = useMemo(
+        () => scatter(visibleAll.length).map(p => (p.top > 82 && p.left > 66 ? { ...p, left: 66 } : p)),
+        [visibleAll.length]);
 
     // While locked: preview the parts the next lesson would unlock, so the
     // learn → build loop is concrete, and link straight to that lesson.
@@ -319,7 +322,7 @@ export function BuildGround() {
                                     onClick={() => add(b)}
                                     animate={reduce ? undefined : { x: [0, pos.dx, 0], y: [0, pos.dy, 0] }}
                                     transition={reduce ? undefined : { duration: pos.dur, delay: pos.delay, repeat: Infinity, ease: "easeInOut" }}
-                                    className="rounded-full px-3 py-1.5 font-serif text-sm sm:text-base shadow-sm whitespace-nowrap"
+                                    className="rounded-full px-2.5 py-1 font-serif text-xs sm:text-sm shadow-sm whitespace-nowrap"
                                     style={{ backgroundColor: s.bg, color: s.fg }}
                                     title={loc(b.meaning)}
                                 >
@@ -328,12 +331,15 @@ export function BuildGround() {
                             </motion.div>
                         );
                     })}
+                    {/* Compact pill: the full 部品を入れ替える label would span
+                        half the field width and bury the bottom-row chips. */}
                     <button
                         onClick={() => setAllPage(p => (p + 1) % handCount)}
-                        className="absolute bottom-3 right-3 z-10 rounded-full border border-border bg-card px-4 py-1.5 text-xs text-muted-foreground shadow-sm hover:text-foreground transition-colors active:scale-[0.96]"
+                        aria-label={t("practice.build.shuffle")}
+                        title={t("practice.build.shuffle")}
+                        className="absolute bottom-3 right-3 z-10 rounded-full border border-border bg-card px-3.5 py-1.5 text-sm text-muted-foreground shadow-sm hover:text-foreground transition-colors active:scale-[0.96]"
                     >
-                        ⟳ {t("practice.build.shuffle")}
-                        <span className="tabular-nums"> {allPage + 1}/{handCount}</span>
+                        ⟳ <span className="tabular-nums text-xs">{allPage + 1}/{handCount}</span>
                     </button>
                 </div>
             ) : (
