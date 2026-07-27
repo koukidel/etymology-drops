@@ -11,6 +11,7 @@ import { useGameStore } from "@/store/useGameStore";
 import { useMounted } from "@/hooks/useMounted";
 import { Header } from "@/components/layout/Header";
 import { Speak } from "@/components/ui/Speak";
+import { FirstVisitHint } from "@/components/ui/FirstVisitHint";
 
 type Filter = 'all' | 'prefix' | 'root' | 'suffix';
 
@@ -108,6 +109,8 @@ export default function DictionaryPage() {
                 <p className="text-sm text-muted-foreground mb-10">
                     {ja ? '頻出順の部品リスト。タップして詳しく。' : 'Word parts, most common first. Tap to explore.'}
                 </p>
+
+                <FirstVisitHint id="dictionary" text={t('hint.dictionary')} />
 
                 {/* Most common parts — highest-leverage ranking */}
                 <section className="mb-12">

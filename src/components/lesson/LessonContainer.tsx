@@ -237,6 +237,11 @@ export function LessonContainer({ word, onFinished }: Props) {
                     {t('lesson.complete.today')
                         .replace('{words}', String(todayCount))
                         .replace('{days}', String(Math.max(1, activeStreak)))}
+                    {/* The very first word earns a preview of tomorrow, so the
+                        next launch is expected instead of confusing. */}
+                    {masteredWords.length === 1 && (
+                        <span className="block mt-1">{t('lesson.complete.tomorrow')}</span>
+                    )}
                 </p>
 
                 {/* Related words fold away so the primary CTA stays above the
