@@ -48,7 +48,7 @@ export function LessonContainer({ word, onFinished }: Props) {
     const [courseDone, setCourseDone] = useState(false);
     const { t, language } = useTranslation();
 
-    const { unlockWord, masterWord, recordLessonComplete, masteredWords, masteryLog, streak, lastActiveDate, recordMiss } = useGameStore();
+    const { unlockWord, masterWord, recordLessonComplete, masteredWords, masteryLog, streak, lastActiveDate, graceUsedOn, recordMiss } = useGameStore();
 
     const localized = (s: string | { en: string; ja: string }) =>
         typeof s === 'string' ? s : s[language];
@@ -134,7 +134,7 @@ export function LessonContainer({ word, onFinished }: Props) {
         const praise = PRAISE[lang][dayHash(word.id) % PRAISE[lang].length];
         const milestone = MILESTONES.includes(masteredWords.length) ? masteredWords.length : null;
         const todayCount = masteryLog.filter(e => e.date === localDate()).length;
-        const activeStreak = currentStreak(streak, lastActiveDate);
+        const activeStreak = currentStreak(streak, lastActiveDate, graceUsedOn);
         // Parts first met in this word (in none of the other mastered words).
         const otherParts = new Set(
             masteredWords.filter(id => id !== word.id)

@@ -174,6 +174,15 @@ export const en = {
 
     "progress.weak_parts": "Parts to revisit",
     "progress.weak_parts.hint": "Review them in a lesson that uses this part.",
+    "progress.weak_practice": "Drill them in cloze practice",
+    "progress.forecast": "Reviews ahead (7 days)",
+    "progress.forecast_none": "No reviews scheduled yet. Learn a word and it shows up here tomorrow.",
+    "progress.grace": "Rest ticket",
+    "progress.grace_ready": "You have one — a single missed day won't break your streak.",
+    "progress.grace_used": "Used to cover {date}. It returns after 14 days.",
+    "today.goal": "Daily goal",
+    "today.goal_met": "Daily goal reached!",
+    "today.goal_left": "{n} more to today's goal",
     "home.unlocked.toast": "Every course is now open",
 
     "tutorial.back": "Back",

@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { localDate, localYesterday } from "@/lib/date";
+import { localDate, localYesterday, localDaysAgo } from "@/lib/date";
+import { currentStreak, graceAvailable } from "@/store/useGameStore";
 import { dayHash, pickReviewWords } from "@/lib/dailyReview";
 import { findNextLesson } from "@/lib/nextLesson";
 import { COURSES } from "@/data/courses";
@@ -61,5 +62,33 @@ describe("findNextLesson", () => {
     it("returns null when everything is mastered", () => {
         const all = COURSES.flatMap(c => c.lessons.map(l => l.id));
         expect(findNextLesson([], all)).toBeNull();
+    });
+});
+
+describe("streak + お休み札 (grace day)", () => {
+    const today = localDate();
+    const yesterday = localYesterday();
+
+    it("streak alive when last active today or yesterday", () => {
+        expect(currentStreak(5, today)).toBe(5);
+        expect(currentStreak(5, yesterday)).toBe(5);
+    });
+
+    it("one missed day survives when the grace ticket is unused", () => {
+        expect(currentStreak(5, localDaysAgo(2), null)).toBe(5);
+    });
+
+    it("one missed day breaks the streak when the ticket was spent recently", () => {
+        expect(currentStreak(5, localDaysAgo(2), localDaysAgo(3))).toBe(0);
+    });
+
+    it("the ticket returns after 14 days", () => {
+        expect(graceAvailable(null)).toBe(true);
+        expect(graceAvailable(localDaysAgo(13))).toBe(false);
+        expect(graceAvailable(localDaysAgo(14))).toBe(true);
+    });
+
+    it("two or more missed days always reset", () => {
+        expect(currentStreak(5, localDaysAgo(3), null)).toBe(0);
     });
 });

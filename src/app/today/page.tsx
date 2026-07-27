@@ -22,7 +22,7 @@ import { useTranslation } from "@/hooks/useTranslation";
 export default function TodayPage() {
     const { t } = useTranslation();
     const {
-        masteryLog, masteredWords, lastReviewDate, srs, streak, lastActiveDate,
+        masteryLog, masteredWords, lastReviewDate, srs, streak, lastActiveDate, graceUsedOn,
         completeReview, recordReviewResult, recordMiss,
     } = useGameStore();
     const mounted = useMounted();
@@ -75,7 +75,7 @@ export default function TodayPage() {
     const empty = totalSteps === 0;
 
     if (finished || empty) {
-        const activeStreak = currentStreak(streak, lastActiveDate);
+        const activeStreak = currentStreak(streak, lastActiveDate, graceUsedOn);
         const todayCount = masteryLog.filter(e => e.date === localDate()).length;
         return (
             <div className="min-h-screen">

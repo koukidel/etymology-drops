@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useGameStore, currentStreak } from "@/store/useGameStore";
+import { useGameStore, currentStreak, graceAvailable } from "@/store/useGameStore";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useMounted } from "@/hooks/useMounted";
 import { COURSES } from "@/data/courses";
@@ -14,14 +14,14 @@ import { localDate } from "@/lib/date";
 import { readConfusionLog } from "@/lib/confusionLog";
 
 export default function ProfilePage() {
-    const { masteredWords, masteryLog, streak, lastActiveDate, missedParts, resetProgress } = useGameStore();
+    const { masteredWords, masteryLog, streak, lastActiveDate, graceUsedOn, srs, missedParts, resetProgress } = useGameStore();
     const { t, language } = useTranslation();
     const mounted = useMounted();
 
     if (!mounted) return null;
 
     const coursesDone = COURSES.filter(c => c.lessons.every(l => masteredWords.includes(l.id))).length;
-    const activeStreak = currentStreak(streak, lastActiveDate);
+    const activeStreak = currentStreak(streak, lastActiveDate, graceUsedOn);
     const ja = language === 'ja';
 
     const wordLabel = (id: string) => allWords.find(w => w.id === id)?.word ?? id;
@@ -109,6 +109,52 @@ export default function ProfilePage() {
                         </span>
                     </div>
 
+                    {/* お休み札 — the streak's safety net, stated plainly */}
+                    <p className="text-xs text-muted-foreground">
+                        🛡 {t('progress.grace')}：{graceAvailable(graceUsedOn)
+                            ? t('progress.grace_ready')
+                            : t('progress.grace_used').replace('{date}', graceUsedOn ?? '')}
+                    </p>
+
+                    {/* Review forecast — SRS made visible (WaniKani-style trust) */}
+                    <section>
+                        <h2 className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-4">
+                            {t('progress.forecast')}
+                        </h2>
+                        {Object.keys(srs).length === 0 ? (
+                            <p className="text-xs text-muted-foreground">{t('progress.forecast_none')}</p>
+                        ) : (() => {
+                            const today = localDate();
+                            const days = Array.from({ length: 7 }, (_, i) => {
+                                const d = new Date();
+                                d.setDate(d.getDate() + i);
+                                const iso = localDate(d);
+                                // Overdue reviews pile onto today.
+                                const count = Object.values(srs).filter(e =>
+                                    i === 0 ? e.due <= today : e.due === iso).length;
+                                const label = i === 0 ? (ja ? '今日' : 'Today')
+                                    : i === 1 ? (ja ? '明日' : 'Tmrw')
+                                    : `${d.getMonth() + 1}/${d.getDate()}`;
+                                return { iso, count, label };
+                            });
+                            const max = Math.max(1, ...days.map(d => d.count));
+                            return (
+                                <div className="flex items-end gap-2">
+                                    {days.map(d => (
+                                        <div key={d.iso} className="flex-1 flex flex-col items-center gap-1">
+                                            <span className="text-xs tabular-nums text-muted-foreground">{d.count || ''}</span>
+                                            <div
+                                                className={`w-full rounded-t ${d.count > 0 ? 'bg-accent/70' : 'bg-muted'}`}
+                                                style={{ height: `${6 + (d.count / max) * 42}px` }}
+                                            />
+                                            <span className="text-[10px] text-muted-foreground">{d.label}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            );
+                        })()}
+                    </section>
+
                     {/* Per-course progress */}
                     <section>
                         <h2 className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-4">
@@ -142,7 +188,12 @@ export default function ProfilePage() {
                             <h2 className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-1.5">
                                 {t('progress.weak_parts')}
                             </h2>
-                            <p className="text-xs text-muted-foreground mb-4">{t('progress.weak_parts.hint')}</p>
+                            <p className="text-xs text-muted-foreground mb-4">
+                                {t('progress.weak_parts.hint')}{' '}
+                                <Link href="/practice/cloze" className="text-accent hover:opacity-80 underline underline-offset-4">
+                                    {t('progress.weak_practice')}
+                                </Link>
+                            </p>
                             <div className="flex flex-wrap gap-2.5">
                                 {weakParts.map(p => (
                                     <Link

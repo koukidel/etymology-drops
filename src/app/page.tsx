@@ -7,7 +7,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { CourseGrid } from "@/components/home/CourseGrid";
 import { Recommended } from "@/components/home/Recommended";
 import { Header } from "@/components/layout/Header";
-import { useGameStore } from "@/store/useGameStore";
+import { useGameStore, graceAvailable } from "@/store/useGameStore";
 import { Intake } from "@/components/onboarding/Intake";
 import { FirstRun } from "@/components/onboarding/FirstRun";
 import { PathChoice } from "@/components/onboarding/PathChoice";
@@ -68,9 +68,25 @@ function FunnelBand({ href, icon, title, done }: {
 // lesson behind one button; when done, it closes for the day.
 function TodayCard() {
   const { t, language } = useTranslation();
-  const { masteryLog, masteredWords, lastReviewDate, lastActiveDate, srs } = useGameStore();
+  const { masteryLog, masteredWords, lastReviewDate, lastActiveDate, srs, profile } = useGameStore();
   const ja = language === 'ja';
   const today = localDate();
+
+  // Duolingo-style daily goal, sized by the intake commitment. The visible
+  // target is what turns "done for today" into "one more".
+  const goal = profile?.commitment === 'serious' ? 5 : profile?.commitment === 'steady' ? 3 : 1;
+  const todayCount = masteryLog.filter(e => e.date === today).length;
+  const goalDots = (
+    <span className="inline-flex items-center gap-1" aria-label={`${t('today.goal')} ${todayCount}/${goal}`}>
+      {Array.from({ length: goal }, (_, i) => (
+        <span
+          key={i}
+          className="w-1.5 h-1.5 rounded-full"
+          style={{ background: i < todayCount ? 'var(--plate-gold)' : 'color-mix(in srgb, var(--plate-dim) 45%, transparent)' }}
+        />
+      ))}
+    </span>
+  );
 
   const reviews = useMemo(
     () => (lastReviewDate === today ? [] : pickReviewWords(masteryLog, masteredWords, today, 3, srs)),
@@ -96,11 +112,16 @@ function TodayCard() {
   if (done) {
     return (
       <div className="rounded-2xl px-6 py-5" style={{ background: 'var(--plate)', boxShadow: 'var(--plate-ring)' }}>
-        <p className="text-[11px] uppercase tracking-[0.18em] mb-1" style={{ color: 'var(--plate-gold)' }}>
-          {t('today.title')}
+        <p className="flex items-center gap-2.5 text-[11px] uppercase tracking-[0.18em] mb-1" style={{ color: 'var(--plate-gold)' }}>
+          {t('today.title')} {goalDots}
         </p>
         <p className="font-serif text-xl mb-3" style={{ color: 'var(--plate-fg)' }}>
           ✓ {t('today.card_done')}
+        </p>
+        <p className="text-sm mb-3" style={{ color: todayCount >= goal ? 'var(--plate-gold)' : 'var(--plate-body)' }}>
+          {todayCount >= goal
+            ? `🌸 ${t('today.goal_met')}`
+            : t('today.goal_left').replace('{n}', String(goal - todayCount))}
         </p>
         <div className="flex flex-wrap items-center gap-x-5 gap-y-1 text-sm">
           {wotd && (
@@ -131,8 +152,8 @@ function TodayCard() {
       style={{ background: 'var(--plate)', boxShadow: 'var(--plate-gold-ring)' }}
     >
       <span className="min-w-0">
-        <span className="block text-[11px] uppercase tracking-[0.18em] mb-1" style={{ color: 'var(--plate-gold)' }}>
-          {t('today.title')} ・ {t('today.minutes')}
+        <span className="flex items-center gap-2.5 text-[11px] uppercase tracking-[0.18em] mb-1" style={{ color: 'var(--plate-gold)' }}>
+          {t('today.title')} ・ {t('today.minutes')} {goal > 1 && goalDots}
         </span>
         <span className="block font-serif text-2xl" style={{ color: 'var(--plate-fg)' }}>
           {fresh ? t('today.card_start') : contents}
@@ -149,17 +170,24 @@ function TodayCard() {
 // Evening nudge when the streak is alive but today has no lesson yet:
 // lighter than a push notification, sharper than nothing.
 function StreakWarning() {
-  const { streak, lastActiveDate } = useGameStore();
+  const { streak, lastActiveDate, graceUsedOn } = useGameStore();
   const { language } = useTranslation();
   const hour = new Date().getHours();
   const yesterday = (() => { const d = new Date(); d.setDate(d.getDate() - 1); return localDate(d); })();
 
   if (hour < 17 || streak < 1 || lastActiveDate !== yesterday) return null;
+  // お休み札 softens the threat honestly: with it in hand tonight is safe,
+  // so the nudge invites instead of alarms.
+  const hasGrace = graceAvailable(graceUsedOn);
   return (
     <p className="text-sm text-ochre mb-6" role="status">
       {language === 'ja'
-        ? `連続${streak}日が今夜リセットされます。1レッスンで継続！`
-        : `Your ${streak}-day streak resets tonight. One lesson keeps it alive!`}
+        ? (hasGrace
+          ? `今日はまだレッスンがありません。休んでもお休み札が連続${streak}日を守りますが、1語だけどうですか？`
+          : `連続${streak}日が今夜リセットされます。1レッスンで継続！`)
+        : (hasGrace
+          ? `No lesson yet today. Your rest ticket will protect the ${streak}-day streak, but how about just one word?`
+          : `Your ${streak}-day streak resets tonight. One lesson keeps it alive!`)}
     </p>
   );
 }

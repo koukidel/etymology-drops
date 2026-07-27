@@ -39,7 +39,7 @@ function makeRound(word: Word, pool: WordBlock[]): Round {
 
 export default function ClozePage() {
     const { t, language } = useTranslation();
-    const { masteredWords, recordMiss } = useGameStore();
+    const { masteredWords, recordMiss, missedParts } = useGameStore();
     const mounted = useMounted();
     const [solved, setSolved] = useState(0);
     const [roundKey, setRoundKey] = useState(0);
@@ -58,7 +58,12 @@ export default function ClozePage() {
 
     const round = useMemo(() => {
         if (eligible.length === 0) return null;
-        const word = eligible[dayHash(String(roundKey) + Date.now()) % eligible.length];
+        // 苦手ファースト: about half the rounds draw from words containing a
+        // part missed 2+ times — the mistakes come back until they don't.
+        const weak = new Set(Object.entries(missedParts).filter(([, n]) => n >= 2).map(([id]) => id));
+        const weakWords = eligible.filter(w => w.blocks.some(b => weak.has(b.id)));
+        const pickFrom = weakWords.length > 0 && Math.random() < 0.5 ? weakWords : eligible;
+        const word = pickFrom[dayHash(String(roundKey) + Date.now()) % pickFrom.length];
         return makeRound(word, pool);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [roundKey, eligible.length]);

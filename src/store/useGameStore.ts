@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { localDate, localYesterday } from '@/lib/date';
+import { localDate, localYesterday, localDaysAgo, daysBetween } from '@/lib/date';
 
 export interface MasteryEntry {
     id: string;
@@ -28,6 +28,7 @@ interface GameState {
 
     streak: number;
     lastActiveDate: string | null; // ISO date (YYYY-MM-DD) of last completed lesson
+    graceUsedOn: string | null;    // お休み札: the missed day it last covered
 
     hasSeenWelcome: boolean;       // finished the very first takeover (value prop + first split)
     hasCompletedIntake: boolean;   // finished the first-run intake (goal/commitment/level)
@@ -58,12 +59,24 @@ const addDays = (iso: string, days: number): string => {
     return localDate(dt);
 };
 
-/** Streak counts only if the last lesson was today or yesterday (local time). */
-export const currentStreak = (streak: number, lastActiveDate: string | null): number => {
+/** お休み札 is ready again once the last covered day is 14+ days back. */
+export const graceAvailable = (graceUsedOn: string | null, today: string = localDate()): boolean =>
+    !graceUsedOn || daysBetween(graceUsedOn, today) >= 14;
+
+/**
+ * Streak counts if the last lesson was today or yesterday (local time) —
+ * or the day before that, when the お休み札 can cover the single missed day
+ * (loss-aversion softener: one rest day per 14 never breaks the run).
+ */
+export const currentStreak = (
+    streak: number,
+    lastActiveDate: string | null,
+    graceUsedOn: string | null = null,
+): number => {
     if (!lastActiveDate) return 0;
-    return lastActiveDate === localDate() || lastActiveDate === localYesterday()
-        ? streak
-        : 0;
+    if (lastActiveDate === localDate() || lastActiveDate === localYesterday()) return streak;
+    if (lastActiveDate === localDaysAgo(2) && graceAvailable(graceUsedOn)) return streak;
+    return 0;
 };
 
 export const useGameStore = create<GameState>()(
@@ -74,6 +87,7 @@ export const useGameStore = create<GameState>()(
             masteryLog: [],
             streak: 0,
             lastActiveDate: null,
+            graceUsedOn: null,
             hasSeenWelcome: false,
             hasCompletedIntake: false,
             profile: null,
@@ -105,15 +119,18 @@ export const useGameStore = create<GameState>()(
             }),
 
             recordLessonComplete: () => set((state) => {
-                const today = new Date();
-                const yesterday = new Date(today);
-                yesterday.setDate(today.getDate() - 1);
-
-                if (state.lastActiveDate === localDate(today)) return {};
-                return {
-                    streak: state.lastActiveDate === localDate(yesterday) ? state.streak + 1 : 1,
-                    lastActiveDate: localDate(today),
-                };
+                const today = localDate();
+                if (state.lastActiveDate === today) return {};
+                // Normal continuation.
+                if (state.lastActiveDate === localYesterday()) {
+                    return { streak: state.streak + 1, lastActiveDate: today };
+                }
+                // Exactly one missed day + お休み札 available → the run survives,
+                // and the ticket is spent on the day that was skipped.
+                if (state.lastActiveDate === localDaysAgo(2) && graceAvailable(state.graceUsedOn, today)) {
+                    return { streak: state.streak + 1, lastActiveDate: today, graceUsedOn: localYesterday() };
+                }
+                return { streak: 1, lastActiveDate: today };
             }),
 
             completeWelcome: () => set({ hasSeenWelcome: true }),
@@ -151,7 +168,7 @@ export const useGameStore = create<GameState>()(
         }),
         {
             name: 'etymology-quest-storage',
-            version: 7,
+            version: 8,
             migrate: (persisted, version) => {
                 const old = (persisted ?? {}) as Record<string, unknown>;
 
@@ -237,13 +254,19 @@ export const useGameStore = create<GameState>()(
 
                 // v7: the first-open takeover (value prop + first split). Anyone
                 // who has touched the app before skips it.
-                return {
+                const withWelcome = {
                     ...withSrs,
                     hasSeenWelcome: old.hasSeenWelcome === true
                         || withSrs.hasSeenOnboarding
                         || withSrs.hasSeenTutorial
                         || withSrs.hasCompletedIntake
                         || withSrs.masteredWords.length > 0,
+                };
+
+                // v8: お休み札 (streak grace day). Everyone starts with it unused.
+                return {
+                    ...withWelcome,
+                    graceUsedOn: typeof old.graceUsedOn === 'string' ? old.graceUsedOn : null,
                 };
             },
         }
