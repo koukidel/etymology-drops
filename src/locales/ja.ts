@@ -174,6 +174,15 @@ export const ja = {
 
     "progress.weak_parts": "苦手な部品",
     "progress.weak_parts.hint": "この部品を使うレッスンでおさらいしましょう。",
+    "progress.weak_practice": "穴埋めで練習する",
+    "progress.forecast": "復習の予定（7日間）",
+    "progress.forecast_none": "予定されている復習はまだありません。単語を覚えると、翌日からここに出てきます。",
+    "progress.grace": "お休み札",
+    "progress.grace_ready": "1枚あります。1日休んでも連続記録は途切れません。",
+    "progress.grace_used": "{date} 分に使用。14日たつと1枚戻ります。",
+    "today.goal": "今日の目標",
+    "today.goal_met": "今日の目標、達成！",
+    "today.goal_left": "目標まであと{n}語",
     "home.unlocked.toast": "すべてのコースが開きました",
 
     "tutorial.back": "戻る",

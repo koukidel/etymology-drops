@@ -15,7 +15,7 @@ import { isMuted, setMuted } from "@/lib/feedback";
 export function Header() {
     const { t } = useTranslation();
     const pathname = usePathname();
-    const { streak, lastActiveDate } = useGameStore();
+    const { streak, lastActiveDate, graceUsedOn } = useGameStore();
     const mounted = useMounted();
     // localStorage-backed; synced after paint to stay SSR- and lint-safe.
     const [muted, setMutedState] = useState(false);
@@ -24,7 +24,7 @@ export function Header() {
         return () => cancelAnimationFrame(id);
     }, []);
 
-    const activeStreak = mounted ? currentStreak(streak, lastActiveDate) : 0;
+    const activeStreak = mounted ? currentStreak(streak, lastActiveDate, graceUsedOn) : 0;
     const showMuted = mounted && muted;
     const toggleMute = () => {
         const next = !muted;

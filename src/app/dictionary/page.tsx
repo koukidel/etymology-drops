@@ -93,6 +93,20 @@ export default function DictionaryPage() {
         return block.type === 'prefix' ? `${bare}-` : block.type === 'suffix' ? `-${bare}` : bare;
     };
 
+    // One color per part type, identical to the lesson/practice chips —
+    // the coding must never change meaning between screens.
+    const typeDot = (type: string) => (
+        <span
+            aria-hidden
+            className="inline-block w-2 h-2 rounded-full shrink-0"
+            style={{
+                backgroundColor: type === 'root' ? 'var(--chip-root-bg)'
+                    : type === 'prefix' ? 'var(--chip-prefix-bg)'
+                    : 'var(--chip-suffix-bg)',
+            }}
+        />
+    );
+
     const typeLabel = (type: string) => {
         if (language === 'ja') {
             return type === 'prefix' ? '接頭辞' : type === 'suffix' ? '接尾辞' : type === 'root' ? '語根' : 'すべて';
@@ -125,6 +139,7 @@ export default function DictionaryPage() {
                                     className="w-full flex items-center gap-4 text-left group"
                                 >
                                     <span className="text-sm text-muted-foreground/60 w-5 shrink-0 tabular-nums">{i + 1}</span>
+                                    {typeDot(block.type)}
                                     <span className={`font-serif text-lg shrink-0 w-28 ${block.type === 'root' ? 'text-accent' : 'text-foreground'}`}>
                                         {displayLabel(block)}
                                     </span>
@@ -149,17 +164,19 @@ export default function DictionaryPage() {
                     className="w-full px-0 py-3 bg-transparent border-0 border-b border-border focus:border-foreground outline-none text-lg placeholder:text-muted-foreground/60 transition-colors mb-6"
                 />
 
-                {/* Filters */}
+                {/* Filters — each type carries its color, teaching the legend
+                    by repetition instead of a manual */}
                 <div className="flex gap-5 mb-10">
                     {(['all', 'root', 'prefix', 'suffix'] as Filter[]).map((type) => (
                         <button
                             key={type}
                             onClick={() => setFilter(type)}
-                            className={`text-sm capitalize transition-colors ${filter === type
+                            className={`inline-flex items-center gap-1.5 text-sm capitalize transition-colors ${filter === type
                                 ? 'text-foreground underline underline-offset-8'
                                 : 'text-muted-foreground hover:text-foreground'
                                 }`}
                         >
+                            {type !== 'all' && typeDot(type)}
                             {typeLabel(type)}
                         </button>
                     ))}
@@ -201,7 +218,8 @@ export default function DictionaryPage() {
                                 onClick={() => setSelectedBlock(block)}
                                 className="w-full flex items-baseline justify-between gap-4 py-4 text-left hover:bg-muted/40 -mx-3 px-3 transition-colors"
                             >
-                                <div className="flex items-baseline gap-4 min-w-0">
+                                <div className="flex items-center gap-3 min-w-0">
+                                    {typeDot(block.type)}
                                     <span className={`font-serif text-xl shrink-0 ${block.type === 'root' ? 'text-accent' : 'text-foreground'}`}>
                                         {displayLabel(block)}
                                     </span>
