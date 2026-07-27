@@ -29,6 +29,7 @@ interface GameState {
     streak: number;
     lastActiveDate: string | null; // ISO date (YYYY-MM-DD) of last completed lesson
 
+    hasSeenWelcome: boolean;       // finished the very first takeover (value prop + first split)
     hasCompletedIntake: boolean;   // finished the first-run intake (goal/commitment/level)
     profile: OnboardingProfile | null;
     hasSeenOnboarding: boolean;    // has played Lesson 0 (the 鳴→breakfast walkthrough)
@@ -40,6 +41,7 @@ interface GameState {
     unlockWord: (wordId: string) => void;
     masterWord: (wordId: string) => void;
     recordLessonComplete: () => void;
+    completeWelcome: () => void;
     completeIntake: (profile: OnboardingProfile | null) => void;
     completeOnboarding: () => void;
     completeTutorial: () => void;
@@ -72,6 +74,7 @@ export const useGameStore = create<GameState>()(
             masteryLog: [],
             streak: 0,
             lastActiveDate: null,
+            hasSeenWelcome: false,
             hasCompletedIntake: false,
             profile: null,
             hasSeenOnboarding: false,
@@ -113,6 +116,8 @@ export const useGameStore = create<GameState>()(
                 };
             }),
 
+            completeWelcome: () => set({ hasSeenWelcome: true }),
+
             completeIntake: (profile) => set({ profile, hasCompletedIntake: true }),
 
             completeOnboarding: () => set({ hasSeenOnboarding: true }),
@@ -146,7 +151,7 @@ export const useGameStore = create<GameState>()(
         }),
         {
             name: 'etymology-quest-storage',
-            version: 6,
+            version: 7,
             migrate: (persisted, version) => {
                 const old = (persisted ?? {}) as Record<string, unknown>;
 
@@ -223,11 +228,22 @@ export const useGameStore = create<GameState>()(
                 for (const e of withTutorial.masteryLog) {
                     if (!srs[e.id]) srs[e.id] = { interval: 1, due: localDate() };
                 }
-                return {
+                const withSrs = {
                     ...withTutorial,
                     lastReviewDate: typeof old.lastReviewDate === 'string' ? old.lastReviewDate : null,
                     srs,
                     missedParts: (old.missedParts as Record<string, number>) ?? {},
+                };
+
+                // v7: the first-open takeover (value prop + first split). Anyone
+                // who has touched the app before skips it.
+                return {
+                    ...withSrs,
+                    hasSeenWelcome: old.hasSeenWelcome === true
+                        || withSrs.hasSeenOnboarding
+                        || withSrs.hasSeenTutorial
+                        || withSrs.hasCompletedIntake
+                        || withSrs.masteredWords.length > 0,
                 };
             },
         }

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { Zap, BookOpenText, Blocks, PuzzleIcon } from "lucide-react";
 import { Header } from "@/components/layout/Header";
+import { FirstVisitHint } from "@/components/ui/FirstVisitHint";
 import { useMounted } from "@/hooks/useMounted";
 import { useTranslation } from "@/hooks/useTranslation";
 
@@ -24,6 +25,8 @@ export default function PracticePage() {
             <main className="max-w-3xl mx-auto px-6 py-12">
                 <h1 className="font-serif text-3xl text-foreground mb-2">{t("practice.title")}</h1>
                 <p className="text-sm text-muted-foreground mb-10">{t("practice.subtitle")}</p>
+
+                <FirstVisitHint id="practice" text={t("hint.practice")} />
 
                 <div className="space-y-3">
                     {modes.map(m => {

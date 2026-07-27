@@ -6,11 +6,15 @@ import { X } from "lucide-react";
 import { useTranslation } from "@/hooks/useTranslation";
 import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
 import { SlicerModule } from "@/components/lesson/SlicerModule";
+import { FirstRunProgress } from "./FirstRunProgress";
+import { useConfusionLog } from "@/lib/confusionLog";
 import { allWords } from "@/data/words";
 
 interface Props {
     onComplete: () => void;
     onExit?: () => void;
+    /** True while this runs as stage 3 of the first-run funnel. */
+    firstRun?: boolean;
 }
 
 // Narration strings carry **…** markers → rendered as warm serif emphasis.
@@ -68,9 +72,10 @@ function Narration({ text, cta, onNext }: { text: string; cta: string; onNext: (
     );
 }
 
-export function GuidedOnboarding({ onComplete, onExit }: Props) {
+export function GuidedOnboarding({ onComplete, onExit, firstRun = false }: Props) {
     const { t, language } = useTranslation();
     const [step, setStep] = useState<Step>('ask');
+    useConfusionLog(`guide-${step}`, firstRun);
     const [guessed, setGuessed] = useState(false);
     const [quizPick, setQuizPick] = useState<number | null>(null);
     const [quizSolved, setQuizSolved] = useState(false);
@@ -106,6 +111,11 @@ export function GuidedOnboarding({ onComplete, onExit }: Props) {
             <div className="absolute top-6 right-6">
                 <LanguageSwitcher />
             </div>
+            {firstRun && (
+                <div className="absolute top-7 inset-x-0 flex justify-center pointer-events-none">
+                    <FirstRunProgress stage={3} />
+                </div>
+            )}
 
             <AnimatePresence mode="wait">
                 <motion.div
@@ -248,7 +258,9 @@ export function GuidedOnboarding({ onComplete, onExit }: Props) {
 
                     {step === 'final' && (
                         <div className="max-w-lg mx-auto text-center">
-                            <p className="font-serif text-3xl text-foreground mb-12">{t('guide.final')}</p>
+                            <p className="font-serif text-3xl text-foreground mb-4">{t('guide.final')}</p>
+                            {/* Tomorrow is already explained today: one button, no re-orienting. */}
+                            <p className="text-sm text-muted-foreground mb-12">{t('guide.final.sub')}</p>
                             <button onClick={onComplete} className="px-10 py-3 bg-foreground text-background rounded-full hover:opacity-90 transition-opacity">
                                 {t('guide.begin')}
                             </button>

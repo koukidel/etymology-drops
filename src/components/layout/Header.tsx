@@ -32,13 +32,18 @@ export function Header() {
         setMutedState(next);
     };
 
-    // Funnel order: learn → apply → look up → reflect.
-    const links = [
+    // Funnel order: learn → apply → look up → reflect. Before Lesson 0 the
+    // extra destinations stay hidden — one path, zero decisions (mirrors the
+    // staged TabBar on mobile).
+    const { hasSeenOnboarding } = useGameStore();
+    const links = (mounted && hasSeenOnboarding ? [
         { href: "/", label: t('nav.path') },
         { href: "/practice", label: t('nav.practice') },
         { href: "/dictionary", label: t('nav.dictionary') },
         { href: "/profile", label: t('nav.progress') },
-    ];
+    ] : [
+        { href: "/", label: t('nav.path') },
+    ]);
 
     return (
         <header className="border-b border-border bg-background sticky top-0 z-40">
@@ -73,13 +78,17 @@ export function Header() {
                         </span>
                     )}
 
-                    <button
-                        onClick={toggleMute}
-                        aria-label={showMuted ? t('sound.unmute') : t('sound.mute')}
-                        className="text-muted-foreground hover:text-foreground transition-colors"
-                    >
-                        {showMuted ? <VolumeX size={16} /> : <Volume2 size={16} />}
-                    </button>
+                    {/* Meta controls stay out of sight until the app is opened up —
+                        every extra icon is a question a brand-new user has to ignore. */}
+                    {mounted && hasSeenOnboarding && (
+                        <button
+                            onClick={toggleMute}
+                            aria-label={showMuted ? t('sound.unmute') : t('sound.mute')}
+                            className="text-muted-foreground hover:text-foreground transition-colors"
+                        >
+                            {showMuted ? <VolumeX size={16} /> : <Volume2 size={16} />}
+                        </button>
+                    )}
 
                     <LanguageSwitcher />
                 </div>

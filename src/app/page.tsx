@@ -9,12 +9,14 @@ import { Recommended } from "@/components/home/Recommended";
 import { Header } from "@/components/layout/Header";
 import { useGameStore } from "@/store/useGameStore";
 import { Intake } from "@/components/onboarding/Intake";
+import { FirstRun } from "@/components/onboarding/FirstRun";
 import { useMounted } from "@/hooks/useMounted";
 import { useTranslation } from "@/hooks/useTranslation";
 import { allWords } from "@/data/words";
 import { findNextLesson } from "@/lib/nextLesson";
 import { pickReviewWords } from "@/lib/dailyReview";
-import { localDate } from "@/lib/date";
+import { localDate, localYesterday } from "@/lib/date";
+import { useConfusionLog } from "@/lib/confusionLog";
 
 // Pulsing halo that animates OPACITY of a pre-shadowed layer (compositor
 // friendly) instead of animating box-shadow itself (paint-heavy on mobile).
@@ -119,6 +121,9 @@ function TodayCard() {
     nextWord ? (ja ? `新しい単語「${nextWord.word}」` : `new word “${nextWord.word}”`) : null,
   ].filter(Boolean).join(ja ? ' と ' : ' + ');
 
+  // Came back the day after playing → greet the return, don't re-pitch.
+  const cameYesterday = lastActiveDate === localYesterday();
+
   return (
     <Link
       href="/today"
@@ -133,7 +138,7 @@ function TodayCard() {
           {fresh ? t('today.card_start') : contents}
         </span>
         <span className="block text-sm mt-1" style={{ color: 'var(--plate-body)' }}>
-          {t('today.tagline')}
+          {cameYesterday ? t('today.yesterday') : t('today.tagline')}
         </span>
       </span>
       <span className="ml-auto text-2xl" style={{ color: 'var(--plate-gold)' }}>→</span>
@@ -183,23 +188,32 @@ function UnlockToast() {
 }
 
 export default function Home() {
-  const { hasCompletedIntake, completeIntake, hasSeenOnboarding, hasSeenTutorial } = useGameStore();
+  const { hasSeenWelcome, hasCompletedIntake, completeIntake, hasSeenOnboarding, hasSeenTutorial } = useGameStore();
   const { t } = useTranslation();
 
   const isMounted = useMounted();
+  const locked = !hasSeenOnboarding;
+  // 戸惑いログ: measure idling on the locked home during the first run.
+  useConfusionLog('home-locked', isMounted && hasSeenWelcome && locked);
+  // One-time glow handoff onto 今日の一歩 right after the catalog unlocks
+  // (same first-visit signal the UnlockToast uses; both read before it writes).
+  const [firstUnlockVisit] = useState(
+    () => typeof window !== 'undefined' && !localStorage.getItem('minamoto_unlock_toast'));
 
   if (!isMounted) return null; // Prevent hydration mismatch
 
+  // The very first open: a full-screen takeover with one action, ending in
+  // the first split. No home, no catalog, no competing choices before the aha.
+  if (!hasSeenWelcome) {
+    return <FirstRun />;
+  }
+
   // Intake comes AFTER the Lesson 0 aha, not before it. The product's first
   // job is to show that the decomposition perspective exists; only someone
-  // who has felt that is worth asking three questions of.
+  // who has felt that is worth asking questions of.
   if (hasSeenOnboarding && !hasCompletedIntake) {
     return <Intake onComplete={completeIntake} onSkip={() => completeIntake(null)} />;
   }
-
-  // First-run funnel: あそびかた glows first, then Lesson 0; everything else
-  // stays visible but locked until Lesson 0 is done.
-  const locked = !hasSeenOnboarding;
 
   const tutorialBand = (
     <FunnelBand
@@ -213,12 +227,14 @@ export default function Home() {
     <FunnelBand
       href="/guide"
       icon={<BookOpen size={18} />}
-      title={t('home.lesson0.title')}
+      title={locked ? t('home.lesson0.firstrun_title') : t('home.lesson0.title')}
       done={hasSeenOnboarding}
     />
   );
 
   if (locked) {
+    // Mid-funnel home (only reachable by exiting the flow): exactly ONE next
+    // action, a day-1 "this is enough" line, and no locked-catalog noise.
     return (
       <div className="min-h-screen">
         <Header />
@@ -226,15 +242,8 @@ export default function Home() {
           <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-4">
             {t('home.firstrun.hint')}
           </p>
-          <div className="space-y-4">
-            <GlowWrap glow={!hasSeenTutorial}>{tutorialBand}</GlowWrap>
-            <GlowWrap glow={hasSeenTutorial}>{lesson0Band}</GlowWrap>
-          </div>
-
-          {/* The catalog stays visible but locked until Lesson 0 is done. */}
-          <div className="mt-12 pointer-events-none select-none">
-            <CourseGrid locked />
-          </div>
+          <GlowWrap glow>{!hasSeenTutorial ? tutorialBand : lesson0Band}</GlowWrap>
+          <p className="text-sm text-muted-foreground mt-5">{t('home.day1')}</p>
         </main>
       </div>
     );
@@ -248,7 +257,9 @@ export default function Home() {
         <StreakWarning />
 
         <div className="mb-8">
-          <TodayCard />
+          <GlowWrap glow={firstUnlockVisit}>
+            <TodayCard />
+          </GlowWrap>
         </div>
 
         <Recommended />

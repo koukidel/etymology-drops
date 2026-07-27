@@ -12,18 +12,18 @@ interface Props {
     onSkip?: () => void;
 }
 
-// Each question: a translation-key prefix for the prompt and its option values.
-const GOALS = ["exam", "work", "culture", "travel"] as const;
+// Two questions only — commitment sizes the recommendations, level targets
+// them. The old "why are you learning?" question was stored but never used,
+// so it was pure friction and is gone.
 const COMMITS = ["light", "steady", "serious"] as const;
 const LEVELS: LearnerLevel[] = ["beginner", "intermediate", "advanced"];
 
-type Step = "goal" | "commit" | "level";
-const ORDER: Step[] = ["goal", "commit", "level"];
+type Step = "commit" | "level";
+const ORDER: Step[] = ["commit", "level"];
 
 export function Intake({ onComplete, onExit, onSkip }: Props) {
     const { t } = useTranslation();
-    const [step, setStep] = useState<Step>("goal");
-    const [goal, setGoal] = useState<string | null>(null);
+    const [step, setStep] = useState<Step>("commit");
     const [commitment, setCommitment] = useState<string | null>(null);
 
     const advance = () => {
@@ -31,9 +31,8 @@ export function Intake({ onComplete, onExit, onSkip }: Props) {
         if (i < ORDER.length - 1) setStep(ORDER[i + 1]);
     };
 
-    const pickGoal = (v: string) => { setGoal(v); advance(); };
     const pickCommit = (v: string) => { setCommitment(v); advance(); };
-    const pickLevel = (v: LearnerLevel) => onComplete({ goal: goal ?? "", commitment: commitment ?? "", selfLevel: v });
+    const pickLevel = (v: LearnerLevel) => onComplete({ goal: "", commitment: commitment ?? "", selfLevel: v });
 
     const stepIndex = ORDER.indexOf(step);
 
@@ -83,7 +82,6 @@ export function Intake({ onComplete, onExit, onSkip }: Props) {
                             {t(`intake.${step}` as Parameters<typeof t>[0])}
                         </p>
 
-                        {step === "goal" && renderOptions(GOALS, "intake.goal", pickGoal)}
                         {step === "commit" && renderOptions(COMMITS, "intake.commit", pickCommit)}
                         {step === "level" && renderOptions(LEVELS, "intake.level", (v) => pickLevel(v as LearnerLevel))}
                     </motion.div>
@@ -93,9 +91,10 @@ export function Intake({ onComplete, onExit, onSkip }: Props) {
                     come later via /intake. */}
                 {onSkip && (
                     <p className="text-center mt-10">
+                        {/* Skipping is a first-class exit, not fine print. */}
                         <button
                             onClick={onSkip}
-                            className="text-sm text-muted-foreground hover:text-foreground underline underline-offset-4 transition-colors"
+                            className="px-6 py-2.5 border border-border rounded-full text-sm text-muted-foreground hover:text-foreground hover:border-muted-foreground transition-colors active:scale-[0.98]"
                         >
                             {t('intake.skip')}
                         </button>

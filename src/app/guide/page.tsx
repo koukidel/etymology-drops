@@ -7,12 +7,13 @@ import { useMounted } from "@/hooks/useMounted";
 
 export default function GuidePage() {
     const router = useRouter();
-    const { completeOnboarding } = useGameStore();
+    const { completeOnboarding, hasSeenOnboarding } = useGameStore();
     const mounted = useMounted();
     if (!mounted) return null;
 
     return (
         <GuidedOnboarding
+            firstRun={!hasSeenOnboarding}
             onComplete={() => { completeOnboarding(); router.push("/"); }}
             onExit={() => router.push("/")}
         />

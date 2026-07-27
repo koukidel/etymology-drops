@@ -7,7 +7,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, BookOpen, Zap, Blocks, Sprout, X } from "lucide-react";
 import { SlicerModule } from "@/components/lesson/SlicerModule";
 import { Bird } from "@/components/ui/Bird";
+import { FirstRunProgress } from "./FirstRunProgress";
 import { sfx } from "@/lib/feedback";
+import { useConfusionLog } from "@/lib/confusionLog";
 import { allWords } from "@/data/words";
 import { WordBlock } from "@/data/types";
 import { useGameStore } from "@/store/useGameStore";
@@ -118,14 +120,19 @@ function MiniBuild({ onSolved }: { onSolved: () => void }) {
 export function TutorialTour() {
     const { t } = useTranslation();
     const router = useRouter();
-    const { completeTutorial } = useGameStore();
+    const { completeTutorial, hasSeenOnboarding } = useGameStore();
     const [step, setStep] = useState(0);
     const [miniSolved, setMiniSolved] = useState(false);
+
+    // First-run chaining: the tour hands the user straight to the reveal
+    // (Lesson 0) instead of dropping them back on the home to re-decide.
+    const firstRun = !hasSeenOnboarding;
+    useConfusionLog(`tutorial-step-${step}`, firstRun);
 
     const next = () => setStep(s => Math.min(STEP_COUNT - 1, s + 1));
     const back = () => setStep(s => Math.max(0, s - 1));
     const exit = () => router.push("/");
-    const finish = () => { completeTutorial(); router.push("/"); };
+    const finish = () => { completeTutorial(); router.push(firstRun ? "/guide" : "/"); };
 
     const isLast = step === STEP_COUNT - 1;
     // The two interactive steps gate Next on completion.
@@ -141,6 +148,9 @@ export function TutorialTour() {
             >
                 <X size={20} />
             </button>
+
+            {/* First-run funnel position (1 体験 → 2 あそびかた → 3 種明かし) */}
+            {firstRun && <FirstRunProgress stage={2} />}
 
             {/* progress dots */}
             <div className="flex items-center justify-center gap-2 mb-8">
@@ -242,7 +252,7 @@ export function TutorialTour() {
                 {step !== 1 && (
                     isLast ? (
                         <button onClick={finish} className="px-8 py-2.5 bg-foreground text-background rounded-full hover:opacity-90 transition-opacity active:scale-[0.98]">
-                            {t("tutorial.finish")}
+                            {t(firstRun ? "tutorial.finish_chain" : "tutorial.finish")}
                         </button>
                     ) : (
                         <button

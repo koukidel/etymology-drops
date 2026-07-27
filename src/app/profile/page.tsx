@@ -9,7 +9,9 @@ import { allWords } from "@/data/words";
 import { Header } from "@/components/layout/Header";
 import { GrowthTree } from "@/components/progress/GrowthTree";
 import { CountUp } from "@/components/ui/CountUp";
+import { FirstVisitHint } from "@/components/ui/FirstVisitHint";
 import { localDate } from "@/lib/date";
+import { readConfusionLog } from "@/lib/confusionLog";
 
 export default function ProfilePage() {
     const { masteredWords, masteryLog, streak, lastActiveDate, missedParts, resetProgress } = useGameStore();
@@ -65,6 +67,10 @@ export default function ProfilePage() {
                 <header className="w-full max-w-xl mb-10 mt-6">
                     <h1 className="font-serif text-4xl text-foreground">Progress</h1>
                 </header>
+
+                <div className="w-full max-w-xl">
+                    <FirstVisitHint id="profile" text={t('hint.profile')} />
+                </div>
 
                 <div className="w-full max-w-xl space-y-12">
                     {/* Growth tree */}
@@ -232,7 +238,9 @@ export default function ProfilePage() {
                             onClick={() => {
                                 if (confirm(ja ? '【開発用】オンボーディングを含む全データを消去して最初からやり直しますか？' : '[DEV] Wipe everything (incl. onboarding) and start over?')) {
                                     localStorage.removeItem('etymology-quest-storage');
-                                    localStorage.removeItem('minamoto_unlock_toast');
+                                    for (const k of Object.keys(localStorage)) {
+                                        if (k.startsWith('minamoto_')) localStorage.removeItem(k);
+                                    }
                                     window.location.href = '/';
                                 }
                             }}
@@ -240,6 +248,21 @@ export default function ProfilePage() {
                         >
                             {ja ? '完全リセット（開発用）' : 'Full reset (dev)'}
                         </button>
+
+                        {/* DEV ONLY — 戸惑いログ: screens where a first-run user idled
+                            10+ seconds. Local only; a compass for the next UX round. */}
+                        {readConfusionLog().length > 0 && (
+                            <details className="text-xs text-muted-foreground/60">
+                                <summary className="cursor-pointer">
+                                    {ja ? `戸惑いログ ${readConfusionLog().length}件（開発用）` : `Confusion log: ${readConfusionLog().length} (dev)`}
+                                </summary>
+                                <ul className="mt-2 space-y-0.5">
+                                    {readConfusionLog().map((e, i) => (
+                                        <li key={i}>{e.screen} ・ {e.at.slice(0, 16).replace('T', ' ')}</li>
+                                    ))}
+                                </ul>
+                            </details>
+                        )}
                     </div>
                 </div>
             </main>
