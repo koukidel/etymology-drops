@@ -43,7 +43,8 @@ export function FirstRun() {
 
     const go = () => {
         completeWelcome();
-        router.push("/tutorial");
+        // Home takes over: it gates straight into the intake (stage 2).
+        router.push("/");
     };
 
     return (

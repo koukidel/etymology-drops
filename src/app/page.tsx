@@ -10,13 +10,13 @@ import { Header } from "@/components/layout/Header";
 import { useGameStore } from "@/store/useGameStore";
 import { Intake } from "@/components/onboarding/Intake";
 import { FirstRun } from "@/components/onboarding/FirstRun";
+import { PathChoice } from "@/components/onboarding/PathChoice";
 import { useMounted } from "@/hooks/useMounted";
 import { useTranslation } from "@/hooks/useTranslation";
 import { allWords } from "@/data/words";
 import { findNextLesson } from "@/lib/nextLesson";
 import { pickReviewWords } from "@/lib/dailyReview";
 import { localDate, localYesterday } from "@/lib/date";
-import { useConfusionLog } from "@/lib/confusionLog";
 
 // Pulsing halo that animates OPACITY of a pre-shadowed layer (compositor
 // friendly) instead of animating box-shadow itself (paint-heavy on mobile).
@@ -193,26 +193,30 @@ export default function Home() {
 
   const isMounted = useMounted();
   const locked = !hasSeenOnboarding;
-  // 戸惑いログ: measure idling on the locked home during the first run.
-  useConfusionLog('home-locked', isMounted && hasSeenWelcome && locked);
   // One-time glow handoff onto 今日の一歩 right after the catalog unlocks
   // (same first-visit signal the UnlockToast uses; both read before it writes).
   const [firstUnlockVisit] = useState(
     () => typeof window !== 'undefined' && !localStorage.getItem('minamoto_unlock_toast'));
+  // Lesson 0 is chosen, not imposed — its ✓ tracks actual completion, which
+  // is no longer the same thing as "funnel finished" (hasSeenOnboarding).
+  const [guideDone] = useState(
+    () => typeof window !== 'undefined' && !!localStorage.getItem('minamoto_guide_done'));
 
   if (!isMounted) return null; // Prevent hydration mismatch
 
-  // The very first open: a full-screen takeover with one action, ending in
-  // the first split. No home, no catalog, no competing choices before the aha.
+  // Duolingo-shaped funnel, one screen at a time, ~6 taps total:
+  // 1. FirstRun — value line + the first split (the aha).
+  // 2. Intake — two required taps of personalization (no skip: an unset
+  //    level silently breaks recommendations forever).
+  // 3. PathChoice — the user decides: 種明かし (Lesson 0) or straight in.
   if (!hasSeenWelcome) {
     return <FirstRun />;
   }
-
-  // Intake comes AFTER the Lesson 0 aha, not before it. The product's first
-  // job is to show that the decomposition perspective exists; only someone
-  // who has felt that is worth asking questions of.
-  if (hasSeenOnboarding && !hasCompletedIntake) {
-    return <Intake onComplete={completeIntake} onSkip={() => completeIntake(null)} />;
+  if (!hasCompletedIntake) {
+    return <Intake firstRun={locked} onComplete={completeIntake} />;
+  }
+  if (locked) {
+    return <PathChoice />;
   }
 
   const tutorialBand = (
@@ -227,27 +231,10 @@ export default function Home() {
     <FunnelBand
       href="/guide"
       icon={<BookOpen size={18} />}
-      title={locked ? t('home.lesson0.firstrun_title') : t('home.lesson0.title')}
-      done={hasSeenOnboarding}
+      title={t('home.lesson0.title')}
+      done={guideDone}
     />
   );
-
-  if (locked) {
-    // Mid-funnel home (only reachable by exiting the flow): exactly ONE next
-    // action, a day-1 "this is enough" line, and no locked-catalog noise.
-    return (
-      <div className="min-h-screen">
-        <Header />
-        <main className="max-w-3xl mx-auto px-6 py-12">
-          <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-4">
-            {t('home.firstrun.hint')}
-          </p>
-          <GlowWrap glow>{!hasSeenTutorial ? tutorialBand : lesson0Band}</GlowWrap>
-          <p className="text-sm text-muted-foreground mt-5">{t('home.day1')}</p>
-        </main>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen">

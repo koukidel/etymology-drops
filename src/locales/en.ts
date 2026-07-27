@@ -193,8 +193,15 @@ export const en = {
     "tutorial.mechanism.title": "Learn more, build more",
     "tutorial.mechanism.body": "You build only with parts you've learned. Every lesson you finish unlocks more.",
     "tutorial.outcome.title": "Where this leads",
-    "tutorial.outcome.body": "Soon you'll slice and guess words you've never seen. Why does that work? The reveal comes right after this.\n\nYou can revisit this guide anytime from the bottom of the home screen.",
-    "tutorial.finish_chain": "On to the reveal",
+    "tutorial.outcome.body": "Soon you'll slice and guess words you've never seen. Every part you meet collects in the Dictionary.\n\nYou can revisit this guide anytime from the bottom of the home screen.",
+
+    // Path choice (final funnel screen)
+    "choice.title": "You're set. How would you like to begin?",
+    "choice.badge": "Best",
+    "choice.guide.title": "Why does splitting work?",
+    "choice.guide.sub": "Watch the reveal · about 3 min",
+    "choice.start.title": "Jump into a lesson",
+    "choice.start.sub": "Your first word · about 3 min",
 
     // First-open takeover
     "firstrun.progress": "First steps {n}/3",
@@ -205,7 +212,7 @@ export const en = {
     "firstrun.tap": "First, tap this",
     "firstrun.safe": "It's okay to get it wrong",
     "firstrun.split_praise": "Beautiful!",
-    "firstrun.split_done": "breakfast is built from break and fast.\nWhy do those two mean “morning meal”? The reveal is coming up.",
+    "firstrun.split_done": "breakfast is built from break and fast.\nWhy do those two mean “morning meal”? The reveal awaits just ahead.",
     "firstrun.continue": "Continue",
     "home.day1": "That's all for today",
     "home.lesson0.firstrun_title": "Your first 3 minutes",

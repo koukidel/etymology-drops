@@ -2,29 +2,44 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Feather, Flame, Rocket, Sprout, TreeDeciduous, Mountain } from "lucide-react";
 import { useTranslation } from "@/hooks/useTranslation";
 import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
+import { FirstRunProgress } from "./FirstRunProgress";
+import { useConfusionLog } from "@/lib/confusionLog";
 import { OnboardingProfile, LearnerLevel } from "@/store/useGameStore";
 
 interface Props {
     onComplete: (profile: OnboardingProfile) => void;
     onExit?: () => void;
-    onSkip?: () => void;
+    /** True while this runs as stage 2 of the first-run funnel. */
+    firstRun?: boolean;
 }
 
 // Two questions only — commitment sizes the recommendations, level targets
-// them. The old "why are you learning?" question was stored but never used,
-// so it was pure friction and is gone.
+// them. Duolingo-style: one question per screen, big tappable options with
+// an icon each, and NO skip. Two taps of personalization beats a broken
+// recommendation feed later (the old skip left the level unset for good).
 const COMMITS = ["light", "steady", "serious"] as const;
 const LEVELS: LearnerLevel[] = ["beginner", "intermediate", "advanced"];
+
+const OPTION_ICON: Record<string, React.ReactNode> = {
+    light: <Feather size={20} />,
+    steady: <Flame size={20} />,
+    serious: <Rocket size={20} />,
+    beginner: <Sprout size={20} />,
+    intermediate: <TreeDeciduous size={20} />,
+    advanced: <Mountain size={20} />,
+};
 
 type Step = "commit" | "level";
 const ORDER: Step[] = ["commit", "level"];
 
-export function Intake({ onComplete, onExit, onSkip }: Props) {
+export function Intake({ onComplete, onExit, firstRun = false }: Props) {
     const { t } = useTranslation();
     const [step, setStep] = useState<Step>("commit");
     const [commitment, setCommitment] = useState<string | null>(null);
+    useConfusionLog(`intake-${step}`, firstRun);
 
     const advance = () => {
         const i = ORDER.indexOf(step);
@@ -42,10 +57,13 @@ export function Intake({ onComplete, onExit, onSkip }: Props) {
                 <button
                     key={v}
                     onClick={() => onPick(v)}
-                    className="px-6 py-4 border border-border rounded-xl text-foreground hover:border-accent hover:text-accent transition-colors text-left"
+                    className="flex items-center gap-4 px-6 py-4 border border-border rounded-xl text-foreground hover:border-accent hover:text-accent transition-colors text-left active:scale-[0.98]"
                 >
-                    <span className="font-serif text-lg">{t(`${prefix}.${v}` as Parameters<typeof t>[0])}</span>
-                    <span className="block text-sm text-muted-foreground">{t(`${prefix}.${v}.sub` as Parameters<typeof t>[0])}</span>
+                    <span className="shrink-0 text-accent">{OPTION_ICON[v]}</span>
+                    <span>
+                        <span className="font-serif text-lg">{t(`${prefix}.${v}` as Parameters<typeof t>[0])}</span>
+                        <span className="block text-sm text-muted-foreground">{t(`${prefix}.${v}.sub` as Parameters<typeof t>[0])}</span>
+                    </span>
                 </button>
             ))}
         </div>
@@ -63,6 +81,8 @@ export function Intake({ onComplete, onExit, onSkip }: Props) {
             </div>
 
             <div className="w-full max-w-2xl">
+                {firstRun && <FirstRunProgress stage={2} />}
+
                 {/* progress dots */}
                 <div className="flex justify-center gap-2 mb-12">
                     {ORDER.map((s, i) => (
@@ -86,20 +106,6 @@ export function Intake({ onComplete, onExit, onSkip }: Props) {
                         {step === "level" && renderOptions(LEVELS, "intake.level", (v) => pickLevel(v as LearnerLevel))}
                     </motion.div>
                 </AnimatePresence>
-
-                {/* First-run friction valve: straight to the app; settings can
-                    come later via /intake. */}
-                {onSkip && (
-                    <p className="text-center mt-10">
-                        {/* Skipping is a first-class exit, not fine print. */}
-                        <button
-                            onClick={onSkip}
-                            className="px-6 py-2.5 border border-border rounded-full text-sm text-muted-foreground hover:text-foreground hover:border-muted-foreground transition-colors active:scale-[0.98]"
-                        >
-                            {t('intake.skip')}
-                        </button>
-                    </p>
-                )}
             </div>
         </div>
     );

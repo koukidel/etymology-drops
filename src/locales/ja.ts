@@ -193,8 +193,15 @@ export const ja = {
     "tutorial.mechanism.title": "習うほど、作れる",
     "tutorial.mechanism.body": "組み立てに使えるのは、習った部品だけ。レッスンを1つ終えるたび、作れる単語が増えます。",
     "tutorial.outcome.title": "この先に待つもの",
-    "tutorial.outcome.body": "初めて見る単語も、分けて推測できるように。なぜそうなるのか？種明かしは、この後すぐ。\n\nこの説明は、いつでもホーム下部から見直せます。",
-    "tutorial.finish_chain": "種明かしへ",
+    "tutorial.outcome.body": "初めて見る単語も、分けて推測できるように。出会った部品は Dictionary にたまっていきます。\n\nこの説明は、いつでもホーム下部から見直せます。",
+
+    // Path choice (final funnel screen)
+    "choice.title": "準備ができました。どちらから始めますか？",
+    "choice.badge": "おすすめ",
+    "choice.guide.title": "なぜ分解で覚えられる？",
+    "choice.guide.sub": "種明かしを見る ・ 約3分",
+    "choice.start.title": "すぐにレッスンを始める",
+    "choice.start.sub": "最初の単語を1つ ・ 約3分",
 
     // First-open takeover
     "firstrun.progress": "はじめの一歩 {n}/3",
@@ -205,7 +212,7 @@ export const ja = {
     "firstrun.tap": "まずは、これをタップ",
     "firstrun.safe": "間違えても、大丈夫",
     "firstrun.split_praise": "お見事！",
-    "firstrun.split_done": "breakfast は、break と fast の2つでできています。\nなぜこの2つで「朝食」なのか？この後、種明かしがあります。",
+    "firstrun.split_done": "breakfast は、break と fast の2つでできています。\nなぜこの2つで「朝食」なのか？種明かしは、この先で。",
     "firstrun.continue": "つづける",
     "home.day1": "今日はこれだけでOK",
     "home.lesson0.firstrun_title": "最初の3分",
