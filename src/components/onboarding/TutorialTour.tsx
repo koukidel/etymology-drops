@@ -4,19 +4,20 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, BookOpen, Zap, Blocks, Sprout, X } from "lucide-react";
+import { ArrowLeft, Zap, Blocks, Sprout, X } from "lucide-react";
 import { SlicerModule } from "@/components/lesson/SlicerModule";
 import { Bird } from "@/components/ui/Bird";
-import { FirstRunProgress } from "./FirstRunProgress";
 import { sfx } from "@/lib/feedback";
-import { useConfusionLog } from "@/lib/confusionLog";
 import { allWords } from "@/data/words";
 import { WordBlock } from "@/data/types";
 import { useGameStore } from "@/store/useGameStore";
 import { useTranslation } from "@/hooks/useTranslation";
 
 const DEMO = allWords.find(w => w.id === "telephone")!;
-const STEP_COUNT = 6;
+// 4 steps: hook → slice → build → where it leads. The old mechanism and
+// dictionary steps are folded into doing and the outcome line — an optional
+// tour has no business being six screens long.
+const STEP_COUNT = 4;
 
 // A tiny, self-contained build exercise for the tour: four fixed parts, two
 // real words to find (unhappy / player). Scripted verdict — no store gating,
@@ -120,19 +121,14 @@ function MiniBuild({ onSolved }: { onSolved: () => void }) {
 export function TutorialTour() {
     const { t } = useTranslation();
     const router = useRouter();
-    const { completeTutorial, hasSeenOnboarding } = useGameStore();
+    const { completeTutorial } = useGameStore();
     const [step, setStep] = useState(0);
     const [miniSolved, setMiniSolved] = useState(false);
-
-    // First-run chaining: the tour hands the user straight to the reveal
-    // (Lesson 0) instead of dropping them back on the home to re-decide.
-    const firstRun = !hasSeenOnboarding;
-    useConfusionLog(`tutorial-step-${step}`, firstRun);
 
     const next = () => setStep(s => Math.min(STEP_COUNT - 1, s + 1));
     const back = () => setStep(s => Math.max(0, s - 1));
     const exit = () => router.push("/");
-    const finish = () => { completeTutorial(); router.push(firstRun ? "/guide" : "/"); };
+    const finish = () => { completeTutorial(); router.push("/"); };
 
     const isLast = step === STEP_COUNT - 1;
     // The two interactive steps gate Next on completion.
@@ -148,9 +144,6 @@ export function TutorialTour() {
             >
                 <X size={20} />
             </button>
-
-            {/* First-run funnel position (1 体験 → 2 あそびかた → 3 種明かし) */}
-            {firstRun && <FirstRunProgress stage={2} />}
 
             {/* progress dots */}
             <div className="flex items-center justify-center gap-2 mb-8">
@@ -211,29 +204,15 @@ export function TutorialTour() {
                         )}
 
                         {step === 3 && (
-                            <Panel icon={<Blocks size={26} />}>
-                                <H>{t("tutorial.mechanism.title")}</H>
-                                <P>{t("tutorial.mechanism.body")}</P>
-                            </Panel>
-                        )}
-
-                        {step === 4 && (
-                            <Panel icon={<BookOpen size={26} />}>
-                                <H>{t("tutorial.dict.title")}</H>
-                                <P>{t("tutorial.dict.body")}</P>
+                            <Panel icon={<Bird size={26} />}>
+                                <H>{t("tutorial.outcome.title")}</H>
+                                <P>{t("tutorial.outcome.body")}</P>
                                 <Link
                                     href="/dictionary"
                                     className="inline-flex items-center gap-1.5 mt-5 text-sm text-accent hover:opacity-80 underline underline-offset-4"
                                 >
                                     {t("tutorial.dict.cta")}
                                 </Link>
-                            </Panel>
-                        )}
-
-                        {step === 5 && (
-                            <Panel icon={<Bird size={26} />}>
-                                <H>{t("tutorial.outcome.title")}</H>
-                                <P>{t("tutorial.outcome.body")}</P>
                             </Panel>
                         )}
                     </motion.div>
@@ -252,7 +231,7 @@ export function TutorialTour() {
                 {step !== 1 && (
                     isLast ? (
                         <button onClick={finish} className="px-8 py-2.5 bg-foreground text-background rounded-full hover:opacity-90 transition-opacity active:scale-[0.98]">
-                            {t(firstRun ? "tutorial.finish_chain" : "tutorial.finish")}
+                            {t("tutorial.finish")}
                         </button>
                     ) : (
                         <button
